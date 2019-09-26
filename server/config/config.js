@@ -24,4 +24,5 @@ module.exports = {
 		max : 200,
 	},
 	node_env : envs.parsed.NODE_ENV.toLowerCase(),
+	db : envs.parsed.DATABASEURL,
 };

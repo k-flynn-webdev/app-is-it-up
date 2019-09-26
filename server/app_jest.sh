@@ -5,4 +5,6 @@ echo $script_location
 cd $script_location
 pwd
 
+export testEnvironment="Node"
+
 npm test

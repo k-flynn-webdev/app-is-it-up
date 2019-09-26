@@ -7,14 +7,14 @@ module.exports = function( folder, ext='.js', next ){
 	let tmp_files = [];
 
 	function is_dir(input){
-		if( input.indexOf('.') === -1) return true;
-		return false;
+		return input.indexOf('.') === -1 ? true : false;
 	}
 
 	function is_file(input){
-		if( input.endsWith(ext)) return true;
-		return false;
+		return input.endsWith(ext) ? true : false;
 	}
+
+
 
 	function get_files(input){
 
@@ -22,24 +22,25 @@ module.exports = function( folder, ext='.js', next ){
 
 		fs.readdir(tmp_path, function(error, files){
 
-			// get all dirs
-			for( let i = 0;i < files.length;i++){
-				if(is_dir(files[i])){
-						tmp_paths.push(files[i]);
-				}
+			if(error){
+				next(error);
 			}
 
-			// get all files
 			for( let i = 0;i < files.length;i++){
+				
+				if(is_dir(files[i])){
+					tmp_paths.push(files[i]);
+				}
+
 				if(is_file(files[i])){
 					tmp_files.push(path.join(input,files[i]));
-				}
+				}				
 			}
 
 			if(tmp_paths.length > 0){
-				get_files(tmp_paths.pop(), true);
+				get_files(tmp_paths.pop());
 			} else {
-				return next(null, tmp_files);
+				next(null, tmp_files);	
 			}
 
 		});

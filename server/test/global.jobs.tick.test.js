@@ -9,4 +9,7 @@ describe('global tick tests', function() {
 	it('global tick should stop on command', function() {
 		expect(global_tick.stop()).toBe(true);
 	});
+	it('global tick should stop on command', function() {
+		expect(global_tick.stop()).toBe(true);
+	});	
 });

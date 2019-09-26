@@ -3,20 +3,27 @@ const job_exec = require('./job/job.exec.js');
 
 
 let jobs = null;
+let has_init = false;
 // creating singleton of jobs ..
 (function(){
 	if( jobs === null || jobs === undefined){ jobs = []; }
 })();
 
 
+
+
 function init(app){
-	app.on('jobs.exec', exec);
+	if(!has_init){
+		app.on('jobs.exec', exec);
+		has_init = true;
+	}
 }
 exports.init = init;
 
 
 
 function exec(input){
+	// console.log('inside exec: ' + input );	
 	exec_all(input,exec_after);
 }
 
@@ -46,29 +53,32 @@ function exec_all(time, onFinish){
 			}
 		});
 	};
+
 	if( jobs.length > 0){
 		loop_all(jobs[0]);
 	} else {
 		return onFinish(results);
 	}
+
 }
 exports.exec_all = exec_all;
 
 
 
 
-function get(id){
+function find(job_id){
 	for(let i = 0; i < jobs.length;i++){
-		if(jobs[i].id === id){
+		if(jobs[i].job_id === job_id){
 			return i;
 		}
 	}
 	return -1;
 }
+exports.find = find;
 
 
 function insert(job){
-	let search = get(job.id);
+	let search = find(job.job_id);
 	if(search !== -1){
 		console.log('Error, inserting a duplicate job to stack(jobs).');
 		return false;
@@ -82,7 +92,7 @@ exports.insert = insert;
 function update(job){
 
 	let updated = false;
-	let search = get(job.id);
+	let search = find(job.job_id);
 	if(search !== -1){
 		jobs.splice(search,1,job);
 		updated = true;
@@ -95,7 +105,7 @@ exports.update = update;
 function remove(job){
 
 	let removed = false;
-	let search = get(job.id);
+	let search = find(job.job_id);
 	if(search !== -1){
 		jobs.splice(search,1);
 		removed = true;

@@ -11,12 +11,14 @@ function check_exists(input){
 }
 
 function exec(job, next){
-
+	
 	if(!check_exists(job)) return next(false);
 	if(!check_exists(job.url)) return next(false);
 	if(!check_exists(job.owner)) return next(false);
 	if(!check_exists(job.time)) return next(false);
-	if(!check_exists(job.id)) return next(false);
+	if(!check_exists(job.job_id)) return next(false);
+
+	// todo add props to the call ..
 
 	request( { url : job.url, method : job.method, json: true }, function(err,res){
 
@@ -24,6 +26,9 @@ function exec(job, next){
 			// todo error response
 			return next(false);
 		}
+
+
+
 
 		return next(true);
 

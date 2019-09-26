@@ -12,7 +12,7 @@ function check_exists(input){
 }
 
 function create_hash(job) {
-	let temp = job.url + job.method + job.props + job.owner + job.time;
+	let temp = job.url + job.method + job.props + job.time + job.owner;
 
 	var hash = 0, i, chr;
 	if (temp.length === 0) return hash;
@@ -39,15 +39,17 @@ function create(job){
 		props : sanitizer.sanitize(job.props) || '',
 		owner : sanitizer.sanitize(job.owner),
 		time : sanitizer.sanitize(job.time),
-		id : create_hash(job),
+		job_id : create_hash(job),
+		_id: '',
 	}
-
-	// todo : check db with this ID for duplicate ..
-	// if free save
 
 	return tempJob;
 }
 module.exports = create;
+
+
+
+
 
 
 

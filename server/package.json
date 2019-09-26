@@ -11,6 +11,9 @@
     "app",
     "nodejs"
   ],
+  "jest": {
+    "testEnvironment": "node"
+  },
   "author": "kevin flynn",
   "license": "MIT",
   "dependencies": {
@@ -22,6 +25,7 @@
     "express": "^4.16.3",
     "express-rate-limit": "^3.2.1",
     "method-override": "^3.0.0",
+    "mongoose": "^5.7.1",
     "morgan": "^1.9.1",
     "pm2": "^3.5.1",
     "request": "^2.88.0",

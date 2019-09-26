@@ -1,3 +1,5 @@
+const sanitizer = require('sanitizer');
+
 
 function check_exists(input){
 	if(input === null) return false;
@@ -36,20 +38,29 @@ exports.valid = {
 };
 
 
-function middle(input, next){
+function middle(req, res, next){
 
-	if(!check_exists(input)) return next(false);
-	if(!check_exists(input.url)) return next(false);
-	if(!check_exists(input.owner)) return next(false);
-	if(!check_exists(input.time)) return next(false);
+	function exit(status,message,data){
+		return res.status(status).json({
+			status : status,
+			message : message,
+			data : data,
+		});
+	}
 
-	input.url = valid_url(sanitizer.sanitize(input.url));
-	input.method = valid_method(sanitizer.sanitize(input.method));
-	input.props = valid_props(sanitizer.sanitize(input.props));
-	input.owner = valid_owner(sanitizer.sanitize(input.owner));
-	input.time = valid_time(sanitizer.sanitize(input.time));
+	if(!check_exists(req.body.url)) return exit(422,'missing property.');
+	if(!check_exists(req.body.owner)) return exit(422,'missing property.');
+	if(!check_exists(req.body.time)) return exit(422,'missing property.');
 
-	return next(null, input);
+	req.body.job = {};
+
+	req.body.job.url = valid_url(sanitizer.sanitize(req.body.url));
+	req.body.job.method = valid_method(sanitizer.sanitize(req.body.method));
+	req.body.job.props = valid_props(sanitizer.sanitize(req.body.props));
+	req.body.job.owner = valid_owner(sanitizer.sanitize(req.body.owner));
+	req.body.job.time = valid_time(sanitizer.sanitize(req.body.time));
+
+	next();
 }
 exports.middle = middle;
 
