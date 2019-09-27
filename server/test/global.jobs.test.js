@@ -1,6 +1,7 @@
 const global_jobs = require('../services/global.jobs.js');
 const jobs_create = require('../services/job/job.create.js');
 
+let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : '1sgn11'};
 
 describe('global jobs tests', function() {
 
@@ -13,15 +14,13 @@ describe('global jobs tests', function() {
 		});
 	});
 	it('global jobs should not insert duplicate jobs', function() {
-		let temp = jobs_create({ url : '11', owner : '11231', time : '12311'});
-		expect(global_jobs.insert(temp)).toBe(true);
-		expect(global_jobs.insert(temp)).toBe(false);
+		expect(global_jobs.insert(temp_job)).toBe(true);
+		expect(global_jobs.insert(temp_job)).toBe(false);
 	});
 	it('global jobs should remove a job', function() {
-		let temp = jobs_create({ url : '11213', owner : '1111', time : '155311'});
-		expect(global_jobs.insert(temp)).toBe(true);
-		expect(global_jobs.remove(temp)).toBe(true);
+		expect(global_jobs.remove(temp_job)).toBe(true);
 	});	
-	// todo update
+	// todo update jobs
+	// todo get jobs
 
 });

@@ -1,15 +1,8 @@
 // creates a db job to be sent to the reader
 const sanitizer = require('sanitizer');
+const valid = require('../../api/middlewares/job.js').valid;
 
 
-function check_exists(input){
-	if(input === null) return false;
-	if(input === undefined) return false;
-	if( input.toString().length < 1){
-		return false;
-	}
-	return true;
-}
 
 function create_hash(job) {
 	let temp = job.url + job.method + job.props + job.time + job.owner;
@@ -28,22 +21,26 @@ function create_hash(job) {
 
 function create(job){
 
-	if(!check_exists(job)) return false;
-	if(!check_exists(job.url)) return false;
-	if(!check_exists(job.owner)) return false;
-	if(!check_exists(job.time)) return false;
+	if(!valid.check(job)) return false;
+	if(!valid.check(job.url)) return false;
+	if(!valid.check(job.owner)) return false;
+	if(!valid.check(job.time)) return false;
 
-	let tempJob = {
-		url : sanitizer.sanitize(job.url),
-		method : sanitizer.sanitize(job.method) || 'GET',
-		props : sanitizer.sanitize(job.props) || '',
-		owner : sanitizer.sanitize(job.owner),
-		time : sanitizer.sanitize(job.time),
+	if(!valid.url(job.url)) return false;
+	if(!valid.owner(job.owner)) return false;
+	if(!valid.time(job.time)) return false;
+
+	let temp_job = {
+		url : valid.url(sanitizer.sanitize(job.url)),
+		method : valid.method(sanitizer.sanitize(job.method)),
+		props : valid.props(sanitizer.sanitize(job.props)),
+		owner : valid.owner(sanitizer.sanitize(job.owner)),
+		time : valid.time(sanitizer.sanitize(job.time)),
 		job_id : create_hash(job),
 		_id: '',
 	}
 
-	return tempJob;
+	return temp_job;
 }
 module.exports = create;
 

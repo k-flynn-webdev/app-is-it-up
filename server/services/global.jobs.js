@@ -1,5 +1,6 @@
 // global array of jobs for speed
 const job_exec = require('./job/job.exec.js');
+const logger = require('../helpers/logger.js');
 
 
 let jobs = null;
@@ -23,11 +24,11 @@ exports.init = init;
 
 
 function exec(input){
-	// console.log('inside exec: ' + input );	
 	exec_all(input,exec_after);
 }
 
 function exec_after(output){
+	// todo
 	// todo save to db etc ..
 	// build widgets etc etc ..
 }
@@ -65,7 +66,6 @@ exports.exec_all = exec_all;
 
 
 
-
 function find(job_id){
 	for(let i = 0; i < jobs.length;i++){
 		if(jobs[i].job_id === job_id){
@@ -80,7 +80,7 @@ exports.find = find;
 function insert(job){
 	let search = find(job.job_id);
 	if(search !== -1){
-		console.log('Error, inserting a duplicate job to stack(jobs).');
+		logger.log('Error, inserting a duplicate job to stack(jobs).');
 		return false;
 	}
 
@@ -115,31 +115,6 @@ function remove(job){
 }
 exports.remove = remove;
 
-
-
-
-
-
-
-
-// // insert fake job to test
-// setTimeout( function(){
-// 	fakeJob();
-// }, 6000);
-
-// function fakeJob(){
-// 	let tempJob = {
-// 		url : 'https://www.google.com/',
-// 		method : 'GET',
-// 		props : '',
-// 		owner : 'owner',
-// 		time : '1313',
-// 		id :'13123',
-// 	}
-// 	console.log('fake job inserted.');
-// 	insert(tempJob);
-// }
-///////////////////
 
 
 

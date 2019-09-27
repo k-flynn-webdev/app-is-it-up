@@ -1,6 +1,8 @@
 const jobs_exec = require('../services/job/job.exec.js');
 const jobs_create = require('../services/job/job.create.js');
 
+let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : '1sgn11'};
+
 
 describe('job exec tests', function() {
 
@@ -12,12 +14,12 @@ describe('job exec tests', function() {
 			expect(result).toBe(false);
 		});
 	});
-	it('running a job to google.com should pass', function() {
-		let tempJob = jobs_create({ url : 'https://www.google.com/', owner : '11fdw1', time : '1sgn11'});
-		jobs_exec(tempJob, function(result){
-			expect(result).toBe(true);
-		});
-	});
+	// it('running a job to google.com should pass', function() {
+		// let tmp = jobs_create(temp_job);
+		// jobs_exec(tmp, function(result){
+			// expect(result).toBe(true);
+		// });
+	// });
 
 	// it('global jobs exec should return an array of results', function() {
 	// 	let result = global_jobs.exec(1);
