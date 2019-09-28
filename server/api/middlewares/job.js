@@ -100,6 +100,15 @@ function get(req,res,next){
 }
 exports.get = get;
 
+function owner(req,res,next){
+
+	if(!check_exists(req.body.owner)) return exit(res,422,'missing owner property.');
+	add_job(req);
+	req.body.job.owner = sanitizer.sanitize(req.body.owner);
+	next();
+}
+exports.owner = owner;
+
 
 function create(req, res, next){
 

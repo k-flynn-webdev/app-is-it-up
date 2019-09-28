@@ -23,6 +23,9 @@ describe('global jobs tests', function() {
 	it('global jobs should find a job', function() {
 		expect(global_jobs.find(temp_job.job_id)).toBe(0);
 	});
+	it('global jobs should return array of all jobs by owner', function() {
+		expect(global_jobs.find_owner(temp_job.owner)).toEqual(expect.any(Array));
+	});
 	it('global jobs should update a job', function() {
 		let new_job = Object.assign({},temp_job);
 		new_job.url = 'test.com';

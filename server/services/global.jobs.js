@@ -68,13 +68,21 @@ exports.exec_all = exec_all;
 
 function find(job_id){
 	for(let i = 0; i < jobs.length;i++){
-		if(jobs[i].job_id === job_id){
-			return i;
-		}
+		if(jobs[i].job_id === job_id) return i;
 	}
+
 	return -1;
 }
 exports.find = find;
+
+function find_owner(owner){
+	let jobs = [];
+	for(let i = 0; i < jobs.length;i++){
+		if(jobs[i].owner === owner) jobs.push(i);
+	}
+	return jobs;
+}
+exports.find_owner = find_owner;
 
 
 function insert(job){
