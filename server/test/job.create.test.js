@@ -1,6 +1,9 @@
 const jobs_create = require('../services/job/job.create.js');
 
-let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : '1sgn11'};
+// let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : '1sgn11', job_id : 247259029 };
+let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : '1sgn11' };
+
+process.env.TEST_SUITE = 'create-test';
 
 
 describe('job create tests', function() {
@@ -9,64 +12,84 @@ describe('job create tests', function() {
 		expect(jobs_create).toBeDefined();
 	});	
 	it('job create should not create a empty job', function() {
-		expect(jobs_create()).toBe(false);
+		jobs_create(null, function(error,result){
+			expect(error.message).toBe('Missing information.');
+		});
 	});	
 	it('job create should not create a job missing url', function() {
-		let new_job = { owner :temp_job.owner, time: temp_job.time };
-		expect(jobs_create(new_job)).toBe(false);
+		let tmp = { owner: temp_job.owner, time: temp_job.time };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Missing url.');
+		});
 	});
+	it('job create should not create a job with invalid url', function() {
+		let tmp = { url: 'localh', owner: temp_job.owner, time: temp_job.time };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Invalid url.');
+		});
+	});	
+	it('job create should not create a job with invalid url', function() {
+		let tmp = { url: 'google.c', owner: temp_job.owner, time: temp_job.time };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Invalid url.');
+		});
+	});	
 	it('job create should not create a job missing time', function() {
-		let new_job = { owner :temp_job.owner, time: temp_job.time };
-		expect(jobs_create({ url : temp_job.url, owner : temp_job.owner })).toBe(false);
+		let tmp = { url: temp_job.url, owner: temp_job.owner };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Missing time.');
+		});
 	});
 	it('job create should not create a job missing owner', function() {
-		expect(jobs_create({ url : temp_job.url, time : temp_job.time})).toBe(false);
+		let tmp = { url: temp_job.url, time: temp_job.time };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Missing owner.');
+		});
 	});
 	it('job create should not create a job with malformed owner <', function() {
-		expect(jobs_create({ url : temp_job.url, time : temp_job.time, owner : '5d8cc974f14001679cb90ca' })).toBe(false);
-	});
+		let tmp = { url: temp_job.url, owner: '5d8cc974f14001679cb90ca', time: temp_job.time };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Invalid owner.');
+		});
+	});	
 	it('job create should not create a job with malformed owner >', function() {
-		expect(jobs_create({ url : temp_job.url, time : temp_job.time, owner : '5d8cc974f14001679cb90caf1' })).toBe(false);
-	});		
+		let tmp = { url: temp_job.url, owner: '5d8cc974f14001679cb90ca11', time: temp_job.time };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Invalid owner.');
+		});
+	});			
 	it('job create should not create a invalid job', function() {
-		expect(jobs_create({ url : '', owner : '', time : ''})).toBe(false);
+		let tmp = { url: '', owner: '', time: '' };
+		jobs_create(tmp, function(error,result){
+			expect(error.message).toBe('Missing url.');
+		});
 	});
-	it('job create should return false on a invalid url', function() {
-		expect(jobs_create({ url : 'google', owner : temp_job.owner, time : temp_job.time})).toBe(false);
-	});
-	it('job create should return false on a invalid url', function() {
-		expect(jobs_create({ url : 'local', owner : temp_job.owner, time : temp_job.time})).toBe(false);
-	});	
-	it('job create should return false on a invalid url', function() {
-		expect(jobs_create({ url : 'http://thingyo', owner : temp_job.owner, time : temp_job.time})).toBe(false);
-	});	
-	it('job create should return false on a invalid url', function() {
-		expect(jobs_create({ url : 'google.c', owner : temp_job.owner, time : temp_job.time})).toBe(false);
-	});	
 	it('job create should return', function() {
-		let result = jobs_create(temp_job);
-		expect(result.url).toEqual(temp_job.url);
-		expect(result.owner).toEqual(temp_job.owner);
-	});	
-	it('job create should return method (get)', function() {
-		temp_job.method = 'get';
-		let result = jobs_create(temp_job);
-		expect(result.method).toEqual('GET');
-	});	
+		jobs_create(temp_job, function(error,result){
+			expect(result.url).toBe(temp_job.url);
+			expect(result.method).toBe('GET');
+			expect(result.pings).toEqual(expect.any(Array));
+			expect(result.owner.toString()).toBe(temp_job.owner.toString());
+			expect(Number.isNaN(result.job_id)).toBe(false);
+		});
+	});
 	it('job create should return method (post)', function() {
 		temp_job.method = 'post';
-		let result = jobs_create(temp_job);
-		expect(result.method).toEqual('POST');
+		jobs_create(temp_job, function(error,result){
+			expect(result.method).toBe('POST');
+		});
 	});	
 	it('job create should return method (put)', function() {
 		temp_job.method = 'put';
-		let result = jobs_create(temp_job);
-		expect(result.method).toEqual('PUT');
+		jobs_create(temp_job, function(error,result){
+			expect(result.method).toBe('PUT');
+		});
 	});
 	it('job create should return method (delete)', function() {
 		temp_job.method = 'delete';
-		let result = jobs_create(temp_job);
-		expect(result.method).toEqual('DELETE');
-	});		
+		jobs_create(temp_job, function(error,result){
+			expect(result.method).toBe('DELETE');
+		});
+	});	
 });
 

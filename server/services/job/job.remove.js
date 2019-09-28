@@ -1,12 +1,20 @@
-// deletes jobs in the global space and db ..
+const sanitizer = require('sanitizer').sanitize;
+const job_model = require('../../models/job.js');
 
 
-// function remove(job){
-// 	let removed = false;
-// 	let search = get(job.id);
-// 	if(search !== -1){
-// 		removed = jobs.splice(i,1);
-// 	}
-// 	return removed;
-// }
-// exports.remove = remove;
+module.exports = function(job_id, next){
+	console.log('removing: ' + job_id);
+	job_model.deleteMany({job_id : sanitizer(job_id)}, function(error, result){
+		
+		if(error){
+			return next(error);
+		}
+
+		if(result.n === 0){
+			return next(new Error('No jobs with that ID exist.'));
+		}
+
+		return next(null, result);
+
+	});
+}

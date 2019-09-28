@@ -1,52 +1,34 @@
-// creates a db job to be sent to the reader
-const sanitizer = require('sanitizer');
+const m_job = require('../../models/job.js');
+const sanitizer = require('sanitizer').sanitize;
 const valid = require('../../api/middlewares/job.js').valid;
 
 
-
-function create_hash(job) {
-	let temp = job.url + job.method + job.props + job.time + job.owner;
-
-	var hash = 0, i, chr;
-	if (temp.length === 0) return hash;
-	for (i = 0; i < temp.length; i++) {
-		chr = temp.charCodeAt(i);
-		hash = ((hash << 5) - hash) + chr;
-		hash |= 0; // Convert to 32bit integer
-	}
-	return hash;
-};
-
 // todo check validness of all props ..
 
-function create(job){
+module.exports = function(job, next){
 
-	if(!valid.check(job)) return false;
-	if(!valid.check(job.url)) return false;
-	if(!valid.check(job.owner)) return false;
-	if(!valid.check(job.time)) return false;
+	if(!valid.check(job)) return next(new Error('Missing information.'));
+	if(!valid.check(job.url)) return next(new Error('Missing url.'));
+	if(!valid.check(job.owner)) return next(new Error('Missing owner.'));
+	if(!valid.check(job.time)) return next(new Error('Missing time.'));
 
-	if(!valid.url(job.url)) return false;
-	if(!valid.owner(job.owner)) return false;
-	if(!valid.time(job.time)) return false;
+	if(!valid.url(job.url)) return next(new Error('Invalid url.'));
+	if(!valid.owner(job.owner)) return next(new Error('Invalid owner.'));
+	if(!valid.time(job.time)) return next(new Error('Invalid time.'));
 
-	let temp_job = {
-		url : valid.url(sanitizer.sanitize(job.url)),
-		method : valid.method(sanitizer.sanitize(job.method)),
-		props : valid.props(sanitizer.sanitize(job.props)),
-		owner : valid.owner(sanitizer.sanitize(job.owner)),
-		time : valid.time(sanitizer.sanitize(job.time)),
-		job_id : create_hash(job),
-		_id: '',
-	}
 
-	return temp_job;
+	// create db entry ..
+	let new_job_model = new m_job({
+		url : valid.url(sanitizer(job.url)),
+		method : valid.method(sanitizer(job.method)),
+		props : valid.props(sanitizer(job.props)),
+		owner : valid.owner(sanitizer(job.owner)),
+		time : valid.time(sanitizer(job.time)),
+		job_id : valid.hash(job),
+	});
+
+	return next(null, new_job_model);
 }
-module.exports = create;
-
-
-
-
 
 
 

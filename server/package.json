@@ -1,18 +1,21 @@
 {
-  "name": "is-it-up-back",
+  "name": "is-it-up-api",
   "version": "0.5.1",
   "description": "basic nodejs starting point.",
   "main": "app.js",
   "scripts": {
+    "production": "pm2 start ./config/pm2.config.js --name is-it-up-api",
     "start": "nodemon app.js",
+    "dev": "nodemon --ignore test",
     "test": "jest --watchAll"
   },
   "keywords": [
     "app",
     "nodejs"
-  ],
+  ], 
   "jest": {
-    "testEnvironment": "node"
+    "setupFilesAfterEnv": ["./test/setup.js"],
+     "testEnvironment": "node"
   },
   "author": "kevin flynn",
   "license": "MIT",

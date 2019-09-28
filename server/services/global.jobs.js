@@ -90,12 +90,14 @@ function insert(job){
 exports.insert = insert;
 
 function update(job){
-
 	let updated = false;
 	let search = find(job.job_id);
 	if(search !== -1){
 		jobs.splice(search,1,job);
 		updated = true;
+	} else {
+		// todo user might not want to push a job just yet if it wasn''t already?
+		// jobs.push(job);
 	}
 
 	return updated;

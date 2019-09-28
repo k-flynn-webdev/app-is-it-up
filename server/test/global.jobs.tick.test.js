@@ -1,5 +1,7 @@
 const global_tick = require('../services/global.jobs.tick.js');
 
+process.env.TEST_SUITE = 'tick-test';
+
 
 describe('global tick tests', function() {
 

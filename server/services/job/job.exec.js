@@ -1,37 +1,30 @@
 // does the work of a job
 const request = require('request');
+const valid = require('../../api/middlewares/job.js').valid;
 
-function check_exists(input){
-	if(input === null) return false;
-	if(input === undefined) return false;
-	if( input.toString().length < 1){
-		return false;
-	}
-	return true;
-}
+
 
 function exec(job, next){
-	
-	if(!check_exists(job)) return next(false);
-	if(!check_exists(job.url)) return next(false);
-	if(!check_exists(job.owner)) return next(false);
-	if(!check_exists(job.time)) return next(false);
-	if(!check_exists(job.job_id)) return next(false);
+
+	if(!valid.check(job)) return next(false);
+	if(!valid.check(job.url)) return next(false);
+	if(!valid.check(job.owner)) return next(false);
+	if(!valid.check(job.time)) return next(false);
+	if(!valid.check(job.job_id)) return next(false);
 
 	// todo add props to the call ..
 
-	request( { url : job.url, method : job.method, json: true }, function(err,res){
+	request({ url : job.url, method : job.method, json : true }, function(error,result){
 
-		if(err){
-			// todo error response
-			return next(false);
+		let exec_result = { status : -1, value : false };
+
+		if(error){
+		} else {
+			exec_result.status = result.statusCode;
+			exec_result.value = true;			
 		}
 
-
-
-
-		return next(true);
-
+		return next(exec_result.value);
 
 		// todo should be saving out direct to array & db instead of returning?
 	});

@@ -7,7 +7,7 @@ let db = null;
 
 function init( app ){
 
-	db = mongoose.connect( config.db ,{ useNewUrlParser: true } , function( error ){
+	db = mongoose.connect( config.db ,{ useNewUrlParser: true, useUnifiedTopology: true } , function( error ){
 		if ( error ){ 
 			logger.log( 'Error: db connecting error.' + error ); 
 		}

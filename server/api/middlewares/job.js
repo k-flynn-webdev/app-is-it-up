@@ -11,8 +11,27 @@ function check_exists(input){
 }
 
 
+function create_hash(job) {
+	let temp = job.url + job.method + job.props + job.time + job.owner;
+
+	let hash = 0, i, chr;
+	if (temp.length === 0) return hash;
+	for (i = 0; i < temp.length; i++) {
+		chr = temp.charCodeAt(i);
+		hash = ((hash << 5) - hash) + chr;
+		hash |= 0; // Convert to 32bit integer
+	}
+
+	return hash;
+};
+
+
 function valid_url(input){
 	let temp = input.toLowerCase();
+
+	if(temp.indexOf('http') === -1){
+		temp = 'http://' + temp;
+	}
 
 	if(temp.indexOf('localhost') !== -1) return temp;
 
@@ -33,58 +52,99 @@ function valid_method(input){
 }
 function valid_props(input){
 	if(!check_exists(input)) return '';
-	return input;
+	return input.toLowerCase();
 }
 function valid_owner(input){
 	let valid_owner = '5d8cc974f14001679cb90caf';
 	if(input.length !== valid_owner.length) return false;
-	return input;
+	return input.toLowerCase();
 }
 function valid_time(input){
 	// every x hour or mins .. for now just every 30 mins
 	return 0.5;
+}
+function valid_id(input){
+	if(Number.isInteger(input)) return false;
+	return input;
 }
 
 
 // todo all valid types ..
 exports.valid = {
 	check : check_exists,
+	hash : create_hash,
 	url : valid_url,
 	method : valid_method,
 	props : valid_props,
 	owner : valid_owner,
 	time : valid_time,
+	id : valid_id,
 };
 
+function exit(res,status,message,data){
+	return res.status(status).json({
+		status : status,
+		message : message,
+		data : data,
+	});
+}
 
-function middle(req, res, next){
+function get(req,res,next){
 
-	function exit(status,message,data){
-		return res.status(status).json({
-			status : status,
-			message : message,
-			data : data,
-		});
-	}
-
-	if(!check_exists(req.body.url)) return exit(422,'missing url property.');
-	if(!check_exists(req.body.owner)) return exit(422,'missing owner property.');
-	if(!check_exists(req.body.time)) return exit(422,'missing time property.');
-
-	req.body.job = {};
-
-	req.body.job.url = sanitizer.sanitize(req.body.urlinput.toLowercase());
-	req.body.job.method = sanitizer.sanitize(req.body.methodinput.toLowercase());
-	req.body.job.props = sanitizer.sanitize(req.body.propsinput.toLowercase());
-	req.body.job.owner = sanitizer.sanitize(req.body.ownerinput.toLowercase());
-	req.body.job.time = sanitizer.sanitize(req.body.timeinput.toLowercase());
-
+	if(!check_exists(req.params.job)) return exit(res,422,'missing job id.');
+	if(!valid_id(req.params.job)) return exit(res,422,'invalid job id.');
+	
+	add_job(req);
+	req.body.job.job_id = sanitizer.sanitize(req.params.job);
 	next();
 }
-exports.middle = middle;
+exports.get = get;
 
 
+function create(req, res, next){
+
+	if(!check_exists(req.body.url)) return exit(res,422,'missing url property.');
+	if(!check_exists(req.body.owner)) return exit(res,422,'missing owner property.');
+	if(!check_exists(req.body.time)) return exit(res,422,'missing time property.');
+
+	add_job(req);
+	validate(req);
+	next();
+}
+exports.create = create;
+
+function update(req, res, next){
+	add_job(req);
+	validate(req);
+	next();
+}
+exports.update = update;
 
 
+function add_job(input){
+	if(input.body.job === undefined || input.body.job === null){
+		input.body.job = {};
+	}
+}
+
+function validate(input){
+
+	if(check_exists(input.body.url)){
+		input.body.job.url = sanitizer.sanitize(input.body.url);
+	}
+	if(check_exists(input.body.method)){
+		input.body.job.method = sanitizer.sanitize(input.body.method);
+	}
+	if(check_exists(input.body.props)){
+		input.body.job.props = sanitizer.sanitize(input.body.props);
+	}
+	if(check_exists(input.body.owner)){
+		input.body.job.owner = sanitizer.sanitize(input.body.owner);
+	}
+	if(check_exists(input.body.time)){
+		input.body.job.time = sanitizer.sanitize(input.body.time);
+	}
+
+}
 
 

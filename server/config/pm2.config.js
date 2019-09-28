@@ -1,6 +1,5 @@
 module.exports = {
   apps : [{
-    name : "app-base-nodejs",
     script : "app.js",
     autorestart: true,
     watch : true,
