@@ -16,15 +16,16 @@ function exec(job, next){
 
 	request({ url : job.url, method : job.method, json : true }, function(error,result){
 
-		let exec_result = { status : -1, value : false };
+		let exec_result = { url: job.url, status: -1, value: false };
 
 		if(error){
+			return next(error);
 		} else {
 			exec_result.status = result.statusCode;
 			exec_result.value = true;			
 		}
 
-		return next(exec_result.value);
+		return next(null,exec_result);
 
 		// todo should be saving out direct to array & db instead of returning?
 	});

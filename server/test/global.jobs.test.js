@@ -13,7 +13,7 @@ describe('global jobs tests', function() {
 	});	
 	it('global jobs exec should return an array of results', function() {
 		global_jobs.exec_all(1, function(result){
-			expect(result).toEqual(expect.any(Array));
+			expect(result).toEqual(expect.any(Boolean));
 		});
 	});
 	it('global jobs should not insert duplicate jobs', function() {
