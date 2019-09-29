@@ -6,8 +6,9 @@ var job = mongoose.Schema({
 	props : { type: String, required: false, default : '' },
 	owner : { type: mongoose.Schema.Types.ObjectId, required: true },
 	time : { type: Number, required: true },
+	active : { type: Boolean, required: true, default: true },
 	job_id : { type: String, required: true },
-	pings : { type: Array, required: false  },	
+	pings : { type: Array, required: false  },
 })
 module.exports = mongoose.model('Job', job);
 

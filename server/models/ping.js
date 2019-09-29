@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 var ping = mongoose.Schema({
 	url : { type: String, required: true },
-	id : { type: String, required: true },
-	result : { type: String, required: true },	
-	time: { type: Date, required: true, default : new Date() },
+	job_id : { type: String, required: true },
+	status : { type: Number, required: true, default: 0 },	
+	time : { type: Date, required: true, default : new Date() },
+	owner : { type: mongoose.Schema.Types.ObjectId, required: true },
 })
 module.exports = mongoose.model('Ping', ping);
 

@@ -1,6 +1,7 @@
 const job = require('../middlewares/job.js');
 const api_job_all = require('../logic/api.job.all.js');
 const api_job_get = require('../logic/api.job.get.js');
+const api_ping_get = require('../logic/api.ping.get.js');
 const api_job_create = require('../logic/api.job.create.js');
 const api_job_update = require('../logic/api.job.update.js');
 const api_job_remove = require('../logic/api.job.remove.js');
