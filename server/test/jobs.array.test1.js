@@ -1,12 +1,11 @@
-const global_jobs = require('../services/global.jobs.js');
-const jobs_create = require('../services/job/job.create.js');
+const loop = require('../services/global.jobs.array.js');
 
-let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : '1sgn11', job_id : 247259029 };
+let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : 300, job_id : 247259029 };
 
 process.env.TEST_SUITE = 'gobal-test';
 
 
-describe('global jobs tests', function() {
+describe('Jobs Array', function() {
 
 	it('global jobs exec should exist', function() {
 		expect(global_jobs.exec_all).toBeDefined();

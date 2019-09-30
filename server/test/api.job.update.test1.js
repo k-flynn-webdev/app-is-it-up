@@ -94,3 +94,12 @@ describe('job update tests', function() {
 	});	
 });
 
+	// it('job update should error with invalid job id', function() {
+	// 	let tmp = Object.assign({},temp_job);
+	// 	tmp.job_id = 'qwwsqw';
+	// 	console.log(tmp);
+	// 	jobs.create(tmp, function(error,result){
+	// 		console.log(error,result);
+	// 		// expect(error.message).toBe('Invalid id.');
+	// 	});
+	// });

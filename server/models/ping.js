@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 var ping = mongoose.Schema({
 	url : { type: String, required: true },
 	status : { type: Number, required: true, default: 0 },	
-	time : { type: Date, required: true, default : Date.now() },
+	date : { type: Date, required: true, default : Date.now() },
 	job_id : { type: String, required: true },
 	owner : { type: mongoose.Schema.Types.ObjectId, required: true },
 })
@@ -29,7 +29,7 @@ ping.pre('update', function (next) {
 // ping {
 // 	url : 'url requested',
 // 	status : 'result of request',	
-// 	time : 'time in seconds of request',
+// 	date : 'date in seconds of when request was made',
 // 	job_id : 'num id of job and its uniqueness',
 // 	owner : 'owner db id',
 // }
