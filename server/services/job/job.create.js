@@ -25,10 +25,10 @@ module.exports = function(job, next){
 		owner : valid.owner(sanitizer(job.owner)),
 		time : valid.time(sanitizer(job.time)),
 		job_id : valid.hash(job),
+		meta : valid.meta(job),
 	});
 
 	return next(null, new_job_model);
 }
-
 
 

@@ -5,6 +5,7 @@ const m_job = require('../models/job.js');
 const logger = require('../helpers/logger.js');
 
 
+let app_temp = null;
 let jobs = null;
 let has_init = false;
 // creating singleton of jobs ..
@@ -17,6 +18,7 @@ let has_init = false;
 
 function init(app){
 	if(!has_init){
+		app_temp = app;
 		app.on('jobs.exec', exec);
 		has_init = true;
 	}
@@ -36,19 +38,41 @@ function exec_after(output){
 }
 
 
+function job_completed(job){
+	job.meta.num +=1;
+	if(job.meta.num > job.meta.max){
+		job.meta.num = 0;
+	}
+	// set new time for request ..
+	job.meta.next = Date.now() + job.time;
+}
+exports.__test_job_complete = job_completed;
+
+// todo test this
+function job_time_check(time_now,job){
+	let test = false;
+	let time_next = new Date(job.meta.next).getTime();
+	if( time_now >= time_next){
+		test = true;
+	}
+	console.log(time_now,time_next,time_now-time_next);
+	return test;
+}
+exports.__test_job_time = job_time_check;
+
 
 function exec_all(time, onFinish){
 	// do jobs
 
 	let i = -1;
 	loop_result = true;
+	console.log('loop start');
 
 	// aborts current job / ping with error
 	function loop_error(error){	
 		logger.log(error);
 		loop_result = false;
-		i++;
-		loop_all(jobs[i]);
+		loop_complete();
 	}
 	function loop_complete(){	
 		i++;
@@ -56,43 +80,55 @@ function exec_all(time, onFinish){
 		if(i < jobs.length){
 			loop_all(jobs[i]);
 		} else {
+			console.log('loop finished');
 			return onFinish(loop_result);
 		}
 	}
-
+	function job_save(job){
+		// save job db
+		job.save(function(error,result){
+			if(error){
+				return loop_error(error);
+			}
+			loop_complete();
+		});		
+	}
 
 	function loop_all(job){
 
+		console.log('tick');
+
+		let time_now = Date.now();
+		let time_result = job_time_check(time_now,job);
+		if(!time_result){
+			return loop_complete();
+		}
+
 		// todo time check on job? if so fire ..
+		job_exec(job, function(job_result){
 
-		job_exec(job, function(error,job_result){
+			job_completed(job);
 
-			if(error){
-				loop_error(error);
-			}
+			console.log('Job exec');
+			console.log(job_result);
 
-			ping_create(job,job_result,function(error,m_ping_result){
+			if(job_result.status !== 200){
 
-				if(error){
-					loop_error(error);
-				}
-
-				// add to stack 
-				job.pings.push(m_ping_result);
-
-				// todo more than 30 days, cleanup?
-
-				// save job db
-				job.save(function(error,result){
+				// create ping report ..
+				ping_create(job,job_result,function(error,m_ping_result){
 
 					if(error){
-						return loop_error(error);
+						loop_error(error);
 					}
 
-					loop_complete();
-				});
+					job.pings.push(m_ping_result);
 
-			});
+					job_save(job);
+				});
+			} else {
+				job_save(job);
+			}
+
 		});
 	};
 
@@ -100,6 +136,9 @@ function exec_all(time, onFinish){
 
 }
 exports.exec_all = exec_all;
+
+
+
 
 
 
@@ -121,6 +160,8 @@ function find_owner(owner){
 }
 exports.find_owner = find_owner;
 
+
+// todo on job insertion check server time, if new job is < update server timing ..
 
 function insert(job){
 	let search = find(job.job_id);

@@ -13,7 +13,7 @@ module.exports = function(job, ping, next){
 		url : sanitizer(job.url),
 		job_id : sanitizer(job.job_id),
 		status : sanitizer(ping.status),
-		time : new Date(),
+		time : Date.now(),
 		owner : sanitizer(job.owner),
 	});
 

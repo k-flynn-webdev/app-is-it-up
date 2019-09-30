@@ -47,6 +47,7 @@ function update(job_db,job_new,next){
 	job_db.props = valid.props(sanitizer(job_new.props));
 	job_db.owner = valid.owner(sanitizer(job_new.owner));
 	job_db.time = valid.time(sanitizer(job_new.time));
+	job_db.meta = valid.meta(sanitizer(job_new));
 
 	return next(null, job_db);
 }

@@ -1,8 +1,8 @@
 // this is the timing system used to fire all jobs at the correct kick off time.
 // todo listen for stop event?
 
-let timer = 3;
-let delay = 5;
+let timer = 11;
+let delay = 10;
 let modes = ['stop','in-progress'];
 let mode = modes[0];
 

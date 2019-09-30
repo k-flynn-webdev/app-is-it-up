@@ -60,13 +60,42 @@ function valid_owner(input){
 	return input.toLowerCase();
 }
 function valid_time(input){
-	// every x hour or mins .. for now just every 30 mins
-	return 0.5;
+	// let time = 60 * 1;
+	// every 30 mins do magic ..
+	return Math.floor(input);
 }
 function valid_id(input){
 	if(Number.isInteger(input)) return false;
 	return input;
 }
+
+
+
+let seconds_in_month = 60 * 60 * 24 * 30;
+
+function valid_meta(input){
+	let tmp = {
+		max : Math.floor(seconds_in_month / Math.floor(input.time)),
+		num : 0,
+		next : Date.now() + input.time,
+	}
+
+
+	// console.log('new Date()');
+	// console.log(new Date());
+	// console.log(Date.now());
+	// console.log(new Date().getTime());
+	// console.log( new Date(tmp.next).getTime() - input.time);
+
+
+	// new Date()
+	// 2019-09-30T00:28:49.321Z
+	// 1569803329324
+	// 1569803329325
+
+	return tmp
+}
+
 
 
 // todo all valid types ..
@@ -78,6 +107,7 @@ exports.valid = {
 	props : valid_props,
 	owner : valid_owner,
 	time : valid_time,
+	meta : valid_meta,
 	id : valid_id,
 };
 
