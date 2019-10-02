@@ -10,8 +10,10 @@ function complete(job){
 	if(job.meta.num > job.meta.max){
 		job.meta.num = 0;
 	}
-	// set new time for request ..
-	job.meta.next = Date.now() + (1000 * job.time);
+
+	let future = 1000 * job.time
+
+	job.meta.next = Date.now() + future;
 }
 exports.complete = complete;
 
@@ -56,7 +58,6 @@ function exec(job, next){
 
 		return next(null,exec_result);
 
-		// todo should be saving out direct to array & db instead of returning?
 	});
 }
 exports.exec = exec;

@@ -1,7 +1,7 @@
 // // this is the timing system used to fire all jobs at the correct kick off time.
 // // todo listen for stop event?
 
-let timer = 11; // todo change this to 30 secs in production maybe as env?..
+let timer = 4; // todo change this to 30 secs in production maybe as env?..
 let delay = 10;
 let modes = ['stop','in-progress'];
 let mode = modes[0];

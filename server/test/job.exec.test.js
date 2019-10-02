@@ -36,7 +36,7 @@ describe('Job Exec', function() {
 		let new_date = Date.now() + (1000 * temp_job.time);
 		exec.complete(temp_job);
 		expect(temp_job.meta.num).toBe(current + 1);
-		let result13 = Math.abs(temp_job.meta.next - new_date) < 5;
+		let result13 = Math.abs(temp_job.meta.next - new_date) < 150;
 		expect(result13).toBe(true);
 	});
 	it('job complete should update job num (rollover 10 >> 0)', function() {
@@ -47,7 +47,8 @@ describe('Job Exec', function() {
 		let new_date = Date.now() + (1000 * temp_job.time);
 		exec.complete(temp_job);
 		expect(temp_job.meta.num).toBe(0);
-		expect(temp_job.meta.next).toBe(new_date);
+		let result13 = Math.abs(temp_job.meta.next - new_date) < 150;
+		expect(result13).toBe(true);
 	});
 
 	it('job exec should error on a job that has unobtainable web url', function() {

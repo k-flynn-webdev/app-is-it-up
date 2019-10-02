@@ -10,45 +10,34 @@ describe('Loop', function() {
 	it('jobs loop should exist', function() {
 		expect(loop.init).toBeDefined();
 		expect(loop.exec).toBeDefined();
+		expect(loop.add_ping).toBeDefined();
+		expect(loop.loop_exec).toBeDefined();
 	});	
-
+ 
 	it('jobs loop next iterator should iterate', function() {
 
-		let vars = { i : 3, work : [1,2,3,4,5,6,7,8,9] };
-		let has_finished = loop.has_finished.bind(vars);
-		let result = has_finished();
+		let jobs = [1,2,3];
+		function ready(next){
+			return true;
+		}
+		function todo(input,next){
+			return next(null,true);
+		}
 
-		expect(vars.i).toEqual(4);
-		expect(result).toEqual(false);
-		
-		vars.i = vars.work.length;
-		let result2 = has_finished();
-		expect(vars.i).toEqual(vars.work.length + 1);
-		expect(result2).toEqual(true);
-
+		let result = loop.loop_exec(jobs,ready,todo,ready);
+		expect(result.toString()).toBe([true,true,true].toString());
 	});
 
+	it('add ping should edit a job', function() {
 
-	// it('jobs looper should return after iterating', function() {
+		let job = { job_id : '1231231', owner : '5d94901865fb022dac1d8122', pings : [] };
+		let ping = { url : 'test.com', status : 99 };
+		loop.add_ping(job,ping);
 
-	// 	function todo(t,next){
-
-	// 		return next(null,true);
-	// 	}
-
-	// 	let vars = {
-	// 		i : 0, 
-	// 		work : [1,2,3] }; 
-
-	// 	let result = [];	
-
-	// 	loop.loop(vars,result);
-	// 	expect(result).toBe([]);
-		
-	// // 	// loop.loop(vars);
-	// // 	// expect(vars.i).toBe(2);
-	// // 	// loop.loop(vars);
-	// // 	// expect(vars.i).toBe(3);
-	// });	
+		expect(job.pings[0].url).toEqual(ping.url);
+		expect(job.pings[0].status).toEqual(ping.status);
+		expect(job.pings[0].owner.toString()).toEqual(job.owner.toString());
+		expect(job.pings[0].job_id.toString()).toEqual(job.job_id.toString());
+	});	
 
 });
