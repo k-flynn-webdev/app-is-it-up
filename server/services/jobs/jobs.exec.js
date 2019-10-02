@@ -1,74 +1,64 @@
 // // does the work of a job
-// const request = require('request');
-// const valid = require('../../api/middlewares/job.js').valid;
+const request = require('request');
+const m_job = require('../../models/job.js');
+const logger = require('../../helpers/logger.js');
 
 
-// // time func
-// function job_completed(job){
-// 	job.meta.num +=1;
-// 	if(job.meta.num > job.meta.max){
-// 		job.meta.num = 0;
-// 	}
-// 	// set new time for request ..
-// 	job.meta.next = Date.now() + job.time;
-// }
-// exports._job_complete = job_completed;
-
-// // todo test this
-// function job_time_check(time_now,job){
-// 	let test = false;
-// 	let time_next = new Date(job.meta.next).getTime();
-// 	if( time_now >= time_next){
-// 		test = true;
-// 	}
-// 	console.log(time_now,time_next,time_now-time_next);
-// 	return test;
-// }
-// exports._job_time = job_time_check;
-// // on finish update for next loop ..
-// 	function job_save(job){
-// 		// save job db
-// 		job.save(function(error,result){
-// 			if(error){
-// 				return loop_error(error);
-// 			}
-// 			loop_complete();
-// 		});		
-// 	}
-// }
+// time func
+function complete(job){
+	job.meta.num +=1;
+	if(job.meta.num > job.meta.max){
+		job.meta.num = 0;
+	}
+	// set new time for request ..
+	job.meta.next = Date.now() + (1000 * job.time);
+}
+exports.complete = complete;
 
 
-// function ready(job){
-// 	// todo time check here ...
-// 	return true;
-// }
-// exports.ready = ready;
+function ready(time_now,job){
+	// time_now = new Date(); should be calculated at bgeining of  
+	// loop and fed in for perf reasons ..
+	if(time_now >= new Date(job.meta.next)) return true;
+	return false;
+}
+exports.ready = ready;
 
 
-// function exec(job, next){
+function save(model,next){
 
-// 	if(!valid.check(job)) return next(false);
-// 	if(!valid.check(job.url)) return next(false);
-// 	if(!valid.check(job.owner)) return next(false);
-// 	if(!valid.check(job.time)) return next(false);
-// 	if(!valid.check(job.job_id)) return next(false);
+	if( process.env.NODE_ENV === 'test' ){
+		return next(null, model);
+	}
 
-// 	// todo add props to the call ..
+	model.save(function(error,result){
+		if(error){
+			logger.log(error);
+			return next(error);
+		}
+		return next(null,result);
+	});
+}
+exports.save = save;
 
-// 	request({ url : job.url, method : job.method, json : true }, function(error,result){
 
-// 		let exec_result = { url: job.url, status: -999, value: false };
+function exec(job, next){
+	// todo add props to the call ..
+	request({ url : job.url, method : job.method, json : true }, function(error,result){
 
-// 		if(result){
-// 			exec_result.status = result.statusCode;
-// 			exec_result.value = true;	
-// 		}
+		let exec_result = { url: job.url, status: -1 };
 
-// 		return next(exec_result);
+		if(error){
+			return next(exec_result);
+		}
 
-// 		// todo should be saving out direct to array & db instead of returning?
-// 	});
-// }
-// exports.exec = exec;
+		exec_result.status = result.statusCode;
+
+		return next(null,exec_result);
+
+		// todo should be saving out direct to array & db instead of returning?
+	});
+}
+exports.exec = exec;
 
 

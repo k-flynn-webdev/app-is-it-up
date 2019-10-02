@@ -7,7 +7,7 @@ const shared = require('./api.job.shared.js');
 
 function create(input, next){
 
-	create_job(input, function(error, job_model){
+	create_model(input, function(error, job_model){
 
 		if(error){
 			return next(error);
