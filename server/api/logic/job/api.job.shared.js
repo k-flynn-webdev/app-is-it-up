@@ -1,4 +1,5 @@
 
+const m_job = require('../../../models/job.js');
 
 
 function valid_url(input){
@@ -126,3 +127,65 @@ exports.update = update;
 
 
 
+function search_term(input,next){
+	let search = null;
+
+	if(exists(input.owner) && input.owner.length > 1 ){
+		search = { owner : input.owner };
+	}
+	if(exists(input.job_id) && input.job_id.length > 1 ){
+		search = { job_id : input.job_id };
+	}
+
+	if(search === null){
+		return next(new Error('Missing search term.'));
+	}
+
+	return next(null,search);
+}
+
+
+function find(job,next){
+
+	search_term(job,function(error,search){
+
+		if(error){
+			return next(error);
+		}
+
+		m_job.find(search,function(error,found){
+
+			if(error){
+				return next(error);
+			}
+
+			return next(null,found);
+
+		});
+	});
+}
+exports.find = find;
+
+
+function remove(job,next){
+
+	search_term(job,function(error,search){
+
+		if(error){
+			return next(error);
+		}
+
+		m_job.deleteMany(search,function(error,result){
+
+			if(error){
+				return next(error);
+			}
+
+			search.result = result
+		
+			return next(null,search);
+
+		});
+	});
+}
+exports.remove = remove;

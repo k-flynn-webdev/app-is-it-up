@@ -14,7 +14,7 @@ function create(input, next){
 		}
 
 		// does it exist?
-		m_job.find({ job_id : job_model.job_id }, function(error, found){
+		shared.find(job_model,function(error, found){
 
 			if(error){
 				return next(error);
@@ -23,6 +23,8 @@ function create(input, next){
 			if(found.length !== 0){
 				return next(new Error('Already exists.'));
 			}
+
+			// add to user via event 
 
 			job_model.save(function(error,result){
 

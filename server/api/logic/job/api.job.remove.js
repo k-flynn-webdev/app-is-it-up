@@ -1,47 +1,33 @@
-// const job_remove = require('../../services/job/job.remove.js');
-// const global_jobs = require('../../services/global.jobs.js');
+const jobs_array = require('../../../services/jobs/jobs.array.js');
 
-
-// module.exports = function(job,next){
-
-// 	job_remove(job.job_id, function(error, m_job){
-
-// 		if(error){
-// 			return next(error);
-// 		}
-
-// 		let result = global_jobs.remove(job);
-// 		if(result){
-// 			// todo remove from user via event
-// 		}
-
-// 		return next(null, m_job);
-// 	});
-// };
+const valid = require('./api.job.shared.js').valid;
+const shared = require('./api.job.shared.js');
 
 
 
+function remove(job,next){
+
+	shared.remove(job, function(error,result){
+
+		if(error){
+			return next(error);
+		}
+
+		if(result.deletedCount === 0){
+			return next(new Error('Job does not exist.'));
+		}
+
+		let global_removed = jobs_array.remove(result);
+
+		// remove from user via event 
+
+		return next(null,result);
+	});
+}
+exports.remove = remove;
+
+
+// todo remove from global space also ...
 
 
 
-
-// const sanitizer = require('sanitizer').sanitize;
-// const job_model = require('../../models/job.js');
-
-
-// module.exports = function(job_id, next){
-// 	console.log('removing: ' + job_id);
-// 	job_model.deleteMany({job_id : sanitizer(job_id)}, function(error, result){
-		
-// 		if(error){
-// 			return next(error);
-// 		}
-
-// 		if(result.n === 0){
-// 			return next(new Error('No jobs with that ID exist.'));
-// 		}
-
-// 		return next(null, result);
-
-// 	});
-// }

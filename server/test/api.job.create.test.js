@@ -102,43 +102,10 @@ describe('Create', function() {
 			expect(result.time.toString()).toBe(tmp.time.toString());
 			expect(result.owner.toString()).toBe(tmp.owner.toString());
 			expect(result.job_id.toString()).toBe(tmp.job_id.toString());
+			expect(Number.isNaN(result.job_id)).toBe(false);
+			expect(result.pings).toEqual(expect.any(Array));
 		});
 	});
-
-
-
-	// it('job create should not create a invalid job', function() {
-	// 	let tmp = { url: '', owner: '', time: '' };
-	// 	jobs_create(tmp, function(error,result){
-	// 		expect(error.message).toBe('Missing url.');
-	// 	});
-	// });
-	// it('job create should return', function() {
-	// 	jobs_create(temp_job, function(error,result){
-	// 		expect(result.url).toBe(temp_job.url);
-	// 		expect(result.method).toBe('GET');
-	// 		expect(result.pings).toEqual(expect.any(Array));
-	// 		expect(result.owner.toString()).toBe(temp_job.owner.toString());
-	// 		expect(Number.isNaN(result.job_id)).toBe(false);
-	// 	});
-	// });
-	// it('job create should return method (post)', function() {
-	// 	temp_job.method = 'post';
-	// 	jobs_create(temp_job, function(error,result){
-	// 		expect(result.method).toBe('POST');
-	// 	});
-	// });	
-	// it('job create should return method (put)', function() {
-	// 	temp_job.method = 'put';
-	// 	jobs_create(temp_job, function(error,result){
-	// 		expect(result.method).toBe('PUT');
-	// 	});
-	// });
-	// it('job create should return method (delete)', function() {
-	// 	temp_job.method = 'delete';
-	// 	jobs_create(temp_job, function(error,result){
-	// 		expect(result.method).toBe('DELETE');
-	// 	});
-	// });	
+	
 });
 

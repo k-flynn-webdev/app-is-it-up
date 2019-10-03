@@ -141,6 +141,13 @@ describe('Job Shared', function() {
 		expect(isValidDate(tmp.next)).toBe(true);
 	});
 
+	it('valid find should fail on invalid search obj', function() {
+		expect(jobs.find).toBeDefined();
+		jobs.find({}, function(error,result){
+			expect(error.message).toBe('Missing search term.');
+		});
+	});
+
 });
 
 

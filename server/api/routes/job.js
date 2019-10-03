@@ -3,8 +3,8 @@ const job = require('../middlewares/job.js');
 // const api_ping_get = require('../logic/api.ping.get.js');
 const api_job_get = require('../logic/job/api.job.get.js');
 const api_job_create = require('../logic/job/api.job.create.js');
-// const api_job_update = require('../logic/job/api.job.update.js');
-// const api_job_remove = require('../logic/job/api.job.remove.js');
+const api_job_update = require('../logic/job/api.job.update.js');
+const api_job_remove = require('../logic/job/api.job.remove.js');
 
 
 function exit(res,status,message,data){
@@ -40,7 +40,7 @@ module.exports = function( app ){
 				return exit(res,422,error.message,error);
 			}
 				
-			return exit(res,200,'Success job found.',{ result : job });
+			return exit(res,200,'Success job found.',{ job : job });
 		});
 	});
 
@@ -52,35 +52,35 @@ module.exports = function( app ){
 				return exit(res,422,error.message,error);
 			}
 
-			return exit(res,201,'Success new job created.',{ result : new_model });
+			return exit(res,201,'Success new job created.',{ job : new_model });
 
 		});
 	});
 
-	// app.put('/api/job/:job', job.update, function (req, res) {
+	app.put('/api/job/:job', job.update, function (req, res) {
 
-	// 	api_job_update(req.body.job, function(error, new_model){
+		api_job_update.update(req.body.job, function(error, new_model){
 
-	// 		if(error){
-	// 			return exit(res,422,error.message,error);
-	// 		}
+			if(error){
+				return exit(res,422,error.message,error);
+			}
 
-	// 		return exit(res,201,'Success job updated.',{ result : new_model });
+			return exit(res,201,'Success job updated.',{ job : new_model });
 
-	// 	});
-	// });
+		});
+	});
 
-	// app.delete('/api/job/:job', job.get, function (req, res) {
+	app.delete('/api/job/:job', job.get, function (req, res) {
 
-	// 	api_job_remove(req.body.job, function(error, job){
+		api_job_remove.remove(req.body.job, function(error, job){
 
-	// 		if(error){
-	// 			return exit(res,422,error.message,error);
-	// 		}
+			if(error){
+				return exit(res,422,error.message,error);
+			}
 				
-	// 		return exit(res,200,'Success job removed.',{ result : job });
-	// 	});
-	// });
+			return exit(res,200,'Success job removed.',{ job : job });
+		});
+	});
 
 	return app;
 
