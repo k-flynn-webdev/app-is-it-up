@@ -47,7 +47,7 @@ exports.find_owner = find_owner;
 function insert(job){
 	let search = find_job(job.job_id);
 	let inserted = false;
-	if(search === -1){
+	if(search === -1 && job.active){
 		jobs.push(job);
 		inserted = true;
 	}

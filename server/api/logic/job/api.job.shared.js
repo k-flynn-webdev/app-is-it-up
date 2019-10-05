@@ -145,26 +145,30 @@ function search_term(input,next){
 }
 
 
-function find(job,next){
+function find(job,next,override){
+
+	if(override){
+		return find_model(job,next);
+	} 
 
 	search_term(job,function(error,search){
 
 		if(error){
 			return next(error);
 		}
-
-		m_job.find(search,function(error,found){
-
-			if(error){
-				return next(error);
-			}
-
-			return next(null,found);
-
-		});
+		find_model(search,next);
 	});
 }
 exports.find = find;
+
+function find_model(input,next){
+	m_job.find(input,function(error,found){
+		if(error){
+			return next(error);
+		}
+		return next(null,found);
+	});			
+}
 
 
 function remove(job,next){
@@ -189,3 +193,6 @@ function remove(job,next){
 	});
 }
 exports.remove = remove;
+
+
+
