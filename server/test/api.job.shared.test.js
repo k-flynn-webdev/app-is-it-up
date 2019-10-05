@@ -1,6 +1,6 @@
 const jobs = require('../api/logic/job/api.job.shared.js');
 
-let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : '1sgn11', job_id : 247259029 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', props : '', owner : '5d8cc974f14001679cb90caf', time : 123, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'shared-test';
 
@@ -146,6 +146,18 @@ describe('Job Shared', function() {
 		jobs.find({}, function(error,result){
 			expect(error.message).toBe('Missing search term.');
 		});
+	});
+
+
+	// update model 
+	let new_model = Object.assign({url:'newurl.com',time:3737,method:'delete'},temp_job);
+	
+	it('update an obj should return a new correctly updated obj', function() {
+		expect(jobs.update).toBeDefined();
+		let result = jobs.update(temp_job,new_model);
+		expect(result.url).toBe(new_model.url);
+		expect(result.time).toBe(new_model.time);
+		expect(result.method).toBe(new_model.method);
 	});
 
 });

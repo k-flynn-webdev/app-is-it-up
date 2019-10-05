@@ -114,7 +114,8 @@ function update(model,input){
 		model.meta = meta(input);
 	}
 	if(exists(input.job_id)){
-		model.job_id = input.job_id;
+		// jobid shouldn't update ..
+		// model.job_id = input.job_id;
 	}
 	if(exists(input.owner)){
 		model.owner = valid_owner(input.owner);

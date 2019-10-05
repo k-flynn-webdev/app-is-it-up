@@ -76,6 +76,10 @@ function loop_exec(jobs,job_ready,job_exec,job_complete){
 
 	function loop(time_now,job){
 
+		if(!job.active){
+			return go_next();
+		}
+
 		if(!job_ready(time_now,job)){
 			return go_next();
 		}

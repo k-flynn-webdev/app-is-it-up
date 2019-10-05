@@ -1,6 +1,6 @@
 const loop = require('../services/jobs/jobs.loop.js');
 
-let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', time : 300, job_id : 247259029 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', props : '', owner : '5d8cc974f14001679cb90caf', time : 123, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'gobal-test';
 
@@ -15,8 +15,7 @@ describe('Loop', function() {
 	});	
  
 	it('jobs loop next iterator should iterate', function() {
-
-		let jobs = [1,2,3];
+		let jobs = [temp_job,temp_job,temp_job];
 		function ready(next){
 			return true;
 		}
