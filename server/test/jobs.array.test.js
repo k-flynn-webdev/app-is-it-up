@@ -1,6 +1,6 @@
 const array = require('../services/jobs/jobs.array.js');
 
-let temp_job = { url : 'https://www.google.com/', owner : '5d8cc974f14001679cb90caf', active: true, time : 300, job_id : 247259029 };
+let temp_job = { url : 'https://www.google.com/', user : '5d8cc974f14001679cb90caf', active: true, time : 300, job_id : 247259029 };
 let tmp2 = Object.assign({},temp_job);
 let tmp3 = Object.assign({},temp_job);
 tmp2.job_id = 57823;
@@ -14,7 +14,7 @@ describe('Jobs Array', function() {
 	it('jobs funcs should exist', function() {
 		expect(array.get_jobs).toBeDefined();
 		expect(array.find_job).toBeDefined();
-		expect(array.find_owner).toBeDefined();
+		expect(array.find_user).toBeDefined();
 		expect(array.insert).toBeDefined();
 		expect(array.update).toBeDefined();
 		expect(array.remove).toBeDefined();
@@ -30,8 +30,8 @@ describe('Jobs Array', function() {
 	it('finding a job should return an index', function() {
 		expect(array.find_job(temp_job.job_id)).toBeGreaterThan(-1);
 	});
-	it('finding a jobs via owner should return an array of 2', function() {
-		expect(array.find_owner(temp_job.owner)).toHaveLength(2);
+	it('finding a jobs via user should return an array of 2', function() {
+		expect(array.find_user(temp_job.user)).toHaveLength(2);
 	});
 	it('insert a duplicate job should fail', function() {
 		expect(array.insert(temp_job)).toBe(false);

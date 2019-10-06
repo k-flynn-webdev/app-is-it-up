@@ -35,9 +35,9 @@ function valid_props(input){
 	if(input === undefined || input === null || input === '') return ' ';
 	return input.toLowerCase();
 }
-function valid_owner(input){
-	let valid_owner = '5d8cc974f14001679cb90caf';
-	if(input.length !== valid_owner.length) return false;
+function valid_user(input){
+	let valid_user = '5d8cc974f14001679cb90caf';
+	if(input.length !== valid_user.length) return false;
 	return input.toLowerCase();
 }
 function valid_time(input){
@@ -72,7 +72,7 @@ exports.valid = {
 	method : valid_method,
 	props : valid_props,
 	time : valid_time,
-	owner : valid_owner,
+	user : valid_user,
 	id : valid_id,
 	status : valid_status,
 };
@@ -117,8 +117,8 @@ function update(model,input){
 		// jobid shouldn't update ..
 		// model.job_id = input.job_id;
 	}
-	if(exists(input.owner)){
-		model.owner = valid_owner(input.owner);
+	if(exists(input.user)){
+		model.user = valid_user(input.user);
 	}
 
 	return model;
@@ -131,8 +131,8 @@ exports.update = update;
 function search_term(input,next){
 	let search = null;
 
-	if(exists(input.owner) && input.owner.length > 1 ){
-		search = { owner : input.owner };
+	if(exists(input.user) && input.user.length > 1 ){
+		search = { user : input.user };
 	}
 	if(exists(input.job_id) && input.job_id.length > 1 ){
 		search = { job_id : input.job_id };

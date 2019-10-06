@@ -38,7 +38,7 @@ function add_ping(job,result){
 		url : result.url,
 		status : result.status,
 		job_id : job.job_id,
-		owner : job.owner,
+		user : job.user,
 	});
 
 	job.pings.push(tmp_ping);

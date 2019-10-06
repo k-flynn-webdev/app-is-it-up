@@ -1,6 +1,6 @@
 const jobs = require('../api/logic/job/api.job.shared.js');
 
-let temp_job = { url : 'https://www.google.com/', active: true, method : '', props : '', owner : '5d8cc974f14001679cb90caf', time : 123, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', props : '', user : '5d8cc974f14001679cb90caf', time : 123, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'shared-test';
 
@@ -99,20 +99,20 @@ describe('Job Shared', function() {
 		expect(jobs.valid.time('-45631')).toBe(-45631);
 	});
 
-	it('valid should fail missing owner', function() {
-		expect(jobs.valid.owner('')).toBe(false);
+	it('valid should fail missing user', function() {
+		expect(jobs.valid.user('')).toBe(false);
 	});
-	it('valid should fail on invalid owner', function() {
-		expect(jobs.valid.owner('random123123')).toBe(false);
+	it('valid should fail on invalid user', function() {
+		expect(jobs.valid.user('random123123')).toBe(false);
 	});
-	it('valid should fail on malformed owner <', function() {
-		expect(jobs.valid.owner('5d8cc974f14001679cb90ca')).toBe(false);
+	it('valid should fail on malformed user <', function() {
+		expect(jobs.valid.user('5d8cc974f14001679cb90ca')).toBe(false);
 	});	
-	it('valid should fail on malformed owner >', function() {
-		expect(jobs.valid.owner('5d8cc974f14001679cb90ca11')).toBe(false);
+	it('valid should fail on malformed user >', function() {
+		expect(jobs.valid.user('5d8cc974f14001679cb90ca11')).toBe(false);
 	});	
-	it('valid should return on valid owner >', function() {
-		expect(jobs.valid.owner(temp_job.owner.toString())).toBe(temp_job.owner.toString());
+	it('valid should return on valid user >', function() {
+		expect(jobs.valid.user(temp_job.user.toString())).toBe(temp_job.user.toString());
 	});
 
 	it('valid should fail on empty obj', function() {

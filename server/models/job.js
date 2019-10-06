@@ -13,7 +13,7 @@ var job = mongoose.Schema({
 		next : { type: Date, required: true, default : Date.now() },
 	},
 	job_id : { type: String, required: true },
-	owner : { type: mongoose.Schema.Types.ObjectId, required: true },
+	user : { type: mongoose.Schema.Types.ObjectId, required: true },
 
 })
 module.exports = mongoose.model('Job', job);

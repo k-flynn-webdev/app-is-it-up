@@ -5,7 +5,7 @@ var ping = mongoose.Schema({
 	status : { type: Number, required: true, default: 0 },	
 	date : { type: Date, required: true, default : Date.now() },
 	job_id : { type: String, required: true },
-	owner : { type: mongoose.Schema.Types.ObjectId, required: true },
+	user : { type: mongoose.Schema.Types.ObjectId, required: true },
 })
 module.exports = mongoose.model('Ping', ping);
 
@@ -31,5 +31,5 @@ ping.pre('update', function (next) {
 // 	status : 'result of request',	
 // 	date : 'date in seconds of when request was made',
 // 	job_id : 'num id of job and its uniqueness',
-// 	owner : 'owner db id',
+// 	user : 'owner db id',
 // }

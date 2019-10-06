@@ -1,6 +1,6 @@
 const exec = require('../services/jobs/jobs.exec.js');
 
-let temp_job = { url : 'https://www.google.com/', method : '', props : '', owner : '5d8cc974f14001679cb90caf', time : 300, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com/', method : '', props : '', user : '5d8cc974f14001679cb90caf', time : 300, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'exec-test';
 

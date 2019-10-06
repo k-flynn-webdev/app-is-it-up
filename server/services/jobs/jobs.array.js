@@ -32,14 +32,14 @@ function find_job(job_id){
 }
 exports.find_job = find_job;
 
-function find_owner(owner){
+function find_user(user){
 	let tmp = [];
 	for(let i = 0; i < jobs.length;i++){
-		if(jobs[i].owner === owner) tmp.push(i);
+		if(jobs[i].user === user) tmp.push(i);
 	}
 	return tmp;
 }
-exports.find_owner = find_owner;
+exports.find_user = find_user;
 
 
 // todo on job insertion check server time, if new job is < update server timing ..
