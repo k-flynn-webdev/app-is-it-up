@@ -13,7 +13,7 @@ function remove(job,next){
 			return next(error);
 		}
 
-		if(result.deletedCount === 0){
+		if(result.result.deletedCount < 1){
 			return next(new Error('Job does not exist.'));
 		}
 
