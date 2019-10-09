@@ -1,0 +1,37 @@
+.widget {
+	position: relative;
+	background-color: lightgrey;
+	text-align: left;
+	margin: 0.5rem 1rem;
+}
+
+.widget-content, .widget-right {
+	min-height: 2rem;
+}
+
+.widget-content {
+	display: inline-block;
+	padding: 0 1rem;
+}
+.widget-right{
+	float: right;
+	background-color: lightblue;
+	text-align: center;
+}
+
+.widget .add, .widget .settings {
+	min-width: 2rem;
+	display: inline-block;
+}
+
+.widget .add {
+	background-color: lightgreen;
+}
+.widget .settings {
+	color: white;
+	background-color: black;
+}
+
+.url {
+	font-weight: bold;
+}
