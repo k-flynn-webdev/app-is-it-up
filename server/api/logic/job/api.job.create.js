@@ -14,13 +14,13 @@ function create(input, next){
 		}
 
 		// does it exist?
-		shared.find(job_model,function(error, found){
+		shared.find(job_model,function(error, result){
 
 			if(error){
 				return next(error);
 			}
 
-			if(found.length !== 0){
+			if(result.found.length !== 0){
 				return next(new Error('Already exists.'));
 			}
 

@@ -162,7 +162,12 @@ function find_model(input,next){
 		if(error){
 			return next(error);
 		}
-		return next(null,found);
+
+		console.log('searching');
+		console.log(input);
+		console.log(found);
+
+		return next(null, Object.assign(input,{ found : found }));
 	});			
 }
 

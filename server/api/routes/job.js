@@ -20,17 +20,17 @@ function exit(res,status,message,data){
 
 module.exports = function( app ){
 
-	// app.get('/api/job/all', job.owner, function (req, res) {
+	app.post('/api/job/all', job.user, function (req, res) {
 
-	// 	api_job_all(req.body.job, function(error, job){
+		api_job_get.get(req.body.job, function(error, jobs){
 
-	// 		if(error){
-	// 			return exit(res,422,error.message,error);
-	// 		}
+			if(error){
+				return exit(res,422,error.message,error);
+			}
 				
-	// 		return exit(res,200,'Success jobs found.',{ result : job });
-	// 	});
-	// });
+			return exit(res,200,'Success jobs found.',{ jobs : jobs });
+		});
+	});
 
 	app.get('/api/job/:job', job.get, function (req, res) {
 

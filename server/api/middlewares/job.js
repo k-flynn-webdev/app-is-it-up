@@ -23,6 +23,14 @@ function exit(res,status,message,data){
 }
 
 
+function user(req,res,next){
+
+	if(!exists(req.body.user)) return exit(res,422,'Missing user property.');
+
+	prepare(req);
+	next();
+}
+exports.user = user;
 
 function get(req,res,next){
 

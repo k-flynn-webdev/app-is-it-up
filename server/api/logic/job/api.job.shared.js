@@ -157,6 +157,7 @@ function find(job,next,override){
 		if(error){
 			return next(error);
 		}
+
 		find_model(search,next);
 	});
 }
@@ -167,7 +168,7 @@ function find_model(input,next){
 		if(error){
 			return next(error);
 		}
-		return next(null,found);
+		return next(null,Object.assign(input,{ found : found }));
 	});			
 }
 
