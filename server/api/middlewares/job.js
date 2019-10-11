@@ -44,6 +44,9 @@ exports.get = get;
 
 function create(req,res,next){
 
+	console.log('req.body');
+	console.log(req.body);
+
 	if(!exists(req.body.url)) return exit(res,422,'Missing url property.');
 	if(!exists(req.body.user)) return exit(res,422,'Missing user property.');
 	if(!exists(req.body.time)) return exit(res,422,'Missing time property.');

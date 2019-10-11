@@ -20,3 +20,10 @@
 .App-link {
   color: #09d3ac;
 }
+
+
+html {
+  background: linear-gradient( to bottom, var(--colour-dark), 75%, var(--colour-light-gradient) );  
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}

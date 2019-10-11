@@ -35,3 +35,9 @@
 .url {
 	font-weight: bold;
 }
+
+
+.option {
+	display: inline-block;
+	margin: .2rem .6rem;
+}

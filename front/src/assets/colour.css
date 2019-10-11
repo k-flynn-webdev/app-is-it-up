@@ -1,0 +1,193 @@
+:root {
+
+	--colour: hsla(182,36%,46%,1);
+	--colour-dark: hsla(182,36%,10%,1);
+	
+	--colour-light: hsla(182,36%,50%,1);
+	--colour-light-gradient: hsla(182,36%,30%,1);
+
+
+	--colour-pop: hsla(1,1%,96%,1);
+
+
+	--colour-shadow: hsla(1,1%,1%,.5);
+
+	--colour-shade: hsla(1,1%,3%,.9);
+
+
+	--colour-notice: hsla(1,1%,80%,.9);
+	--colour-notice-dark: hsla(1,1%,50%,.9);
+
+
+	--colour-positive: hsla(100,40%,40%,1);
+	--colour-negative: hsla(0,50%,40%,1);
+
+	--colour-button-positive: hsla(100,15%,50%,1);
+
+	--colour-button-negative: hsla(0,30%,40%,1);
+
+	/*--colour-accent: hsl(182,36%,46%);*/
+	/*--colour-accent: hsl(182,36%,46%);*/
+
+/*	--colour: hsl(220,70%,20%);
+	--colour-inv: hsla(35,50%,85%,1);
+	--colour-accent: hsla(10,80%,70%,1); 
+	--colour-accent-alt: black;
+	
+
+
+
+	--colour-button: hsla(200,60%,60%,1);
+	--colour-button-shadow: hsla(200,30%,35%,1);
+
+
+	--colour-bg-input: hsla(1,1%,90%,.33);
+	--colour-bg-input-focus: hsla(200,40%,50%,1);
+
+
+
+
+
+
+	--colour-shade: hsla(0,10%,10%,1);
+
+	
+
+
+
+
+
+
+	--colour-button-highlight: hsla(100,40%,90%,.7);
+
+	--colour-button-positive: hsla(100,15%,50%,1);
+
+	--colour-button-negative: hsla(0,30%,40%,1);*/
+
+}
+
+.colour-fill-pop {
+	color: var(--colour-pop);
+	fill: var(--colour-pop);
+}
+.colour-bg-pop {
+	background-color: var(--colour-pop) !important;
+}
+
+
+.colour-fill {
+	color: var(--colour);
+	fill: var(--colour);
+}
+.colour-bg {
+	background-color: var(--colour);
+}
+
+.colour-fill-light {
+	color: var(--colour-light);
+	fill: var(--colour-light);
+}
+.colour-bg-light {
+	background-color: var(--colour-light);
+}
+
+.colour-fill-dark {
+	color: var(--colour-dark);
+	fill: var(--colour-dark);
+}
+.colour-bg-dark {
+	background-color: var(--colour-dark);
+}
+
+.colour-fill-notice {
+	color: var(--colour-notice);
+	fill: var(--colour-notice);
+}
+.colour-bg-notice {
+	background-color: var(--colour-notice);
+}
+
+.colour-fill-shade {
+	color: var(--colour-shade);
+	fill: var(--colour-shade);
+}
+.colour-bg-shade {
+	background-color: var(--colour-shade);
+}
+
+
+/*
+.colour-bg {
+	background-color: var( --colour );
+}
+.colour-bg-inv {
+	background-color: var( --colour-inv );
+}
+.colour-bg-accent {
+	background-color: var( --colour-accent ) !important;
+}
+.colour-bg-accent-alt {
+	background-color: var( --colour-accent-alt ) !important;
+}
+.colour-bg-shade {
+	opacity: 0.7;
+	background-color: var( --colour-shade );	
+}
+
+
+.colour-fill-bg {
+	color: var( --colour );
+	fill: var( --colour );
+}
+.colour-fill-bg-inv {
+	color: var( --colour-inv );
+	fill: var( --colour-inv );
+}
+.colour-fill-accent {
+	color: var( --colour-accent ) !important;
+	fill: var( --colour-accent ) !important;
+}
+.colour-fill-accent-alt {
+	color: var( --colour-accent-alt ) !important;
+	fill: var( --colour-accent-alt ) !important;
+}
+.colour-fill-shade {
+	color: var( --colour-shade );
+	fill: var( --colour-shade );
+}
+
+
+
+.colour-fill-positive{
+	color: var( --colour-positive );
+	fill: var( --colour-positive );	
+}
+.colour-bg-positive{
+	background-color: var( --colour-positive );
+}
+
+.colour-fill-negative{
+	color: var( --colour-negative );
+	fill: var( --colour-negative );	
+}
+.colour-bg-negative{
+	background-color: var( --colour-negative );
+}
+
+
+.colour-fill-darken {
+	color: hsla(10,5%,15%,0.93);
+	fill: hsla(10,5%,15%,0.93);
+}
+.colour-bg-darken {
+	background-color: hsla(10,5%,15%,0.93);
+}
+
+.colour-fill-button{
+	color: var( --colour-button );
+	fill: var( --colour-button );	
+}
+.colour-bg-button{
+	background-color: var( --colour-button );
+}
+*/
