@@ -3,6 +3,8 @@ import './Widget.css';
 
 function Widget(props) {
 
+	console.dir(props);
+
 	return(
 		<div className="widget">
 
@@ -12,13 +14,9 @@ function Widget(props) {
 
 			<div className="widget-right">
 
-				<div className="settings">
+				<button className="settings">
 					<p>:</p>
-				</div>
-
-				<div className="add">
-					<p>O</p>
-				</div>
+				</button>
 
 			</div>
 

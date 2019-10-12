@@ -47,9 +47,9 @@ class App extends Component {
 	render(){
 		return(
 			<div className="App">
-				<h1 className="colour-fill-pop"> Is It Up?</h1>
+				<h1 className="colour-fill-pop"> Is It Up? </h1>
 				<WidgetSearch searchChange={this.onSearchChange} />
-				<WidgetCreate create={WidgetService.create} update={this.getWidgetList}/>
+				<WidgetCreate create={WidgetService.create} update={this.getWidgetList} />
 				<WidgetList widgets={this.onListChange()} />	
 			</div>
 		);

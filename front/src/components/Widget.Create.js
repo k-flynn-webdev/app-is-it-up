@@ -29,11 +29,8 @@ class WidgetCreate extends Component {
 		this.props.create( this.state ).then( response => {
 			// todo  set success class / anim / visual ?
 			this.setState( basic );
-			console.log(this.state);
-
 			return this.props.update();
 		}).catch( error => {
-			console.log('error caught');
 			// todo  alert user to error ?
 		});
 
