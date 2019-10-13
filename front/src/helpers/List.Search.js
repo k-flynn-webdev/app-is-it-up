@@ -6,7 +6,8 @@ function ListSearch({ list, search }) {
 	}
 
 	return list.filter(item => {
-		return item.url.toLowerCase().includes(search.toLowerCase());
+		let test = item.url.toLowerCase().includes(search.toLowerCase());
+		if(test) return item;
 	});
 }
 export default ListSearch;

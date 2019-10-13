@@ -1,10 +1,147 @@
-.widget {
-	position: relative;
-	background-color: lightgrey;
-	text-align: left;
-	margin: 0.5rem 1rem;
+
+
+
+.text-small {
+	font-size: .9rem;
 }
 
+.widget button{
+	/*background-color: unset;*/
+	/*border: unset;*/
+}
+
+
+.open-window {
+	padding-bottom: 2rem;
+}
+.open-dropdown {
+}
+
+.widget {
+	position: relative;
+	text-align: left;
+	margin: 1rem;
+	margin-bottom: 2.5rem;
+	min-height: 4rem;
+}
+
+
+
+.outline {
+	border-right: 2px solid hsl(1,1%,40%);
+	border-bottom: 2px solid hsl(1,1%,40%);
+}
+
+.widget-window {
+	transition: .2s ease;
+	position: absolute;
+	top: .3rem;
+	z-index: -10;
+	left: .3rem;
+	width: 100%;
+	min-height: 100%;
+}
+
+.open-window .widget-window{
+	top: 95%;
+}
+
+.shadow {
+	-webkit-box-shadow: 0px 10px 10px -5px rgba(0,0,0,0.8);
+	-moz-box-shadow: 0px 10px 10px -5px rgba(0,0,0,0.8);
+	box-shadow: 0px 10px 10px -5px rgba(0,0,0,0.8);
+}
+
+.widget-url {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	font-weight: bold;
+}
+
+.widget p {
+	padding: 0;
+	margin: .5rem;	
+}
+
+
+.widget-method, .widget-time, .widget-props, .widget-uptime, .widget-active {
+	position: absolute;
+	width: 25%;
+	top: 0;
+}
+
+.widget-active {
+	top: unset;
+	bottom: 0;
+	left: 75%;
+}
+
+.widget-method {
+	left: 0;
+}
+.widget-time {
+	left: 25%;
+}
+.widget-props {
+	left: 50%;
+}
+.widget-uptime {
+	left: 75%;
+}
+
+.widget-dropdown {
+	background-color: unset;
+	border: unset;
+	position: absolute;
+	z-index: 1;
+	width: 2rem;
+	height: calc(100% - .5rem);
+	top: .25rem;
+	right: 0;
+	padding: 0;
+	margin: 0;
+	pointer-events: all;
+}
+
+.ic_dropdown {
+
+}
+.ic_close {
+	height: 1.5rem;
+}
+
+.drop-down {
+	pointer-events: none;
+	transition: .5s;
+	opacity: 0;
+	position: absolute;
+	right: 0;
+	transform: translateY(-4rem);
+}
+.drop-down button{
+	margin: .1rem;
+}
+
+.open-dropdown .drop-down {
+	pointer-events: all;
+	opacity: 1;
+	transform: translateY(-2.5rem);
+}
+
+
+
+.widget .label {
+	display: inline-block;
+}
+
+.widget .ic {
+	width: 1rem;
+	margin-left: .5rem;
+	padding: 0;
+}
+
+/*
 .widget-content, .widget-right {
 	min-height: 2rem;
 }
@@ -32,12 +169,10 @@
 	background-color: black;
 }
 
-.url {
-	font-weight: bold;
-}
+
 
 
 .option {
 	display: inline-block;
 	margin: .2rem .6rem;
-}
+}*/

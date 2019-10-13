@@ -10,7 +10,7 @@ function WidgetList({widgets}) {
 	}
 
 	const list = widgets.map((item, i) => {
-		return ( <Widget key={i} url={widgets[i].url} /> );
+		return ( <Widget key={i} widget={widgets[i]} /> );
 	})
 
 	return list;
