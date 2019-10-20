@@ -1,7 +1,7 @@
 const jobs = require('../api/logic/job/api.job.get.js');
 const create = require('../api/logic/job/api.job.create.js');
 
-let temp_job = { url : 'https://www.google.com/', active: true, method : '', props : '', user : '5d8cc974f14001679cb90caf', time : 123, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'get-test';
 

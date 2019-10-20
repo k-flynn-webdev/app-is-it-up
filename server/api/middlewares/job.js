@@ -44,15 +44,12 @@ exports.get = get;
 
 function create(req,res,next){
 
-	console.log('req.body');
-	console.log(req.body);
-
 	if(!exists(req.body.url)) return exit(res,422,'Missing url property.');
 	if(!exists(req.body.user)) return exit(res,422,'Missing user property.');
-	if(!exists(req.body.time)) return exit(res,422,'Missing time property.');
+	if(!exists(req.body.ping)) return exit(res,422,'Missing ping property.');
 
 	if(!exists(req.body.method)) req.body.method = 'GET';
-	if(!exists(req.body.props)) req.body.props = '';
+	if(!exists(req.body.params)) req.body.params = '';
 
 	prepare(req);
 	next();
@@ -83,11 +80,11 @@ function prepare(input){
 	if(exists(input.body.method)){
 		input.body.job.method = sanitizer(input.body.method);
 	}
-	if(exists(input.body.props)){
-		input.body.job.props = sanitizer(input.body.props);
+	if(exists(input.body.params)){
+		input.body.job.params = sanitizer(input.body.params);
 	}
-	if(exists(input.body.time)){
-		input.body.job.time = sanitizer(input.body.time);
+	if(exists(input.body.ping)){
+		input.body.job.ping = sanitizer(input.body.ping);
 	}
 	if(exists(input.params) && exists(input.params.job)){
 		input.body.job.job_id = sanitizer(input.params.job);

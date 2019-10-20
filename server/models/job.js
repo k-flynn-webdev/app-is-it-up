@@ -3,10 +3,11 @@ const mongoose = require('mongoose');
 var job = mongoose.Schema({
 	url : { type: String, required: true },
 	method : { type: String, required: false, default : 'GET' },
-	props : { type: String, required: false, default : '' },	
-	time : { type: Number, required: true },
+	params : { type: String, required: false, default : '' },	
+	ping : { type: Number, required: true },
 	active : { type: Boolean, required: true, default: true },
-	pings : { type: Array, required: false },
+	status : { type: Boolean, required: true, default: true },
+	fails : { type: Array, required: false },
 	meta : {
 		max : { type: Number, required: true, default: 0 },
 		num : { type: Number, required: true, default: 0 },

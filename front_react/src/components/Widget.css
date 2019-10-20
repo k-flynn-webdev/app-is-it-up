@@ -17,11 +17,15 @@
 .open-dropdown {
 }
 
+.widget-holder {
+	position: relative;
+	margin: 1rem;
+	margin-bottom: 2.5rem;
+}
+
 .widget {
 	position: relative;
 	text-align: left;
-	margin: 1rem;
-	margin-bottom: 2.5rem;
 	min-height: 4rem;
 }
 
@@ -34,17 +38,29 @@
 
 .widget-window {
 	transition: .2s ease;
+	margin-left: .5rem;
 	position: absolute;
 	top: .3rem;
-	z-index: -10;
-	left: .3rem;
 	width: 100%;
-	min-height: 100%;
+	min-height: 4rem;
 }
 
 .open-window .widget-window{
-	top: 95%;
+	top: 4rem;
+	/*top: 95%;*/
 }
+
+
+.input-string, .input-button {
+	position: relative;
+	/*z-index: 10;*/
+}
+
+.widget-window .content {
+	margin: .5rem;
+}
+
+
 
 .shadow {
 	-webkit-box-shadow: 0px 10px 10px -5px rgba(0,0,0,0.8);
@@ -94,7 +110,7 @@
 	background-color: unset;
 	border: unset;
 	position: absolute;
-	z-index: 1;
+	/*z-index: 1;*/
 	width: 2rem;
 	height: calc(100% - .5rem);
 	top: .25rem;

@@ -31,7 +31,7 @@ function valid_method(input){
 	if(temp.indexOf('delete') !== -1) return 'DELETE';
 	return 'GET';
 }
-function valid_props(input){
+function valid_params(input){
 	if(input === undefined || input === null || input === '') return ' ';
 	return input.toLowerCase();
 }
@@ -40,7 +40,7 @@ function valid_user(input){
 	if(input.length !== valid_user.length) return false;
 	return input.toLowerCase();
 }
-function valid_time(input){
+function valid_ping(input){
 	return is_number(input);
 }
 function valid_id(input){
@@ -70,8 +70,8 @@ function is_number(input){
 exports.valid = {
 	url : valid_url,
 	method : valid_method,
-	props : valid_props,
-	time : valid_time,
+	params : valid_params,
+	ping : valid_ping,
 	user : valid_user,
 	id : valid_id,
 	status : valid_status,
@@ -81,9 +81,9 @@ exports.valid = {
 let seconds_in_month = 60 * 60 * 24 * 30;
 
 function meta(input){
-	if(input.time === undefined || input.time === null) return false;
+	if(input.ping === undefined || input.ping === null) return false;
 	let tmp = {
-		max : Math.floor(seconds_in_month / Math.floor(input.time)),
+		max : Math.floor(seconds_in_month / Math.floor(input.ping)),
 		num : 0,
 		next : Date.now(),
 	}
@@ -106,11 +106,11 @@ function update(model,input){
 	if(exists(input.method)){
 		model.method = valid_method(input.method);
 	}
-	if(exists(input.props)){
-		model.props = valid_props(input.props);
+	if(exists(input.params)){
+		model.params = valid_params(input.params);
 	}
-	if(exists(input.time)){
-		model.time = valid_time(input.time);
+	if(exists(input.ping)){
+		model.ping = valid_ping(input.ping);
 		model.meta = meta(input);
 	}
 	if(exists(input.job_id)){

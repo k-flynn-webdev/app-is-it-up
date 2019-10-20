@@ -26,8 +26,8 @@ function load_jobs(){
 			}
 
 			let jobs_loaded = 0;
-			for(let i = 0;i<jobs.length;i++){
-				if(array.insert(jobs[i])){
+			for(let i = 0;i<jobs.found.length;i++){
+				if(array.insert(jobs.found[i])){
 					jobs_loaded +=1;
 				}
 			}

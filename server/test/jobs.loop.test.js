@@ -1,6 +1,6 @@
 const loop = require('../services/jobs/jobs.loop.js');
 
-let temp_job = { url : 'https://www.google.com/', active: true, method : '', props : '', user : '5d8cc974f14001679cb90caf', time : 123, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'gobal-test';
 
@@ -29,14 +29,14 @@ describe('Loop', function() {
 
 	it('add ping should edit a job', function() {
 
-		let job = { job_id : '1231231', user : '5d94901865fb022dac1d8122', pings : [] };
+		let job = { active : true, status : true, job_id : '1231231', user : '5d94901865fb022dac1d8122', fails : [] };
 		let ping = { url : 'test.com', status : 99 };
+
 		loop.add_ping(job,ping);
 
-		expect(job.pings[0].url).toEqual(ping.url);
-		expect(job.pings[0].status).toEqual(ping.status);
-		expect(job.pings[0].user.toString()).toEqual(job.user.toString());
-		expect(job.pings[0].job_id.toString()).toEqual(job.job_id.toString());
+		expect(job.status).toEqual(false);
+		expect(job.fails[0].date).toBeTruthy();
+		expect(job.fails[0].id).toBeTruthy();
 	});	
 
 });

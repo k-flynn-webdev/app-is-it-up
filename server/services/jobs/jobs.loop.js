@@ -34,14 +34,16 @@ exports.exec = exec;
 
 
 function add_ping(job,result){
+
 	let tmp_ping = new m_ping({
-		url : result.url,
+		url : job.url,
 		status : result.status,
 		job_id : job.job_id,
 		user : job.user,
 	});
 
-	job.pings.push(tmp_ping);
+	job.status = false;
+	job.fails.push({ date : tmp_ping.date , id : tmp_ping._id });
 
 	if(process.env.NODE_ENV === 'test') return;
 
@@ -87,10 +89,11 @@ function loop_exec(jobs,job_ready,job_exec,job_complete){
 		job_exec(job, function(error,job_result){
 
 			let tmp = true;
+			job.status = true;
 
 			if(error){
 				tmp = false;
-				add_ping(job,job_result)
+				add_ping(job,error);
 			} 
 
 			result.push(tmp);

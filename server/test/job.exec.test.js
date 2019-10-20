@@ -1,6 +1,6 @@
 const exec = require('../services/jobs/jobs.exec.js');
 
-let temp_job = { url : 'https://www.google.com/', method : '', props : '', user : '5d8cc974f14001679cb90caf', time : 300, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com/', method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 300, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'exec-test';
 
@@ -32,8 +32,8 @@ describe('Job Exec', function() {
 		// setting next job to render to be 10 mins in the future ..
 		let current = 5;
 		temp_job.meta = { next : 0, num : current, max : 10 };
-		temp_job.time = 100;
-		let new_date = Date.now() + (1000 * temp_job.time);
+		temp_job.ping = 10;
+		let new_date = Date.now() + (1000 * 60 * temp_job.ping);
 		exec.complete(temp_job);
 		expect(temp_job.meta.num).toBe(current + 1);
 		let result13 = Math.abs(temp_job.meta.next - new_date) < 150;
@@ -43,8 +43,8 @@ describe('Job Exec', function() {
 		// setting next job to render to be 10 mins in the future ..
 		let current = 10;
 		temp_job.meta = { next : 0, num : current, max : 10 };
-		temp_job.time = 100;
-		let new_date = Date.now() + (1000 * temp_job.time);
+		temp_job.ping = 13;
+		let new_date = Date.now() + (1000 * 60 * temp_job.ping);
 		exec.complete(temp_job);
 		expect(temp_job.meta.num).toBe(0);
 		let result13 = Math.abs(temp_job.meta.next - new_date) < 150;

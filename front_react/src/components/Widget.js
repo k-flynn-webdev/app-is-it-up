@@ -49,7 +49,7 @@ class Widget extends Component {
 	widgetClasses = () => {
 		let widget_dropdown = this.state.dropdown ? 'open-dropdown' : '';
 		let widget_window = this.state.window ? 'open-window' : '';
-		return widget_dropdown + ' ' + widget_window;
+		return 'widget-holder ' + widget_dropdown + ' ' + widget_window;
 	}
 
 
@@ -97,9 +97,7 @@ class Widget extends Component {
 
 		return(
 			<div>
-
 				{ buttonToShow }
-
 				<div className="drop-down">
 					<button className="colour-bg outline" onClick={this.modeInfo}>
 						<p> INFO </p>
@@ -112,9 +110,41 @@ class Widget extends Component {
 					</button>
 				</div>
 			</div>
-
 		);
 	}
+
+	renderWidgetContent(){
+		switch ( this.state.mode ){
+			case 'info':
+				return this.renderInfo();
+				break;
+			case 'update':
+				return this.renderUpdate();
+				break;
+			case 'delete':
+				return this.renderDelete();
+				break;
+		}
+	}
+
+	renderInfo(){
+		return (<p> info page </p>);
+	}
+	renderUpdate(){
+		return (
+			<div>
+				<input className="input-string" />
+				<button className="input-button">ACTIVE</button>
+				<input className="input-string" />
+				<button className="input-button">GET</button>
+				<button className="input-button">30m</button>
+			</div>
+		);		
+	}
+	renderDelete(){
+		return (<p> delete page </p>);
+	}
+
 
 	renderMethod(){
 		return(
@@ -177,6 +207,13 @@ class Widget extends Component {
 		return(
 			<div className={ this.widgetClasses() }>
 
+				<div className="widget-window shadow1 colour-bg outline">
+					<div className="content">
+						{ this.renderWidgetContent() }
+					</div>
+					
+				</div>
+
 				<div className="widget shadow1 colour-bg outline" onClick={this.closeDropDown}>
 
 					{ this.renderMethod() }
@@ -187,19 +224,17 @@ class Widget extends Component {
 
 					{ this.renderUpTime() }
 
-					{ this.renderOptions() }
-
 					<div className="widget-url">
 						<p> { this.props.widget.url } </p>
 					</div>
 
 					{ this.renderActive() }
 
-					<div className="widget-window shadow1 colour-bg outline">
-						{ this.state.mode }
-					</div>
+					{ this.renderOptions() }
 
 				</div>
+
+
 
 			</div>
 		);

@@ -1,6 +1,6 @@
 const jobs = require('../api/logic/job/api.job.shared.js');
 
-let temp_job = { url : 'https://www.google.com/', active: true, method : '', props : '', user : '5d8cc974f14001679cb90caf', time : 123, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : 1697179240 };
 
 process.env.TEST_SUITE = 'shared-test';
 
@@ -77,26 +77,26 @@ describe('Job Shared', function() {
 		expect(jobs.valid.id('-45631')).toBe(-45631);
 	});
 
-	it('valid should fail missing time', function() {
-		expect(jobs.valid.time('')).toBe(false);
+	it('valid should fail missing ping', function() {
+		expect(jobs.valid.ping('')).toBe(false);
 	});
-	it('valid should fail on invalid time', function() {
-		expect(jobs.valid.time('12go1')).toBe(false);
+	it('valid should fail on invalid ping', function() {
+		expect(jobs.valid.ping('12go1')).toBe(false);
 	});
-	it('valid should fail on invalid time', function() {
-		expect(jobs.valid.time('12.2')).toBe(false);
+	it('valid should fail on invalid ping', function() {
+		expect(jobs.valid.ping('12.2')).toBe(false);
 	});	
-	it('valid should fail on invalid time', function() {
-		expect(jobs.valid.time(234.1)).toBe(false);
+	it('valid should fail on invalid ping', function() {
+		expect(jobs.valid.ping(234.1)).toBe(false);
 	});
-	it('valid should return on valid time', function() {
-		expect(jobs.valid.time(12)).toBe(12);
+	it('valid should return on valid ping', function() {
+		expect(jobs.valid.ping(12)).toBe(12);
 	});
-	it('valid should return on valid time', function() {
-		expect(jobs.valid.time('31')).toBe(31);
+	it('valid should return on valid ping', function() {
+		expect(jobs.valid.ping('31')).toBe(31);
 	});
-	it('valid should return on valid time', function() {
-		expect(jobs.valid.time('-45631')).toBe(-45631);
+	it('valid should return on valid ping', function() {
+		expect(jobs.valid.ping('-45631')).toBe(-45631);
 	});
 
 	it('valid should fail missing user', function() {
@@ -122,20 +122,20 @@ describe('Job Shared', function() {
 		expect(jobs.meta('')).toBe(false);
 	});
 	it('valid should return obj', function() {
-		let tmp = jobs.meta({ time : 200 });
+		let tmp = jobs.meta({ ping : 200 });
 		expect(tmp.max).toBe(12960);
 		expect(tmp.num).toBe(0);
 		expect(isValidDate(tmp.next)).toBe(true);
 	});
 	it('valid should return obj', function() {
-		let tmp = jobs.meta({ time : 341 });
+		let tmp = jobs.meta({ ping : 341 });
 		expect(tmp.max).toBe(7601);
 		expect(tmp.num).toBe(0);
 		expect(isValidDate(tmp.next)).toBe(true);
 	});
 	it('valid should return obj', function() {
 		let seconds_day = 60 * 60 * 24;
-		let tmp = jobs.meta({ time : seconds_day });
+		let tmp = jobs.meta({ ping : seconds_day });
 		expect(tmp.max).toBe(30);
 		expect(tmp.num).toBe(0);
 		expect(isValidDate(tmp.next)).toBe(true);
@@ -150,13 +150,13 @@ describe('Job Shared', function() {
 
 
 	// update model 
-	let new_model = Object.assign({url:'newurl.com',time:3737,method:'delete'},temp_job);
+	let new_model = Object.assign({url:'newurl.com',ping:3737,method:'delete'},temp_job);
 	
 	it('update an obj should return a new correctly updated obj', function() {
 		expect(jobs.update).toBeDefined();
 		let result = jobs.update(temp_job,new_model);
 		expect(result.url).toBe(new_model.url);
-		expect(result.time).toBe(new_model.time);
+		expect(result.ping).toBe(new_model.ping);
 		expect(result.method).toBe(new_model.method);
 	});
 

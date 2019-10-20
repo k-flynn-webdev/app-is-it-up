@@ -51,8 +51,8 @@ function create_model(input, next){
 
 	if(!valid.url(input.url)) return next(new Error('Invalid URL.'));
 	if(!valid.method(input.method)) return next(new Error('Invalid method.'));
-	if(!valid.props(input.props)) return next(new Error('Invalid props.'));
-	if(!valid.time(input.time)) return next(new Error('Invalid time.'));
+	if(!valid.params(input.params)) return next(new Error('Invalid params.'));
+	if(!valid.ping(input.ping)) return next(new Error('Invalid ping.'));
 	if(!valid.user(input.user)) return next(new Error('Invalid user.'));
 
 	let tmp = new m_job();
@@ -65,7 +65,7 @@ function create_model(input, next){
 exports.create_model = create_model;
 
 function create_id(input) {
-	let temp = input.url + input.method + input.props + input.time + input.user;
+	let temp = input.url + input.method + input.params + input.ping + input.user;
 
 	let hash = 0, i, chr;
 	if (temp.length === 0) return hash;
