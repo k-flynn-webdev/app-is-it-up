@@ -1,38 +1,49 @@
 <template>
    
-  <div class="job-widget colour-bg">
+  <div class="job-create colour-bg">
 
     <form v-on:submit=OnSubmit>
       
-      <label for="method"> Method </label>
+      <div class="input-full">
+        <label for="url"> URL </label>
+        <input id="url" name="url" placeholder="eg www.myhome.com" type="text" minLength="4" required v-model=form.url /> 
+      </div>
 
-      <select id="method" name="method" v-model=form.method>
-        <template v-for="method in attrs.methods">
-          <option v-bind:key=method v-bind:value=method>
-            {{ method }}
-          </option>
-        </template>
-      </select>
 
-      <label for="ping"> Ping </label>
+      <div class="input-option">
 
-      <select id="ping" name="ping" v-model=form.ping>
-        <template v-for="ping in attrs.pings">
-          <option v-bind:key=ping v-bind:value=ping>
-            {{ ping }}m
-          </option>
-        </template>
-      </select>
+        <div class="option">
+          <label for="method"> Method </label>
+          <select id="method" name="method" v-model=form.method>
+            <template v-for="method in attrs.methods">
+              <option v-bind:key=method v-bind:value=method>
+                {{ method }}
+              </option>
+            </template>
+          </select>
+        </div>  
 
-      <label for="url"> URL </label>
+        <div class="option">
+          <label for="ping"> Ping </label>
+          <select id="ping" name="ping" v-model=form.ping>
+            <template v-for="ping in attrs.pings">
+              <option v-bind:key=ping v-bind:value=ping>
+                {{ ping }}m
+              </option>
+            </template>
+          </select>
+        </div>
 
-      <input id="url" name="url" placeholder="eg www.myhome.com" type="text" minLength="4" required v-model=form.url /> 
+        <div class="input">
+          <label for="params"> Params </label>
+          <input id="params" name="params" placeholder="eg user123" type="text" maxLength="50" v-model=form.params />
+        </div>
 
-      <label for="url"> Params </label>
+      </div>
 
-      <input id="params" name="params" placeholder="eg user123" type="text" maxLength="50" v-model=form.params />
-
-      <button v-on:click=OnSubmit> Create </button>
+      <div class="text-right">
+        <button v-on:click=OnSubmit class="button"> Create </button>
+      </div>
 
     </form>
 
@@ -95,4 +106,57 @@ export default {
 </script>
 
 <style>
+
+.job-create {
+  border-radius: var(--border-radius);
+  border: 1px solid var(--colour-dark);
+  margin: .5rem;
+  margin-bottom: 1rem; 
+}
+
+form {
+  padding: .5rem;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+#params, #url {
+  padding: 0 .5rem;
+}
+
+.input-full, .input-option {
+  display: flex;
+  flex-direction: row; 
+  margin-bottom: .25rem;
+}
+
+.input-option {
+  justify-content: space-between;
+}
+
+.input-full label {
+  margin-right: .5rem;
+}
+.input-full input, .input-option .input, .input-option .option {
+  flex: 1;
+}
+
+.input-full input, .input-option  input{
+  border-radius: var(--border-radius);
+}
+
+.input-full input, .input-option  input, .input-option select{
+  background-color: var(--colour-bg);
+}
+
+form .button {
+  border-radius: var(--border-radius);
+  font-weight: bold;
+  color: var(--colour-bg);
+  background-color: var(--colour-dark);
+} 
+
 </style>

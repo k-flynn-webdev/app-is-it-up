@@ -43,7 +43,7 @@ function add_ping(job,result){
 	});
 
 	job.status = false;
-	job.fails.push({ date : tmp_ping.date , id : tmp_ping._id });
+	job.fails.push({ date : new Date(tmp_ping.date).getTime() , id : tmp_ping._id });
 
 	if(process.env.NODE_ENV === 'test') return;
 

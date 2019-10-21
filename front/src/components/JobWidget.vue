@@ -1,40 +1,16 @@
 <template>
-   
-  <div class="job-widget colour-bg">
+    
+    <tr class="row-split" v-on:click=onClick>
 
-    <!-- <div class="bg "> -->
+      <td class="widget-status"> {{ getStatus }} </td>  
 
-      <div class="sect status">
-        <p class="widget-label"> status </p>  
-        <p class="widget-value"> {{ getStatus }} </p>  
-      </div>
+      <td class="widget-url"> {{ getURL }} </td>  
 
-      <div class="sect url">
-        <div>
-          <span class="widget-label"> url </span>  
-          <span class="widget-label method"> 
-            <em> {{ job.method }} </em>
-          </span>
-        </div>
-        <p class="widget-value"> {{ job.url }} </p>  
-      </div>
+      <td class="widget-period"> {{ getPeriod }}% </td>  
 
-      <!-- todo -->
-      <div class="sect period">
-        <p class="widget-label"> week </p>  
-        <p class="widget-value"> 97% </p>  
-        <!-- <p class="widget-label"> {{ getPeriod.type }} </p>   -->
-        <!-- <p class="widget-value"> {{ getPeriod.value }}% </p>   -->
-      </div>
+      <td class="widget-ping"> {{ job.ping }}m </td>  
 
-      <div class="sect ping">
-        <p class="widget-label"> ping </p>  
-        <p class="widget-value"> {{ job.ping }}m </p>  
-      </div>
-
-     <!-- </div> -->
-
-  </div>
+   </tr>
 
 </template>
 
@@ -48,73 +24,41 @@ export default {
       active : Boolean, 
       url : String,
       period : Array,
-      period_display : Number,
-      ping : Number,       
-      params : String,       
+      ping : Number,
+      params : String,
     },
+    period : String,
   },  
   computed : {
     getStatus(){
       if( !this.job.active ) return 'in-active';
       return this.job.status;
-    },    
+    },  
+    getURL(){
+      let newURL = '';
+      if( this.job.url.toLowerCase().indexOf('https://') >= 0 ){
+        newURL = this.job.url.replace('https://', '');
+      }
+      if( this.job.url.toLowerCase().indexOf('http://') >= 0 ){
+        newURL = this.job.url.replace('http://', '');
+      } 
+      return newURL;
+    },
     getPeriod(){
-      let tmp = this.job.period[ this.job.period_display ];
-      return { type : tmp.type, value : tmp.value * 100 };
+      return (this.job.periods[ this.period ] * 100).toFixed(2);
     },
   },
   methods : {
+    onClick(){
+      this.$router.push(`/job/${this.job.job_id}`);
+    },
   },
 }
 </script>
 
 <style>
 
-  .job-widget {
-    margin: .5rem;
-  }
-  .status {
-    min-width: 10%;
-  }
-  .period {
-    min-width: 15%;
-  }  
-  .ping {
-    min-width: 15%;
-  }
-  .url {
-    min-width: 55%;
-  }
 
-  .job-widget .bg{
-    position: relative;
-    display: inline-block;
-    border: 1px solid black;
-    border-radius: .75rem;
-  }
 
-  .job-widget .sect {
-    box-sizing: border-box;
-    /*margin: 0.1rem 1rem;*/
-    display: inline-block;
-    /*todo make responsive on margins*/
-  }
-
-  .widget-label, .widget-value{
-    text-align: center;
-  }
-  .widget-label {
-    margin: .25rem 0.5rem;
-  }
-  .widget-value{
-    margin: .25rem 0.5rem;
-  }
-
-  .url .widget-label {
-    text-align: left;
-  }
-
-  .job-widget .method{
-  }
 
 </style>

@@ -3,10 +3,15 @@ const m_job = require('../../../models/job.js');
 
 
 function valid_url(input){
-	let temp = input.toLowerCase();
+	let temp = input.toLowerCase().trim();
 
 	if(temp.indexOf('http') === -1){
 		temp = 'http://' + temp;
+	}
+
+	// remove trailing slash
+	if(temp.endsWith('/')){
+		temp = temp.substring(0,temp.length-1);
 	}
 
 	if(temp.indexOf('localhost') !== -1) return temp;
@@ -15,6 +20,8 @@ function valid_url(input){
 
 	if(point === -1) return false;
 	if(point >= temp.length - 2 ) return false;
+
+
 
 	// todo look into this??
 	// let tmpsplit = temp.split('.');

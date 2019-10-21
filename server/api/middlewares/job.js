@@ -75,13 +75,13 @@ function prepare(input){
 	}
 
 	if(exists(input.body.url)){
-		input.body.job.url = sanitizer(input.body.url);
+		input.body.job.url = sanitizer(input.body.url.trim());
 	}
 	if(exists(input.body.method)){
-		input.body.job.method = sanitizer(input.body.method);
+		input.body.job.method = sanitizer(input.body.method.trim());
 	}
 	if(exists(input.body.params)){
-		input.body.job.params = sanitizer(input.body.params);
+		input.body.job.params = sanitizer(input.body.params.trim());
 	}
 	if(exists(input.body.ping)){
 		input.body.job.ping = sanitizer(input.body.ping);

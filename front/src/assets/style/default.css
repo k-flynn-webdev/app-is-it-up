@@ -2,9 +2,9 @@
 
 	--border-radius: .5rem;
 
-	--margin: 1rem;
+	/*--margin: 1rem;*/
 
-	--nav-height: 2.75rem;
+	/*--nav-height: 2.75rem;*/
 
 /*	--margin-screen-small: 0.5rem;
 	--margin-screen-med: 1rem;
@@ -32,6 +32,7 @@
 
 html {
 	padding-top: var(--nav-height);
+	background-color: var(--colour-bg);
 	/*background: linear-gradient( to bottom, var(--colour-dark), 75%, var(--colour-light-gradient) );	*/
 	background-repeat: no-repeat;
 	background-attachment: fixed;
