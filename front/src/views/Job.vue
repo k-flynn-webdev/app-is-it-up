@@ -44,44 +44,65 @@
       <div class="input-option">
 
         <div class="option">
-          <label for="method"> Active </label>
-          <p>{{ job.active }}</p>
+          <label for="active"> Active </label>
+          <select id="active" name="active" v-model=job.active>
+            <template v-for="item in attrs.active">
+              <option v-bind:key=item v-bind:value=item>
+                {{ item }}
+              </option>
+            </template>
+          </select>
         </div>
 
+
         <div class="option">
-          <label for="method"> Status </label>
+          <label for="status"> Status </label>
           <p>{{ job.status }}</p>
         </div>
 
 
         <div class="option">
-          <label for="method"> Pings </label>
+          <label for="pings"> Pings </label>
           <p>{{ job.meta.num }}</p>
         </div>
 
-        <div class="option">
-          <label for="method"> Periods </label>
-          <p>{{ job.periods }}</p>
+        <div class="option" style="flex-grow:2">
+          <template v-for="(period, name) in job.periods">
+            <div :key=name style="display: inline-block;margin:0 .5rem;">
+              <label> {{ name }} </label>
+              <span> {{ RenderPeriod(period) }} </span>
+            </div>
+          </template>
         </div>
 
       </div>
 
-      <div class="option">
-        <label for="method"> ID </label>
-        <p>{{ job.job_id }}</p>
-      </div>
-      <div class="option">
-        <label for="method"> User </label>
-        <p>{{ job.user }}</p>
-      </div>       
+      <div class="input-option">
 
+        <div class="option">
+          <label for="id"> ID </label>
+          <p>{{ job.job_id }}</p>
+        </div>
+        <div class="option">
+          <label for="user"> User </label>
+          <p>{{ job.user }}</p>
+        </div>       
+      </div>
+        
       <div class="option">
-        <label for="method"> History </label>
-        <p>{{ job.fails.length > 0 ? job.fails : 'No issues.' }}</p>
+        <label for="history"> History </label>
+
+        <p v-if="job.fails.length < 1" style="padding-bottom:1rem;">No issues.</p>
+        <div v-else>
+          <template v-for="(job) in job.fails">
+            <p :key=job.id > {{ RenderDate(job.date) }} </p>
+          </template> 
+        </div>
       </div>  
 
       <div class="text-right">
         <button v-on:click=OnSubmit class="button"> Update </button>
+        <div style="display:inline-block;width:1rem;"></div>  
         <button v-on:click=OnSubmit class="button"> Delete </button>
       </div>
 
@@ -100,6 +121,7 @@ export default {
   data(){
     return {
       attrs : {
+        active : [true,false],
         pings : [1,15,30,45,60],
         methods : ['GET','POST','PUT','DELETE'],
       },
@@ -129,6 +151,16 @@ export default {
   components: {
   },
   methods : {
+    RenderDate : function(input){
+      return new Date(input).toLocaleString();
+    },
+    RenderPeriod : function(input){
+      let temp = input.toString();
+      let index = temp.indexOf('.');
+      if(index === -1) return input;
+      let length = index + 3 < temp.length ? index + 3 : temp.length;
+      return temp.substring(0,length);
+    },
     GetJob : function( job_id ){
       JobService.get_job({ job_id : job_id }).then(response => {
         this.job = response.data.data.job[0];
