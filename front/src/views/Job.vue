@@ -2,7 +2,7 @@
 
   <div class="job-create colour-bg">
 
-    <form v-on:submit=OnSubmit>
+    <form>
       
       <div class="input-full">
         <label for="url"> URL </label>
@@ -101,9 +101,9 @@
       </div>  
 
       <div class="text-right">
-        <button v-on:click=OnSubmit class="button"> Update </button>
+        <button v-on:click=OnUpdate class="button"> Update </button>
         <div style="display:inline-block;width:1rem;"></div>  
-        <button v-on:click=OnSubmit class="button"> Delete </button>
+        <button v-on:click=OnDelete class="button"> Delete </button>
       </div>
 
     </form>
@@ -177,22 +177,36 @@ export default {
       // todo
       return true;
     },
-    OnSubmit : function(){
+    OnUpdate : function(){
       event.preventDefault();
 
       if(!this.OnValidate()){
         return;
       }
 
-      JobService.create(this.form).then(response => {
-        // console.log( response.data.data.jobs );
+      JobService.update(this.job).then(response => {
+        console.log( response.data );
         this.$emit('success');
       }).catch(error => {
         // console.log(error);
         this.$emit('error');
-      });      
+      }); 
+    },
+    OnDelete : function(){
+      event.preventDefault();
 
-    },    
+      if(!this.OnValidate()){
+        return;
+      }
+      
+      JobService.remove({job : this.job}).then(response => {
+        console.log( response.data );
+        this.$emit('success');
+      }).catch(error => {
+        // console.log(error);
+        this.$emit('error');
+      }); 
+    },   
   },
   mounted(){
     this.GetJob( this.$route.params.job_id );

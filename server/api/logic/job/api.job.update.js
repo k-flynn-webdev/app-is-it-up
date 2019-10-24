@@ -7,7 +7,7 @@ const shared = require('./api.job.shared.js');
 
 function update(job,next){
 
-	shared.find(job,function(error,found){
+	shared.find(job,function(error,{found}){
 
 		if(error){
 			return next(error);

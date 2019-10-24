@@ -74,6 +74,9 @@ function prepare(input){
 		input.body.job = {};
 	}
 
+	if(exists(input.body.active)){
+		input.body.job.active = sanitizer(input.body.active);
+	}
 	if(exists(input.body.url)){
 		input.body.job.url = sanitizer(input.body.url.trim());
 	}

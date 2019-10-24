@@ -38,6 +38,12 @@ function valid_method(input){
 	if(temp.indexOf('delete') !== -1) return 'DELETE';
 	return 'GET';
 }
+function valid_active(input){
+	let temp = input.toString().toLowerCase();
+	if( temp == 'true' ) return true;
+	if( temp == 'false' ) return false;
+	return false;
+}
 function valid_params(input){
 	if(input === undefined || input === null || input === '') return ' ';
 	return input.toLowerCase();
@@ -113,6 +119,9 @@ function update(model,input){
 	if(exists(input.method)){
 		model.method = valid_method(input.method);
 	}
+	if(exists(input.active)){
+		model.active = valid_active(input.active);
+	}	
 	if(exists(input.params)){
 		model.params = valid_params(input.params);
 	}
