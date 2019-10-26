@@ -72,9 +72,6 @@ module.exports = function( app ){
 
 	app.delete('/api/job/:job', job.get, function (req, res) {
 
-		console.log('job deletion')
-		console.log(req.body.job)
-
 		api_job_remove.remove(req.body.job, function(error, job){
 
 			if(error){

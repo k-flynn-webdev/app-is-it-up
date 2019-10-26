@@ -35,10 +35,12 @@ textarea,text,p,h1,.header,.title,.text,.text-input,.label,small{
 	font-family: 'Open Sans', sans-serif;
 }
 
-title,.title,.label{
+title,.title,label,.label{
+	text-decoration: none;
 	font-weight: 700;
 }
 h1,.header,.poster{
+	text-decoration: none;
 	font-weight: 700;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <card>
     <job-render :attrs=attrs :job=job>
       <div class="text-right">
         <button v-on:click=OnUpdate class="button"> Update </button>
@@ -7,13 +7,13 @@
         <button v-on:click=OnDelete class="button"> Delete </button>
       </div>
     </job-render>
-  </div>
+  </card>
 
 </template>
 
 <script>
 
-
+import Card from '@/components/Card.vue'
 import JobRender from '@/components/Job.vue'
 import JobService from '../helpers/JobService.js';
 
@@ -50,6 +50,7 @@ export default {
     }
   }, 
   components: {
+    Card,
     JobRender,
   },
   methods : {

@@ -1,6 +1,6 @@
 <template>
    
-  <div class="job-render colour-bg">
+  <div>
 
     <div class="flex-items">
 
@@ -46,7 +46,7 @@
         </select>
       </div>
 
-      <div class="option block" style="flex-grow:1;">
+      <div class="option block">
         <label for="params"> Params </label>
         <input id="params" name="params" placeholder="eg user123" type="text" maxLength="50" v-model=job.params />
       </div>
@@ -71,7 +71,7 @@
           <template v-for="(period, name) in job.periods">
             <div class="periods" :key=name>
               <label> {{ name }} </label>
-              <span> {{ RenderPeriod(period) }} </span>
+              <p> {{ RenderPeriod(period) }} </p>
             </div>
           </template>
         </div>
@@ -144,48 +144,30 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
-.job-render {
-  border-radius: var(--border-radius);
-  border: 1px solid var(--colour-dark);
-  margin: .5rem;
-  margin-bottom: 1rem;
-  padding: .5rem 1rem;
-}
-
-.job-render label {
+label {
   display: block;
   font-weight: bold;
   text-align: left;
-}
-
-
-
-.flex-items  input {
-  padding: 0 .5rem;
-  border-radius: var(--border-radius);
-}
-.flex-items select {
-  border: 1px solid grey;
 }
 
 .flex-items .option {
   margin: .2rem .2rem;
 }
 .flex-items .option.block {
-  flex-grow:2;
+  flex-grow: 2;
 }
 .flex-items .option.block input{
   width: 100%;
 }
 
-.job-render .periods {
+.periods {
   display: inline-block;
   margin: 0 .5rem;
 }
 
-.job-render .item-fail {
+.item-fail {
   margin: .3rem;
 }
 </style>

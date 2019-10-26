@@ -171,7 +171,7 @@ button, .button {
 	border: none;
 	outline: none;
 	min-width: 6rem;
-	transition: all .05s, background-color .66s, opacity .66s;
+	/*transition: all .05s, background-color .66s, opacity .66s;*/
 
 	overflow: hidden;
 	box-sizing: border-box;
@@ -198,16 +198,16 @@ button, .button {
 }
 
 .shadow {
-	box-shadow: 1px 2px 3px var( --colour-shadow );
-	-webkit-box-shadow: 1px 2px 3px var( --colour-shadow );
-	-moz-box-shadow: 1px 2px 3px var( --colour-shadow );
+	box-shadow: 1px 3px 15px black;
+	-webkit-box-shadow: 1px 3px 15px black;
+	-moz-box-shadow: 1px 3px 15px black;
 }
-.button.shadow:active {
+/*.button.shadow:active {
 	transform: translateX(1px) translateY(3px);
 	box-shadow: 1px 1px 0 var( --colour-shadow );
 	-webkit-box-shadow: 1px 1px 0 var( --colour-shadow );
 	-moz-box-shadow: 1px 1px 0 var( --colour-shadow );	
-}
+}*/
 
 
 

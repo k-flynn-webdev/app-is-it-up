@@ -1,19 +1,22 @@
 <template>
-   
-  <form>
-    <job-render :attrs=attrs :job=job>
 
-      <div style="text-align:right;">
-        <button class="button" v-on:click=OnSubmit>CREATE</button>
-      </div>
+  <card>
+    <form>
+      <job-render :attrs=attrs :job=job>
 
-    </job-render>
-  </form>
+        <div style="text-align:right;">
+          <button class="button" v-on:click=OnSubmit>Create</button>
+        </div>
+
+      </job-render>
+    </form>
+  </card>
 
 </template>
 
 <script>
 
+import Card from '@/components/Card.vue'
 import JobRender from '@/components/Job.vue'
 import JobService from '../helpers/JobService.js';
 
@@ -37,6 +40,7 @@ export default {
     }
   },
   components: {
+    Card,
     JobRender,
   },
   computed : {
@@ -44,9 +48,9 @@ export default {
   methods : {
     OnValidate : function(){
 
-      if(this.form.url.length < 4)  return false;
-      if(this.form.method === '')  return false;
-      if(this.form.ping === '')  return false;
+      if(this.job.url.length < 4)  return false;
+      if(this.job.method === '')  return false;
+      if(this.job.ping === '')  return false;
 
       // todo
       return true;
@@ -58,7 +62,7 @@ export default {
         return;
       }
 
-      JobService.create(this.form).then(response => {
+      JobService.create(this.job).then(response => {
         // console.log( response.data.data.jobs );
         this.$emit('success');
       }).catch(error => {

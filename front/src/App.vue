@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="nav" style="margin-top:1rem;">
+      <router-link class="poster" to="/">Is It Up</router-link>
     </div>
     <router-view/>
   </div>
@@ -17,11 +16,6 @@ require('@/assets/style/reset.css');
 require('@/assets/style/default.css');
 require('@/assets/style/colour.css');
 require('@/assets/style/text.css');
-// require('@/assets/style/anim.css');
-// require('@/assets/style/custom.css');
-
-// const cNavBar = () => import('./components/c_navbar.vue');
-// const cFooter = () => import('./components/c_app_footer.vue');
 
 export default {
   name: 'App', 
@@ -43,24 +37,51 @@ export default {
 
 
 <style>
+body {
+  background-color: var(--colour-bg);
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: var(--colour-dark);
-}
-#nav {
-  padding: 30px;
 }
 
+p, h1, h2, h3, a, a:visited, .text, .label, label{
+  color: var(--colour-pop);
+}
 
-#nav a {
+.card {
+  margin: 2rem 1rem;
+  padding: .5rem;
+  overflow: hidden;
+}
+.card, .button {
+  border-radius: var(--border-radius);
+  background-color: var(--colour-dark);
+}
+
+.button {
+  margin-top: .5rem;
   font-weight: bold;
-  color: var(--colour-dark);
+  color: var(--colour-pop);
+  border: 1px solid var(--colour-pop);
+  background-color: var(--colour-dark);
+}
+.button:hover, .button:active {
+  background-color: var(--colour-mid);
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+input, select {
+  padding: 0 .5rem;
+  color: var(--colour-pop);
+  border: 2px solid transparent;
+  border-bottom: 2px solid black;
+  outline: var(--colour-bg);
+  background-color: var(--colour-bg);
 }
+input {
+  border-radius: var(--border-radius);
+}
+
 </style>

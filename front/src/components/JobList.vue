@@ -1,6 +1,6 @@
 <template>
 
-  <div class="job-list colour-bg">
+  <card>
 
     <table>
       
@@ -23,7 +23,7 @@
 
     </table>
 
-  </div>
+  </card>
 
 </template>
 
@@ -31,6 +31,7 @@
 
 <script>
 
+import Card from '@/components/Card.vue'
 import JobListRender from './JobListRender.vue';
 
 export default {
@@ -62,6 +63,7 @@ export default {
   mounted(){
   },
   components: {
+    Card,
     JobListRender,
   },
 }
@@ -71,32 +73,26 @@ export default {
 
 <style>
 
-.job-list {
-  border-radius: var(--border-radius);
-  border: 1px solid var(--colour-dark);
-  margin: .5rem;
-  margin-bottom: 1rem; 
-}
-
-.job-list table {
+table {
   margin: .5rem 0;
   width: 100%;
 }
 
-.job-list .row-split-head {
+.row-split-head {
   height: 1.5rem;
-  border-bottom: 1px solid hsla(1,10%,50%,0.33);
+  border-bottom: 1px solid var(--colour-bg);
 }
 
-
-.job-list .row-split {
-   height: 2rem;
+.row-split {
+  color: var(--colour-mid);
+  height: 2rem;
 }
-.job-list .row-split:not(:last-child) {
-  border-bottom: 1px solid hsla(1,10%,50%,0.33);
+.row-split:not(:last-child) {
+  border-bottom: 1px solid var(--colour-bg);
 }
-.job-list .row-split:hover {
-  background-color: hsla(1,1%,66%,.75);
+.row-split:hover {
+  color: var(--colour-bg);
+  background-color: var(--colour-mid);
 }
 
 </style>
