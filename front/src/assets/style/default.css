@@ -149,7 +149,19 @@ a:first-of-type:last-of-type {
 	border: 1px solid grey !important;
 }
 
+.flex-items {
+  display: flex;
+}
 
+.flex-items.wrap{
+  flex-wrap: wrap;
+}
+.flex-items.center{
+  justify-content: center;
+}
+.flex-items.space-evenly{
+  justify-content: space-evenly;
+}
 
 
 button, .button {

@@ -8,7 +8,7 @@
           <tr class="row-split-head">
               <th class="label">status</th>
               <th class="label">url</th>
-              <th class="label" v-on:click=togglePeriod>{{ getPeriod }}</th>
+              <th class="label" style="width:" v-on:click=togglePeriod>{{ getPeriod }}</th>
               <th class="label">ping</th>
           </tr>
       </thead>
@@ -16,7 +16,7 @@
       <tbody>
 
         <template v-for="job in jobs">
-          <JobWidget v-bind:key=job.job_id v-bind:job=job v-bind:period=getPeriod />
+          <job-list-render v-bind:key=job.job_id v-bind:job=job v-bind:period=getPeriod />
         </template>
 
       </tbody>
@@ -31,7 +31,7 @@
 
 <script>
 
-import JobWidget from './JobWidget.vue';
+import JobListRender from './JobListRender.vue';
 
 export default {
   name: 'JobList',
@@ -62,7 +62,7 @@ export default {
   mounted(){
   },
   components: {
-    JobWidget,
+    JobListRender,
   },
 }
 

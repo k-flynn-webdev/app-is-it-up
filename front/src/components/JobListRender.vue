@@ -31,7 +31,7 @@ export default {
   },  
   computed : {
     getStatus(){
-      if( !this.job.active ) return 'in-active';
+      if( !this.job.active ) return 'off';
       return this.job.status;
     },  
     getURL(){

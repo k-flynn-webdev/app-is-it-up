@@ -37,3 +37,14 @@ export default {
   },
 }
 </script>
+
+
+<style>
+  .button {
+  border-radius: var(--border-radius);
+  font-weight: bold;
+  color: var(--colour-bg);
+  background-color: var(--colour-dark);
+  margin-top: 1rem;
+}
+</style>
