@@ -6,6 +6,8 @@ const api_job_create = require('../logic/job/api.job.create.js');
 const api_job_update = require('../logic/job/api.job.update.js');
 const api_job_remove = require('../logic/job/api.job.remove.js');
 
+const api_job_stack = require('../../services/jobs/jobs.array.js');
+
 
 function exit(res,status,message,data){
 	res.status(status).json({
@@ -31,6 +33,12 @@ module.exports = function( app ){
 			return exit(res,200,'Success jobs found.',{ jobs : jobs });
 		});
 	});
+
+	// app.get('/api/job/stack', function (req, res) {
+
+	// 	return exit(res,200,'Job stack:',{ jobs : api_job_stack.get_jobs() });
+
+	// });
 
 	app.get('/api/job/:job', job.get, function (req, res) {
 
@@ -81,6 +89,8 @@ module.exports = function( app ){
 			return exit(res,200,'Success job removed.',{ job : job });
 		});
 	});
+
+
 
 	return app;
 
