@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 var ping = mongoose.Schema({
 	url : { type: String, required: true },
 	status : { type: Number, required: true, default: 0 },	
-	date : { type: Date, required: true, default : Date.now() },
+	date : { type: Number, required: true, default : Date.now() },
 	job_id : { type: String, required: true },
 	user : { type: mongoose.Schema.Types.ObjectId, required: true },
 })
