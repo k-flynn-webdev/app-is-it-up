@@ -5,8 +5,8 @@ server {
 	root /home/user01/app-is-it-up/server/public;
 	index index.html index.htm index.nginx-debian.html;
 
-    access_log /var/log/nginx/app-is-it-up.log;
-    error_log /var/log/nginx/app-is-it-up.error.log;
+	access_log /var/log/nginx/app-is-it-up.log;
+	error_log /var/log/nginx/app-is-it-up.error.log;
 
     server_name isitup.kubedev.co.uk www.isitup.kubedev.co.uk;
 
@@ -14,21 +14,15 @@ server {
 		try_files $uri $uri/ =404;
 	}
 
-	#location /api {
-	#	proxy_pass http://localhost:8106;
-		
-		# proxy_pass http://backend;
-	#	proxy_set_header X-Real-IP $remote_addr;
-	#	proxy_set_header Host $host;
-	#	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	location /api {
+		proxy_pass http://localhost:8106;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-		# broken / missing ?
-		# proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
-
-		# Following is necessary for Websocket support
-	#	proxy_http_version 1.1;
-	#	proxy_set_header Upgrade $http_upgrade;
-	#	proxy_set_header Connection "upgrade";
-	#}
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
+	}
 
 }
