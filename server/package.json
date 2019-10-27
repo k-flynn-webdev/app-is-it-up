@@ -4,7 +4,7 @@
   "description": "basic nodejs starting point.",
   "main": "app.js",
   "scripts": {
-    "production": "pm2 start ./config/pm2.config.js --name is-it-up-api",
+    "production": "pm2 start ./config/pm2.config.js --name app-is-it-up",
     "start": "nodemon app.js",
     "dev": "nodemon --ignore test",
     "test": "jest --watchAll"
