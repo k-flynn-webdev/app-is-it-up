@@ -40,6 +40,7 @@ function add_ping(job,result){
 		status : result.status,
 		job_id : job.job_id,
 		user : job.user,
+		date : Date.now(),
 	});
 
 	job.status = false;
