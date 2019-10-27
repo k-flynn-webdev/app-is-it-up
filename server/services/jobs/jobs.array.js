@@ -1,3 +1,6 @@
+const path = require('path');
+const logger = require(path.join('..', '..', 'helpers', 'logger.js'));
+
 // global array of jobs for speed
 let jobs = null;
 
@@ -60,8 +63,11 @@ function update(job){
 	let updated = false;
 	let search = find_job(job.job_id);
 	if(search !== -1){
+		let oldVer = jobs[search].toString();
+		let newVer = job.toString();
 		jobs.splice(search,1,job);
 		updated = true;
+		logger.log('job update success: \n' + oldVer + '\n' + newVer );
 	}
 
 	return updated;
@@ -72,8 +78,10 @@ function remove(job){
 	let removed = false;
 	let search = find_job(job.job_id);
 	if(search !== -1){
+		let oldVer = jobs[search].toString();
 		jobs.splice(search,1);
 		removed = true;
+		logger.log('job remove success: \n' + oldVer );
 	}
 
 	return removed;
