@@ -1,6 +1,6 @@
 const jobs = require('../api/logic/job/api.job.shared.js');
 
-let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : -1454934947 };
 
 process.env.TEST_SUITE = 'shared-test';
 
@@ -22,6 +22,9 @@ describe('Job Shared', function() {
 	});	
 	it('valid should return on a valid url', function() {
 		expect(jobs.valid.url('google.com')).toEqual('http://google.com');
+	});
+	it('valid should return on a valid url with no slash', function() {
+		expect(jobs.valid.url('google.com/')).toEqual('http://google.com');
 	});
 	it('valid should return on a valid url', function() {
 		expect(jobs.valid.url('localhost')).toEqual('http://localhost');
@@ -150,8 +153,7 @@ describe('Job Shared', function() {
 
 
 	// update model 
-	let new_model = Object.assign({url:'newurl.com',ping:3737,method:'delete'},temp_job);
-	
+	let new_model = Object.assign(temp_job,{url:'newurl.com',ping:3737,method:'delete'});
 	it('update an obj should return a new correctly updated obj', function() {
 		expect(jobs.update).toBeDefined();
 		let result = jobs.update(temp_job,new_model);

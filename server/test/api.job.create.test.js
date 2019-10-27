@@ -1,6 +1,6 @@
 const jobs = require('../api/logic/job/api.job.create.js');
 
-let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : 1697179240 };
+let temp_job = { url : 'https://www.google.com', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : -1454934947 };
 
 process.env.TEST_SUITE = 'create-test';
 
