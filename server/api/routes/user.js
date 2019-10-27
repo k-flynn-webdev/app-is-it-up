@@ -32,55 +32,55 @@ module.exports = function( app ){
 	// 	});
 	// });
 
-	app.get('/api/job/:job', job.get, function (req, res) {
+	// app.get('/api/job/:job', job.get, function (req, res) {
 
-		api_job_get.get(req.body.job, function(error, job){
+	// 	api_job_get.get(req.body.job, function(error, job){
 
-			if(error){
-				return exit(res,422,error.message,error);
-			}
+	// 		if(error){
+	// 			return exit(res,422,error.message,error);
+	// 		}
 				
-			return exit(res,200,'Success job found.',{ job : job });
-		});
-	});
+	// 		return exit(res,200,'Success job found.',{ job : job });
+	// 	});
+	// });
 
-	app.post('/api/job/create', job.create, function (req, res) {
+	// app.post('/api/job/create', job.create, function (req, res) {
 
-		api_job_create.create(req.body.job, function(error, new_model){
+	// 	api_job_create.create(req.body.job, function(error, new_model){
 
-			if(error){
-				return exit(res,422,error.message,error);
-			}
+	// 		if(error){
+	// 			return exit(res,422,error.message,error);
+	// 		}
 
-			return exit(res,201,'Success new job created.',{ job : new_model });
+	// 		return exit(res,201,'Success new job created.',{ job : new_model });
 
-		});
-	});
+	// 	});
+	// });
 
-	app.put('/api/job/:job', job.update, function (req, res) {
+	// app.put('/api/job/:job', job.update, function (req, res) {
 
-		api_job_update.update(req.body.job, function(error, new_model){
+	// 	api_job_update.update(req.body.job, function(error, new_model){
 
-			if(error){
-				return exit(res,422,error.message,error);
-			}
+	// 		if(error){
+	// 			return exit(res,422,error.message,error);
+	// 		}
 
-			return exit(res,201,'Success job updated.',{ job : new_model });
+	// 		return exit(res,201,'Success job updated.',{ job : new_model });
 
-		});
-	});
+	// 	});
+	// });
 
-	app.delete('/api/job/:job', job.get, function (req, res) {
+	// app.delete('/api/job/:job', job.get, function (req, res) {
 
-		api_job_remove.remove(req.body.job, function(error, job){
+	// 	api_job_remove.remove(req.body.job, function(error, job){
 
-			if(error){
-				return exit(res,422,error.message,error);
-			}
+	// 		if(error){
+	// 			return exit(res,422,error.message,error);
+	// 		}
 				
-			return exit(res,200,'Success job removed.',{ job : job });
-		});
-	});
+	// 		return exit(res,200,'Success job removed.',{ job : job });
+	// 	});
+	// });
 
 	return app;
 
