@@ -83,6 +83,10 @@ table {
   border-bottom: 1px solid var(--colour-bg);
 }
 
+.row-split-head .label {
+  transform: translateY(-.33rem);
+}
+
 .row-split {
   color: var(--colour-mid);
   height: 2rem;

@@ -35,13 +35,19 @@ export default {
       return this.job.status;
     },  
     getURL(){
+      const maxLength = 18;
       let newURL = '';
       if( this.job.url.toLowerCase().indexOf('https://') >= 0 ){
         newURL = this.job.url.replace('https://', '');
       }
       if( this.job.url.toLowerCase().indexOf('http://') >= 0 ){
         newURL = this.job.url.replace('http://', '');
-      } 
+      }
+
+      if(newURL.length > maxLength ){
+        newURL = newURL.substring(0,maxLength);
+      }
+
       return newURL;
     },
     getPeriod(){
@@ -57,8 +63,5 @@ export default {
 </script>
 
 <style>
-
-
-
 
 </style>
