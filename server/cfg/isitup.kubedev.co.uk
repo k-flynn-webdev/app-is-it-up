@@ -11,11 +11,7 @@ server {
 	server_name isitup.kubedev.co.uk www.isitup.kubedev.co.uk;
 
 	location / {
-		try_files $uri $uri/ =404;
-	}
-
-	location /job {
-		try_files $uri;
+		 try_files $uri /index.html;
 	}
 
 	location /api {
