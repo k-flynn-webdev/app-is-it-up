@@ -8,10 +8,14 @@ server {
 	access_log /var/log/nginx/app-is-it-up.log;
 	error_log /var/log/nginx/app-is-it-up.error.log;
 
-    server_name isitup.kubedev.co.uk www.isitup.kubedev.co.uk;
+	server_name isitup.kubedev.co.uk www.isitup.kubedev.co.uk;
 
 	location / {
 		try_files $uri $uri/ =404;
+	}
+
+	location /job {
+		try_files $uri;
 	}
 
 	location /api {
