@@ -10,6 +10,9 @@
       </div>
       <h1 class="logo-text"> Is It Up</h1>
     </router-link>
+
+    <message-c />
+
     </div>
     <router-view/>
   </div>
@@ -25,6 +28,9 @@ require('@/assets/style/default.css');
 require('@/assets/style/colour.css');
 require('@/assets/style/text.css');
 
+import MessageC from '@/components/MessageC.vue'
+
+
 export default {
   name: 'App', 
   created(){
@@ -38,6 +44,7 @@ export default {
   mounted(){
   },
   components: {
+    MessageC,
   },
 }
 
@@ -45,7 +52,10 @@ export default {
 
 
 <style>
-
+#nav {
+  margin-top: -.66rem;
+  margin-bottom: 3rem;
+}
 .icon {
   margin: 0 auto;
   text-align: center;
@@ -91,15 +101,28 @@ label, .label {
   background-color: var(--colour-dark);
 }
 
+
 .button {
   margin-top: .5rem;
   font-weight: bold;
   color: var(--colour-pop);
   border: 1px solid var(--colour-pop);
   background-color: var(--colour-dark);
+  transition: .2s;
+}
+button:focus, .button:focus {
+  background-color: hsla(210,33%,75%,.5);
+  border: 1px solid white;
 }
 .button:hover, .button:active {
   background-color: var(--colour-mid);
+}
+
+.button.success {
+  background-color: var(--colour-success);  
+}
+.button.fail {
+  background-color: var(--colour-fail);  
 }
 
 input, select {
@@ -116,10 +139,6 @@ input {
 
 input:focus, select:focus {
   outline: 2px solid white;
-}
-button:focus, .button:focus {
-  background-color: hsla(210,33%,75%,.5);
-  border: 1px solid white;
 }
 
 

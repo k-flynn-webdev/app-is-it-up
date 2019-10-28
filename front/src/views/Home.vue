@@ -31,8 +31,13 @@ export default {
         console.log(error);
       });
     },
+    AddJob : function(job){
+      this.jobs.push(job);
+    },
   },
   mounted(){
+    this.$root.$on('add-job', this.AddJob );
+    this.$root.$on('get-jobs', this.GetJobs );
     this.GetJobs();
   },
 }
