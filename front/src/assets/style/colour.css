@@ -6,6 +6,9 @@
 	--colour-dark: hsl(210,25%,30%);
 	--colour-bg: hsl(210,25%,20%);
 
+	--colour-success: hsl(170,60%,50%);
+	--colour-fail: hsl(14,60%,50%);
+
 }
 
 

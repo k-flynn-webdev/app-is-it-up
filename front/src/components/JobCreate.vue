@@ -5,7 +5,7 @@
       <job-render :attrs=attrs :job=job>
 
         <div style="text-align:right;">
-          <button class="button" v-on:click=OnSubmit>Create</button>
+          <button-c ref="btn_create" v-on:click=OnSubmit>Create</button-c>
         </div>
 
       </job-render>
@@ -16,6 +16,7 @@
 
 <script>
 
+import ButtonC from '@/components/ButtonC.vue'
 import Card from '@/components/Card.vue'
 import JobRender from '@/components/Job.vue'
 import JobService from '../helpers/JobService.js';
@@ -40,6 +41,7 @@ export default {
     }
   },
   components: {
+    ButtonC,
     Card,
     JobRender,
   },
@@ -63,12 +65,13 @@ export default {
       }
 
       JobService.create(this.job).then(response => {
-        // console.log( response.data.data.jobs );
-        this.$emit('success');
+        this.$refs.btn_create.OnSuccess();
+        this.$root.$emit('message', response.data.message);
+        this.$root.$emit('add-job', response.data.data.job);
       }).catch(error => {
-        // console.log(error);
-        this.$emit('error');
-      });      
+        this.$refs.btn_create.OnFail();
+        this.$root.$emit('message', error.response.data.message);
+      });
 
     },
   },

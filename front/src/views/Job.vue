@@ -2,9 +2,9 @@
   <card>
     <job-render :attrs=attrs :job=job>
       <div class="text-right">
-        <button v-on:click=OnUpdate class="button"> Update </button>
+        <button-c ref="btn_update" v-on:click=OnUpdate> Update </button-c>
         <div style="display:inline-block;width:1rem;"></div>  
-        <button v-on:click=OnDelete class="button"> Delete </button>
+        <button-c ref="btn_delete" v-on:click=OnDelete> Delete </button-c>
       </div>
     </job-render>
   </card>
@@ -13,12 +13,13 @@
 
 <script>
 
+import ButtonC from '@/components/ButtonC.vue'
 import Card from '@/components/Card.vue'
 import JobRender from '@/components/Job.vue'
 import JobService from '../helpers/JobService.js';
 
 export default {
-  name: 'job',
+  name: 'Job',
   data(){
     return {
       attrs : {
@@ -50,6 +51,7 @@ export default {
     }
   }, 
   components: {
+    ButtonC,
     Card,
     JobRender,
   },
@@ -78,20 +80,26 @@ export default {
       }
 
       JobService.update(this.job).then(response => {
-        this.$emit('success');
+        this.$refs.btn_update.OnSuccess();
+        this.$root.$emit('message', response.data.message );
       }).catch(error => {
-        // console.log(error);
-        this.$emit('error');
+        this.$refs.btn_update.OnFail();
+        this.$root.$emit('message', error.response.data.message);
       }); 
     },
     OnDelete : function(){
       event.preventDefault();
       
       JobService.remove({ job_id : this.$route.params.job_id }).then(response => {
-        this.$emit('success');
+        this.$refs.btn_delete.OnSuccess();
+        this.$root.$emit('message', response.data.message );
+        let self = this;
+        setTimeout( function(){
+          self.$router.push('/');
+        }, 3.5 * 1000);
       }).catch(error => {
-        // console.log(error);
-        this.$emit('error');
+        this.$refs.btn_delete.OnSuccess();
+        this.$root.$emit('message', error.response.data.message);
       }); 
     },   
   },
