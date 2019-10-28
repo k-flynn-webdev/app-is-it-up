@@ -59,7 +59,9 @@
 
         <div class="info">
           <label for="status"> Status </label>
-          <p>{{ job.status }}</p>
+          <Up v-if="getStatus === 1" />
+          <Down v-if="getStatus === 2" />
+          <Off v-if="getStatus === 3" />
         </div>
 
         <div class="info">
@@ -116,6 +118,9 @@
 
 <script>
 
+import Up from '@/components/Ic_Up.vue'
+import Down from '@/components/Ic_Down.vue'
+import Off from '@/components/Ic_Off.vue'
 
 export default {
   name: 'JobRender',
@@ -123,11 +128,21 @@ export default {
     attrs : Object,
     job : Object,
   },
+  components: {
+    Up,
+    Down,
+    Off,
+  },
   computed : {
     renderFull : function(){
       if(this.job.full) return true;
       return false;
     },
+    getStatus(){
+      if( !this.job.active ) return 3;
+      if( !this.job.status ) return 2;
+      return 1;
+    }, 
   },
   methods : {
     RenderDate : function(input){

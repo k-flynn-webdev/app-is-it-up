@@ -46,6 +46,12 @@ export default {
 
 <style>
 
+.icon {
+  margin: 0 auto;
+  text-align: center;
+  width: 1.55rem;
+  transform: translateY(.25rem);
+}
 .logo {
   width: 4rem;
   display: inline-block;

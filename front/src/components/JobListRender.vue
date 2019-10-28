@@ -2,7 +2,13 @@
     
     <tr class="row-split" v-on:click=onClick>
 
-      <td class="widget-status"> {{ getStatus }} </td>  
+      <td class="widget-status"> 
+
+        <Up v-if="getStatus === 1" />
+        <Down v-if="getStatus === 2" />
+        <Off v-if="getStatus === 3" />
+
+      </td>
 
       <td class="widget-url"> {{ getURL }} </td>  
 
@@ -15,8 +21,18 @@
 </template>
 
 <script>
+
+import Up from '@/components/Ic_Up.vue'
+import Down from '@/components/Ic_Down.vue'
+import Off from '@/components/Ic_Off.vue'
+
 export default {
   name: 'JobWidget',
+  components: {
+    Up,
+    Down,
+    Off,
+  },  
   props: {
     job : {
       method : String,
@@ -31,8 +47,9 @@ export default {
   },  
   computed : {
     getStatus(){
-      if( !this.job.active ) return 'off';
-      return this.job.status;
+      if( !this.job.active ) return 3;
+      if( !this.job.status ) return 2;
+      return 1;
     },  
     getURL(){
       const maxLength = 18;
