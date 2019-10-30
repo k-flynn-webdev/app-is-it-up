@@ -8,11 +8,6 @@
         <label for="url"> URL </label>
         <input id="url" name="url" placeholder="eg www.myhome.com" type="text" minLength="4" required v-model=job.url /> 
       </div>
-
-    </div> 
-
-    <div class="flex-items">
-
       <div class="option">
         <label for="active"> Active </label>
         <select id="active" name="active" v-model=job.active>
@@ -23,6 +18,10 @@
           </template>
         </select>
       </div>
+
+    </div> 
+
+    <div class="flex-items">
 
       <div class="option">
         <label for="method"> Method </label>
@@ -53,7 +52,7 @@
 
     </div> 
 
-    <div v-if=renderFull>
+    <div v-if=renderFull style="margin-top:1rem;">
 
       <div class="flex-items wrap space-evenly">
 
