@@ -25,10 +25,23 @@ function update(job,next){
 				return next(error);
 			}
 
-			new_model.has_updated = jobs_array.update(new_model);
+			// does job exist in stack???
+			// todo create integration test for this!
+
+			let index = jobs_array.find_job(new_model);
+
+			if(!new_model.active){
+				new_model.has_updated = jobs_array.remove(new_model);
+			}
+			if(new_model.active && index === -1){
+				new_model.has_updated = jobs_array.insert(new_model);
+			} else {
+				new_model.has_updated = jobs_array.update(new_model);
+			}
+
 			return next(null,new_model);
 
-		});		
+		});
 	});
 }
 exports.update = update;
