@@ -53,7 +53,7 @@ function insert(job){
 	if(search === -1 && job.active){
 		jobs.push(job);
 		inserted = true;
-		logger.log('job insert success: ' + '\n' + job );
+		// logger.log('job insert success: ' + '\n' + job );
 	}
 
 	return inserted;
@@ -68,7 +68,7 @@ function update(job){
 		let newVer = job.toString();
 		jobs.splice(search,1,job);
 		updated = true;
-		logger.log('job update success: ' + '\n' + newVer );
+		// logger.log('job update success: ' + '\n' + newVer );
 	}
 
 	return updated;
@@ -82,7 +82,7 @@ function remove(job){
 		let oldVer = jobs[search].toString();
 		jobs.splice(search,1);
 		removed = true;
-		logger.log('job remove success:' + '\n' + oldVer );
+		// logger.log('job remove success:' + '\n' + oldVer );
 	}
 
 	return removed;
