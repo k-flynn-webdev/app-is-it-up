@@ -5,6 +5,7 @@ const api_job_get = require('../logic/job/api.job.get.js');
 const api_job_create = require('../logic/job/api.job.create.js');
 const api_job_update = require('../logic/job/api.job.update.js');
 const api_job_remove = require('../logic/job/api.job.remove.js');
+const pings = require('../../services/pings/pings.funcs.js');
 
 const api_job_stack = require('../../services/jobs/jobs.array.js');
 
@@ -37,10 +38,6 @@ module.exports = function( app ){
 	// todo //
 	app.get('/api/job/stack', function (req, res) {
 		let stack = api_job_stack.get_jobs();
-
-		for(let i =0; i < stack.length; i++){
-			stack[i].fails = stack[i].fails.length;
-		}
 
 		return exit(res,200,'Job stack:',{ jobs : stack });
 	});
@@ -90,7 +87,10 @@ module.exports = function( app ){
 			if(error){
 				return exit(res,422,error.message,error);
 			}
-				
+
+			// find all pings and remove
+			pings.remove(job);
+
 			return exit(res,200,'Success job removed.',{ job : job });
 		});
 	});

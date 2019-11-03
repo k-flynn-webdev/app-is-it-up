@@ -27,22 +27,6 @@ function ready(time_now,job){
 exports.ready = ready;
 
 
-// function save(model,next){
-
-// 	if( process.env.NODE_ENV === 'test' ){
-// 		return next(null, model);
-// 	}
-
-// 	model.save(function(error,result){
-// 		if(error){
-// 			logger.log(error);
-// 			return next(error);
-// 		}
-// 		return next(null,result);
-// 	});
-// }
-// exports.save = save;
-
 
 function exec(job, next){
 

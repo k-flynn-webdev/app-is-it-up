@@ -1,8 +1,9 @@
 // // iterates over array of provided jobs ..
 let array = require('./jobs.array.js');
 const jobs_exec = require('./jobs.exec.js');
-const m_ping = require('../../models/ping.js');
+// const m_ping = require('../../models/ping.js');
 const logger = require('../../helpers/logger.js');
+const pings = require('../pings/pings.funcs.js');
 
 
 let app_temp = null;
@@ -33,26 +34,11 @@ exports.exec = exec;
 
 
 
-function add_ping(job,result){
-
-	let tmp_ping = new m_ping({
-		url : job.url,
-		status : result.status,
-		job_id : job.job_id,
-		user : job.user,
-		date : Date.now(),
-	});
-
+function add_ping(job,status){
+	let new_ping = pings.create(job,status);
 	job.status = false;
-	job.fails.push({ date : tmp_ping.date , id : tmp_ping._id });
-
-	if(process.env.NODE_ENV === 'test') return;
-
-	tmp_ping.save(function(error,result){
-		if(error){
-			logger.log(error);
-		}
-	});
+	let new_fail = { date : new_ping.date , id : new_ping._id };
+	job.fails.push(new_fail);
 }
 exports.add_ping = add_ping;
 

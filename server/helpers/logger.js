@@ -37,7 +37,7 @@ function log( line ){
 	if( line.message !== undefined ){
 		line = line.message;
 	}
-	if( !line.endsWith('\n') ){
+	if( line.endsWith !== undefined && !line.endsWith('\n') ){
 		line = line + '\n';
 	}
 	// if( process.env.NODE_ENV.toLowerCase() !== 'production'){
