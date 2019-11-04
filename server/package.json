@@ -1,7 +1,7 @@
 {
   "name": "is-it-up-api",
-  "version": "0.5.1",
-  "description": "basic nodejs starting point.",
+  "version": "0.6.6",
+  "description": "Basic uptime-downtime app.",
   "main": "app.js",
   "scripts": {
     "production": "pm2 start ./config/pm2.config.js",
