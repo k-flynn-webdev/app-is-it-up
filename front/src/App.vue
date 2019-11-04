@@ -15,6 +15,7 @@
 
     </div>
     <router-view/>
+    <Footer/>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ require('@/assets/style/colour.css');
 require('@/assets/style/text.css');
 
 import MessageC from '@/components/MessageC.vue'
+import Footer from '@/components/Footer.vue'
 
 
 export default {
@@ -45,6 +47,7 @@ export default {
   },
   components: {
     MessageC,
+    Footer,
   },
 }
 
@@ -52,10 +55,12 @@ export default {
 
 
 <style>
+
 #nav {
   margin-top: -.66rem;
   margin-bottom: 3rem;
 }
+
 .icon {
   margin: 0 auto;
   text-align: center;

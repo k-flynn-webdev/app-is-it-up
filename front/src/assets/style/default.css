@@ -1,7 +1,8 @@
 :root{
 
 	--border-radius: .5rem;
-
+	--margin: 1rem;
+	--nav-height: 2.75rem;
 	/*--margin: 1rem;*/
 
 	/*--nav-height: 2.75rem;*/
@@ -31,7 +32,7 @@
 
 
 html {
-	padding-top: var(--nav-height);
+	/*padding-top: var(--nav-height);*/
 	background-color: var(--colour-bg);
 	/*background: linear-gradient( to bottom, var(--colour-dark), 75%, var(--colour-light-gradient) );	*/
 	background-repeat: no-repeat;
@@ -41,7 +42,7 @@ body {
 	margin: 0;
 	position: relative;
 	width: 100%;
-	height: calc(100% - var(--nav-height) - .2rem );
+	height: calc(100vh - var(--nav-height));
 }
 
 #app {
@@ -49,7 +50,8 @@ body {
 	margin: 0;
 	display: block;
 	width: 100%;
-	min-height: calc(100% - var(--nav-height) - .2rem );
+	/*min-height: calc(100% - var(--nav-height) - .2rem );*/
+	min-height: 100%;
 	position: relative;
 }
 
