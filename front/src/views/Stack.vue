@@ -21,17 +21,13 @@ export default {
     JobList,
   },
   methods : {
-    getStatus(input){
-      if( !input.active ) return 'in-active';
-      if( !input.status ) return 'down';
-      return 'active';
-    },
     GetStack : function(){
       JobService.stack().then(response => {
         this.stack.length = 0;
         this.stack = response.data.data.jobs;
+        this.$root.$emit('message', 'success');
       }).catch(error => {
-        console.log(error);
+        this.$root.$emit('message', error.response.data.message);
       });
     },
   },
