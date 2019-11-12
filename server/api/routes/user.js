@@ -20,6 +20,11 @@ function exit(res,status,message,data){
 
 module.exports = function( app ){
 
+	// todo create
+	// todo get
+	// todo update
+	// todo delete
+
 	// app.get('/api/job/all', job.owner, function (req, res) {
 
 	// 	api_job_all(req.body.job, function(error, job){

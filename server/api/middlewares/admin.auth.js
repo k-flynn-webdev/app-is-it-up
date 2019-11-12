@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const token_cfg = {
-	// expires: 60*60*24*7,
-	expires: 60,
+	expires: 60*60*24*7,
 	secret: 'testSecret',
 }
 const example = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1MTI3NTMsImV4cCI6MTU3NDExNzU1M30.SRSqRpqnvPImX6rr282-fDg8T-xwJuztObkBnB5DZW0'
@@ -16,7 +15,7 @@ function create( input ){
 }
 exports.create = create;
 
-console.log(create({email:'test@test.com',role:'admin'}))
+// console.log(create({email:'test@test.com',role:'admin'}))
 
 function exit(res,status,message,data){
 	res.status(status).json({
@@ -25,6 +24,22 @@ function exit(res,status,message,data){
 		data : data,
 	});
 }
+
+
+function tokenCleanUp (token,res) {
+	let tmp = token;
+	let bearer = 'Bearer'; 
+	let bearerIndex = token.indexOf(bearer);
+	if( bearerIndex !== -1){ // is present
+		let tmp2 = tmp.split(bearer);
+		tmp = tmp2[1].trim();
+	} else {
+		return exit(res,401,'Invalid token')
+	}
+	return tmp;
+}
+exports.tokenCleanUp = tokenCleanUp;
+
 
 function auth (req,res,next) {
 
@@ -35,46 +50,28 @@ function auth (req,res,next) {
 	}
 
 	if( token ){
-		var bearer = 'Bearer'; 
-		var hasBearer = token.indexOf(bearer);
-		if( hasBearer !== -1){ // is present
-			let temp = token.split(bearer);
-			token = temp[1].trim();
-		} else {
-			return exit(res,401,'Invalid token')
-		}
+		token = tokenCleanUp(token,res);
 	}
 
 	if(token.length !== example.length){
 		return exit(res,401,'Invalid token')
 	}
 
-	jwt.verify( token, token_cfg.secret, function(error, decoded ){
+	jwt.verify(token,token_cfg.secret, function(error,decoded){
 
 		if(error){
 			return exit(res,401,error.name)
 		}
 
-	// 	if( error.name === 'TokenExpiredError' ){
-	// 		return response.status(status.client.unauthorized).json({ 
-	// 			status : status.client.unauthorized, 
-	// 			message : 'token expired, please re-login.'
-	// 		});
-	// 	}
-
-	// 	return response.status(status.client.unauthorized).json({ 
-	// 		status : status.client.unauthorized, 
-	// 		message : 'token invalid.'
-	// 	});
-	// }
-
-	// request.decoded = decoded;
-	// request.decoded.raw = token;
-
+		req.body.payload = decoded;
+		
 		next()
 	})
 }
 exports.auth = auth;
 
+
+
+// todo create unit tests for auth
 
 

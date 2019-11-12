@@ -38,6 +38,7 @@ module.exports = function( app ){
 
 	// todo //
 	app.get('/api/job/stack', adminAauth.auth, function (req, res) {
+
 		let stack = api_job_stack.get_jobs();
 
 		return exit(res,200,'Job stack:',{ jobs : stack });

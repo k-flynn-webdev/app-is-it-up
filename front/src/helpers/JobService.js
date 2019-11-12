@@ -5,7 +5,7 @@ const BASE = '/api/job';
 const STACK = '/api/job/stack';
 const CREATE = '/create';
 const ALL = '/all';
-const ADMIN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1MTUyNjcsImV4cCI6MTU3MzUxNTMyN30.nuO3lxyc-KqHo3KaLQg0X1Dhj5yZo0EYy0WP10BoJxA'
+const ADMIN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1OTgwMjIsImV4cCI6MTU3NDIwMjgyMn0.i41Bb4rzaMwL3J1TxV2t_zI1ODA2KcMbq30GevFNwsE'
 
 const mergeParams = (params) => {
 	return Object.assign(params, { user : UserService.read(), headers: { authorization: 'Bearer ' + ADMIN }});
