@@ -1,31 +1,30 @@
 <template>
   <div class="card shadow">
-    <form>
-      <h1>User</h1>
+    <h1>Register</h1>
+    <div class="form">
       <div class="form-item-block">
         <label for="name"> Name </label>
-        <input minLength="4" required type="string" name="name" placeholder="Name">
+        <input minLength="4" required type="string" name="name" placeholder="Name" v-model="user.name">
       </div>
       <div class="form-item-block">
         <label for="email"> Email </label>
-        <input minLength="4" required type="email" name="email" placeholder="me @ me.com">
+        <input minLength="4" required type="email" name="email" placeholder="me @ me.com" v-model="user.email">
       </div>
       <div class="form-item-block">
         <label for="password"> Password </label>
-        <input minLength="8" required type="password" name="password" placeholder="password">
+        <input minLength="8" required type="password" name="password" placeholder="password" v-model="user.password">
       </div>
       <div style="text-align: right;">
-        <button class="button">Create</button>      
+        <button class="button" @click="onSubmit">Create</button>      
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
 
 import Card from '@/components/Card.vue'
-// import JobList from '@/components/JobList.vue'
-// import JobService from '../helpers/JobService.js';
+import UserService from '../helpers/UserService.js';
 
 export default {
   name: 'user',
@@ -40,9 +39,19 @@ export default {
   }, 
   components: {
     Card,
-    // JobList,
   },
   methods : {
+    onSubmit : function () {
+      // todo: validate all input
+      UserService.create(this.user)
+      .then( response => {
+        console.log(response.data)
+      })
+      .catch( errror => {
+
+      })
+
+    },
     // GetJobs : function(){
     //   JobService.get_all().then(response => {
     //     this.jobs.length = 0;
@@ -65,7 +74,7 @@ export default {
 
 
 <style>
-form {
+.form {
   margin: .5rem 0.5rem 1rem 0.5rem;
 }
 .form-item-block {

@@ -1,21 +1,48 @@
+import axios from 'axios';
+
+const API = 'api';
+const USER = 'user';
+const CREATE = 'create';
+// const ALL = '/all';
+// const ADMIN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1OTgwMjIsImV4cCI6MTU3NDIwMjgyMn0.i41Bb4rzaMwL3J1TxV2t_zI1ODA2KcMbq30GevFNwsE'
+
+// const mergeParams = (params) => {
+	// return Object.assign(params, { user : UserService.read(), headers: { authorization: 'Bearer ' + ADMIN }});
+// }
+
+// get via owner
+// const get_all = (params={}) => axios.post(`${BASE + ALL}`, mergeParams(params))
+
 
 let user_default = '5d8cc974f14001679cb90caf';
-let user = Read_Local();
+// let user = read();
 
 
-function Read_Local(){
+function read(){
 	let tmp = JSON.parse(localStorage.getItem('user'));
 	if(tmp === null){
-		Update_Local(user_default);
+		update(user_default);
 		return user_default;
 	}
 	return tmp;
 }
-exports.read = Read_Local;
 
 
-function Update_Local(input){
+function update(input){
 	localStorage.setItem('user', JSON.stringify(input));
 }
-exports.update = Update_Local;
+
+
+const create = (input={}) => axios.post(`/${API}/${USER}/${CREATE}`, input)
+
+
+
+const services = {
+	create : create,
+	update : update,
+	read : read,
+}
+
+export default services;
+
 

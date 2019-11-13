@@ -1,7 +1,7 @@
 <template>
   <div class="card shadow">
+    <h1>Login</h1>
     <form>
-      <h1>User</h1>
       <div class="form-item-block">
         <label for="name"> Name </label>
         <input minLength="4" required type="string" name="name" placeholder="Name">

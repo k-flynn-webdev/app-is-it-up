@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <div class="sign-up">
-      <router-link class="sign-up" to="/user/create">Sign Up</router-link>
+    <div class="register">
+      <router-link class="register" to="/user/register">Register</router-link>
     </div>
     <JobCreate v-on:success=GetJobs />
     <JobList v-bind:jobs=jobs />
@@ -48,7 +48,7 @@ export default {
 
 
 <style>
-.sign-up {
+.register {
   text-align: right;
 }
 </style>
