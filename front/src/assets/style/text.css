@@ -92,7 +92,7 @@ h1,.header,.poster{
 	margin-bottom: var(--margin);
 }
 
-.title {
+h1,.title {
 	font-size: var( --title-screen-large );
 	margin-bottom: calc(var(--margin)*0.5);
 }

@@ -1,70 +1,57 @@
 const m_user = require('../../../models/user.js');
-
-const valid = require('./api.user.shared.js').valid;
+const valid = require('../../middlewares/user.js').valid;
 const shared = require('./api.user.shared.js');
+const bcrypt = require('bcrypt');
+const config = require('../../../config/config.js');
 
 
 function create(input, next){
+	if(!valid.name(input.name)) return next(new Error('Invalid Name.'));
+	if(!valid.email(input.email)) return next(new Error('Invalid Email.'));
+	
+	let passwordTest = valid.password(input.password)
+	if(passwordTest !== true) return next(new Error(passwordTest));
 
-	create_model(input, function(error, user_model){
+	shared.find_user({email:input.email}, function(err,result){
 
-		if(error){
-			return next(error);
+		if (err){
+			return next(err);
 		}
 
-		// does it exist?
-		shared.find(user_model,function(error, found){
+		if (result.found.length > 0){
+			return next(new Error('Email already in use.'));
+		}
 
-			if(error){
-				return next(error);
+		bcrypt.genSalt(config.SALT_ROUNDS, function(err, salt) {
+
+			if (err){
+				return next(err);
 			}
 
-			if(found.length !== 0){
-				return next(new Error('Already exists.'));
-			}
-
-			user_model.save(function(error,result){
-
-				if(error){
-					return next(error);
+			bcrypt.hash(config.HASH_SECRET + input.password, salt, function(err, hash) {
+				
+				if (err){
+					return next(err);
 				}
 
-				return next(null,user_model);
+				input.password = hash;
+
+				let tmp = new m_user();
+				let newUser = shared.update(tmp,input);
+				newUser.save( function(err, model){
+					
+					if (err){
+						return next(err);
+					}
+
+					return next(null,model);
+
+				});
 			});
 		});
 	});
 }
 exports.create = create;
-
-
-function create_model(input, next){
-
-	if(!valid.name(input.name)) return next(new Error('Invalid Name.'));
-	if(!valid.Email(input.Email)) return next(new Error('Invalid Email.'));
-	if(!valid.Password(input.Password)) return next(new Error('Invalid Password.'));
-
-	let tmp = new m_user();
-
-	let clean = shared.update(tmp,input);
-	clean.user_id = create_id(clean);
-
-	return next(null,clean);
-}
-exports.create_model = create_model;
-
-// function create_id(input) {
-// 	let temp = input.url + input.method + input.props + input.time + input.owner;
-
-// 	let hash = 0, i, chr;
-// 	if (temp.length === 0) return hash;
-// 	for (i = 0; i < temp.length; i++) {
-// 		chr = temp.charCodeAt(i);
-// 		hash = ((hash << 5) - hash) + chr;
-// 		hash |= 0; // Convert to 32bit integer
-// 	}
-
-// 	return hash;
-// };
 
 
 

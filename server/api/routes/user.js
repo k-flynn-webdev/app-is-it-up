@@ -1,10 +1,10 @@
-const job = require('../middlewares/job.js');
-// const api_job_all = require('../logic/api.job.all.js');
+const valid_user = require('../middlewares/user.js');
+const api_user = require('../logic/user/api.user.create.js');
 // const api_ping_get = require('../logic/api.ping.get.js');
-const api_job_get = require('../logic/job/api.job.get.js');
-const api_job_create = require('../logic/job/api.job.create.js');
-const api_job_update = require('../logic/job/api.job.update.js');
-const api_job_remove = require('../logic/job/api.job.remove.js');
+// const api_job_get = require('../logic/job/api.job.get.js');
+// const api_job_create = require('../logic/job/api.job.create.js');
+// const api_job_update = require('../logic/job/api.job.update.js');
+// const api_job_remove = require('../logic/job/api.job.remove.js');
 
 
 function exit(res,status,message,data){
@@ -25,17 +25,17 @@ module.exports = function( app ){
 	// todo update
 	// todo delete
 
-	// app.get('/api/job/all', job.owner, function (req, res) {
+	app.post('/api/user/create', valid_user.create, function (req, res) {
 
-	// 	api_job_all(req.body.job, function(error, job){
+		api_user.create(req.body.user, function(error, model){
+			
+			if(error){
+				return exit(res,422,error.message,error);
+			}
 
-	// 		if(error){
-	// 			return exit(res,422,error.message,error);
-	// 		}
-				
-	// 		return exit(res,200,'Success jobs found.',{ result : job });
-	// 	});
-	// });
+			return exit(res,200,'Success User created.',{ result : model });
+		});
+	});
 
 	// app.get('/api/job/:job', job.get, function (req, res) {
 

@@ -12,7 +12,7 @@
       </div>
       <div class="form-item-block">
         <label for="password"> Password </label>
-        <input minLength="8" required type="password" name="password" placeholder="password" v-model="user.password">
+        <input minLength="8" required type="password" name="password" placeholder="* * *" v-model="user.password">
       </div>
       <div style="text-align: right;">
         <button class="button" @click="onSubmit">Create</button>      
@@ -45,10 +45,11 @@ export default {
       // todo: validate all input
       UserService.create(this.user)
       .then( response => {
-        console.log(response.data)
+        // console.log(response.data)
+        this.$root.$emit('message', response.data.message);
       })
-      .catch( errror => {
-
+      .catch( error => {
+        this.$root.$emit('message', error.response.data.message);
       })
 
     },
