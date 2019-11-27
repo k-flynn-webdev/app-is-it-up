@@ -1,5 +1,5 @@
 const job = require('../middlewares/job.js');
-const adminAauth = require('../middlewares/admin.auth.js');
+const admin_auth = require('../middlewares/admin.auth.js');
 // const api_job_all = require('../logic/api.job.all.js');
 // const api_ping_get = require('../logic/api.ping.get.js');
 const api_job_get = require('../logic/job/api.job.get.js');
@@ -37,7 +37,7 @@ module.exports = function( app ){
 	});
 
 	// todo //
-	app.get('/api/job/stack', adminAauth.auth, function (req, res) {
+	app.get('/api/job/stack', admin_auth.adminOnly, function (req, res) {
 
 		let stack = api_job_stack.get_jobs();
 

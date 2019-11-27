@@ -1,16 +1,15 @@
+const path = require('path');
+const config = require(path.join(__dirname, '..','..', 'config', 'config.js'));
 const jwt = require('jsonwebtoken');
 
-const token_cfg = {
-	expires: 60*60*24*7,
-	secret: 'testSecret',
-}
+
 const example = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1MTI3NTMsImV4cCI6MTU3NDExNzU1M30.SRSqRpqnvPImX6rr282-fDg8T-xwJuztObkBnB5DZW0'
 const short = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1MTUyNjcsImV4cCI6MTU3MzUxNTMyN30.nuO3lxyc-KqHo3KaLQg0X1Dhj5yZo0EYy0WP10BoJxA'
 
 
 function create( input ){
 	let payload =  { email: input.email, role: input.role };
-	const JWTToken = jwt.sign( payload, token_cfg.secret, { expiresIn : token_cfg.expires } );
+	const JWTToken = jwt.sign( payload, config.token.secret, { expiresIn : config.token.expires } );
 	return JWTToken;
 }
 exports.create = create;
@@ -41,7 +40,7 @@ function tokenCleanUp (token,res) {
 exports.tokenCleanUp = tokenCleanUp;
 
 
-function auth (req,res,next) {
+function adminOnly (req,res,next) {
 
 	let token = req.headers.authorization;
 
@@ -68,7 +67,7 @@ function auth (req,res,next) {
 		next()
 	})
 }
-exports.auth = auth;
+exports.adminOnly = adminOnly;
 
 
 

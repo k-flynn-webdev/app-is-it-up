@@ -8,7 +8,7 @@ var user = mongoose.Schema({
 		updated : { type: Date, required: true, default : Date.now() },
 		login : { type: Date, required: true, default : Date.now() },
 	},
-
+	role : { type: String, required: true, default: 'user' },
 	jobs : { type: Array, required: false },
 })
 module.exports = mongoose.model('User', user);

@@ -1,5 +1,6 @@
 const valid_user = require('../middlewares/user.js');
 const api_user = require('../logic/user/api.user.create.js');
+const admin_auth = require('../middlewares/admin.auth.js');
 // const api_ping_get = require('../logic/api.ping.get.js');
 // const api_job_get = require('../logic/job/api.job.get.js');
 // const api_job_create = require('../logic/job/api.job.create.js');
@@ -27,13 +28,15 @@ module.exports = function( app ){
 
 	app.post('/api/user/create', valid_user.create, function (req, res) {
 
-		api_user.create(req.body.user, function(error, model){
+		api_user.create(req.body.user, function(error, newUser){
 			
 			if(error){
 				return exit(res,422,error.message,error);
 			}
 
-			return exit(res,200,'Success User created.',{ result : model });
+			let newToken = admin_auth.create(newUser);
+
+			return exit(res,200,'Success User created.',{ account : newUser , token : newToken });
 		});
 	});
 
