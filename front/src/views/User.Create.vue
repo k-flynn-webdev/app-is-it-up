@@ -1,24 +1,24 @@
 <template>
-  <div class="card shadow">
+  <card>
     <h1>Register</h1>
     <div class="form">
       <div class="form-item-block">
         <label for="name"> Name </label>
-        <input minLength="4" required type="string" name="name" placeholder="Name" v-model="user.name">
+        <input id="name" minLength="4" required type="string" name="name" placeholder="Name" v-model="user.name">
       </div>
       <div class="form-item-block">
         <label for="email"> Email </label>
-        <input minLength="4" required type="email" name="email" placeholder="me @ me.com" v-model="user.email">
+        <input id="email" minLength="4" required type="email" name="email" placeholder="me @ me.com" v-model="user.email">
       </div>
       <div class="form-item-block">
         <label for="password"> Password </label>
-        <input minLength="8" required type="password" name="password" placeholder="* * *" v-model="user.password">
+        <input id="password" minLength="8" required type="password" name="password" placeholder="* * *" v-model="user.password">
       </div>
       <div style="text-align: right;">
         <button class="button" @click="onSubmit">Create</button>      
       </div>
     </div>
-  </div>
+  </card>
 </template>
 
 <script>
@@ -27,7 +27,7 @@ import Card from '@/components/Card.vue'
 import UserService from '../helpers/UserService.js';
 
 export default {
-  name: 'user',
+  name: 'user-create',
   data(){
     return {
       user : {
@@ -42,10 +42,9 @@ export default {
   },
   methods : {
     onSubmit : function () {
-      // todo: validate all input
-      UserService.create(this.user)
+      // todo : validate all input
+      return UserService.create(this.user)
       .then( response => {
-        // console.log(response.data)
         this.$root.$emit('message', response.data.message);
       })
       .catch( error => {
@@ -53,23 +52,7 @@ export default {
       })
 
     },
-    // GetJobs : function(){
-    //   JobService.get_all().then(response => {
-    //     this.jobs.length = 0;
-    //     this.jobs = response.data.data.jobs;
-    //   }).catch(error => {
-    //     console.log(error);
-    //   });
-    // },
-    // AddJob : function(job){
-      // this.jobs.push(job);
-    // },
-  },
-  mounted(){
-    // this.$root.$on('add-job', this.AddJob );
-    // this.$root.$on('get-jobs', this.GetJobs );
-    // this.GetJobs();
-  },
+  }
 }
 </script>
 

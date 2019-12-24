@@ -39,6 +39,37 @@ function tokenCleanUp (token,res) {
 }
 exports.tokenCleanUp = tokenCleanUp;
 
+function userOnly (req,res,next) {
+
+	let token = req.headers.authorization;
+
+	console.log('req.headers')
+	console.log(req.headers)
+
+	if(token === undefined || token === null){
+		return exit(res,401,'Missing token')
+	}
+
+	if( token ){
+		token = tokenCleanUp(token,res);
+	}
+
+	if(token.length !== example.length){
+		return exit(res,401,'Invalid token')
+	}
+
+	jwt.verify(token,token_cfg.secret, function(error,decoded){
+
+		if(error){
+			return exit(res,401,error.name)
+		}
+
+		req.body.payload = decoded;
+		
+		next()
+	})
+}
+exports.userOnly = userOnly;
 
 function adminOnly (req,res,next) {
 

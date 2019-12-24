@@ -1,48 +1,53 @@
-import axios from 'axios';
+import Http from './HttpService.js'
 
-const API = 'api';
-const USER = 'user';
-const CREATE = 'create';
 // const ALL = '/all';
 // const ADMIN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1OTgwMjIsImV4cCI6MTU3NDIwMjgyMn0.i41Bb4rzaMwL3J1TxV2t_zI1ODA2KcMbq30GevFNwsE'
 
 // const mergeParams = (params) => {
-	// return Object.assign(params, { user : UserService.read(), headers: { authorization: 'Bearer ' + ADMIN }});
+// return Object.assign(params, { user : UserService.read(), headers: { authorization: 'Bearer ' + ADMIN }});
 // }
 
 // get via owner
 // const get_all = (params={}) => axios.post(`${BASE + ALL}`, mergeParams(params))
 
-
-let user_default = '5d8cc974f14001679cb90caf';
+// let user_default = '5d8cc974f14001679cb90caf';
 // let user = read();
 
-
-function read(){
-	let tmp = JSON.parse(localStorage.getItem('user'));
-	if(tmp === null){
-		update(user_default);
-		return user_default;
-	}
-	return tmp;
+function create (input) {
+  const request = Http.post('/api/user/create', input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
 }
 
-
-function update(input){
-	localStorage.setItem('user', JSON.stringify(input));
+function login (input) {
+  const request = Http.post('/api/user/login', input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
 }
 
-
-const create = (input={}) => axios.post(`/${API}/${USER}/${CREATE}`, input)
-
-
+function logout () {
+  const request = Http.post('/api/user/logout')
+    .then(result => {
+      Http.user.set(null)
+      return result
+    })
+  return request
+}
 
 const services = {
-	create : create,
-	update : update,
-	read : read,
+  create: create,
+  login: login,
+  logout: logout,
+  // update : logout,
+  // read : read,
 }
 
-export default services;
+export default services
 
 

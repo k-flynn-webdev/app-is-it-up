@@ -24,8 +24,12 @@ function exit(res,status,message,data){
 
 
 function user(req,res,next){
+	console.log('req.body')
+	console.log(req.body)
 
 	if(!exists(req.body.user)) return exit(res,422,'Missing user property.');
+
+
 
 	prepare(req);
 	next();
@@ -33,6 +37,8 @@ function user(req,res,next){
 exports.user = user;
 
 function get(req,res,next){
+	console.log('get')
+	console.log(req.body)
 
 	if(!exists(req.params)) return exit(res,422,'Missing job id.');
 	if(!exists(req.params.job)) return exit(res,422,'Missing job id.');

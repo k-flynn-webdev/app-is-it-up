@@ -1,5 +1,6 @@
 const valid_user = require('../middlewares/user.js');
-const api_user = require('../logic/user/api.user.create.js');
+const api_user_create = require('../logic/user/api.user.create.js').create;
+const api_user_login = require('../logic/user/api.user.login.js').login;
 const admin_auth = require('../middlewares/admin.auth.js');
 // const api_ping_get = require('../logic/api.ping.get.js');
 // const api_job_get = require('../logic/job/api.job.get.js');
@@ -28,7 +29,7 @@ module.exports = function( app ){
 
 	app.post('/api/user/create', valid_user.create, function (req, res) {
 
-		api_user.create(req.body.user, function(error, newUser){
+		api_user_create(req.body.user, function(error, newUser){
 			
 			if(error){
 				return exit(res,422,error.message,error);
@@ -36,10 +37,27 @@ module.exports = function( app ){
 
 			let newToken = admin_auth.create(newUser);
 
+			// todo never return password or extra bits!!!! perhaps set this up in the model as show/hide defaults?
+
 			return exit(res,200,'Success User created.',{ account : newUser , token : newToken });
 		});
 	});
 
+	app.post('/api/user/login', valid_user.login, function (req, res) {
+
+		api_user_login(req.body.user, function(error, newUser){
+
+			if(error){
+				return exit(res,422,error.message,error);
+			}
+
+			let newToken = admin_auth.create(newUser);
+
+			// todo never return password or extra bits!!!! perhaps set this up in the model as show/hide defaults?
+
+			return exit(res,200,'Success User login.',{ account : newUser , token : newToken });
+		});
+	});
 	// app.get('/api/job/:job', job.get, function (req, res) {
 
 	// 	api_job_get.get(req.body.job, function(error, job){
