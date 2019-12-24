@@ -77,13 +77,14 @@ function exists(input){
 	if(input.toString().length < 1) return false;
 	return true;
 }
+exports.exists = exists;
+
 
 function update(model,input){
 
 	if(exists(input.token)){
 		model.token = valid_token(input.token);
 	}
-
 	if(exists(input.name)){
 		model.name = input.name;
 	}
@@ -123,7 +124,7 @@ function find(user,next,override){
 
 	if(override){
 		return find_user(user,next);
-	} 
+	}
 
 	search_term(user,function(error,search){
 
@@ -142,7 +143,7 @@ function find_user(input,next){
 		}
 
 		return next(null, Object.assign(input,{ found : found }));
-	});			
+	});
 }
 exports.find_user = find_user;
 

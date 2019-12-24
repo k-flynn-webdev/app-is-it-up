@@ -12,45 +12,77 @@ function create(input, next){
 	let passwordTest = valid.password(input.password)
 	if(passwordTest !== true) return next(new Error(passwordTest));
 
-	shared.find_user({email:input.email}, function(err,result){
+	m_user.find({ email: input.email })
+		.then(items => {
 
-		if (err){
-			return next(err);
-		}
-
-		if (result.found.length > 0){
-			return next(new Error('Email already in use.'));
-		}
-
-		bcrypt.genSalt(config.SALT_ROUNDS, function(err, salt) {
-
-			if (err){
-				return next(err);
+			if (items.length > 1) {
+				throw new Error('Email already in use.')
 			}
 
-			bcrypt.hash(config.HASH_SECRET + input.password, salt, function(err, hash) {
-				
-				if (err){
-					return next(err);
-				}
+			return bcrypt.genSalt(config.SALT_ROUNDS)
+		})
+		.then(salt => {
+			bcrypt.hash(config.HASH_SECRET + input.password, salt)
+				.then(hash => {
 
-				input.password = hash;
+					// todo make a log of the creation
 
-				let tmp = new m_user();
-				let newUser = shared.update(tmp,input);
-				newUser.save( function(err, model){
-					
-					if (err){
-						return next(err);
-					}
-
-					return next(null,model);
-
-				});
-			});
-		});
-	});
+					input.password = hash
+					let tmp = new m_user()
+					let newUser = shared.update(tmp, input)
+					newUser.save()
+						.then(user => {
+							return next(null, user)
+						})
+				})
+		})
+		.catch(err => {
+			// todo make a note of error in log
+			return next(err)
+		})
 }
+
+
+	//
+	// shared.find_user({email:input.email}, function(err,result){
+	//
+	// 	if (err){
+	// 		return next(err);
+	// 	}
+	//
+	// 	if (result.found.length > 0){
+	// 		return next(new Error('Email already in use.'));
+	// 	}
+	//
+	// 	bcrypt.genSalt(config.SALT_ROUNDS, function(err, salt) {
+	//
+	// 		if (err){
+	// 			return next(err);
+	// 		}
+	//
+	// 		bcrypt.hash(config.HASH_SECRET + input.password, salt, function(err, hash) {
+	//
+	// 			if (err){
+	// 				return next(err);
+	// 			}
+	//
+	// 			input.password = hash;
+	//
+	// 			let tmp = new m_user();
+	// 			let newUser = shared.update(tmp,input);
+	// 			newUser.save( function(err, model){
+	//
+	// 				if (err){
+	// 					return next(err);
+	// 				}
+	//
+	// 				return next(null,model);
+	//
+	// 			});
+	// 		});
+	// 	});
+	// });
+// }
 exports.create = create;
 
 
