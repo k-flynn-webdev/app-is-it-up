@@ -25,7 +25,7 @@ function get (jobID) {
 }
 
 function create (job) {
-  return Http.get('/api/job/create/', job)
+  return Http.post('/api/job/create/', job)
 }
 
 function update (job) {

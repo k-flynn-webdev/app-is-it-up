@@ -14,7 +14,6 @@ function onMount () {
 
 function set_auth (auth) {
   let token = `Bearer ${auth}`
-  console.log(token)
   axios.defaults.headers.common['authorization'] = token
 }
 
@@ -26,8 +25,6 @@ function get_user () {
   let key = localStorage.getItem(USER_TOKEN)
   if (key !== null) {
     set_auth(key)
-    console.log('successfully added user auth')
-    console.log(axios.defaults.headers.common)
   } else {
     remove_auth()
   }
@@ -37,12 +34,10 @@ function set_user (response) {
   if (response === null || response === undefined) {
     localStorage.removeItem(USER_TOKEN)
     localStorage.removeItem(USER_PAYLOAD)
-    console.log('successfully removed user locally')
   } else {
     let result = response.data.data
     localStorage.setItem(USER_TOKEN, result.token)
     localStorage.setItem(USER_PAYLOAD, JSON.stringify(result.account))
-    console.log('successfully added user locally')
   }
   get_user()
 }

@@ -42,9 +42,9 @@ module.exports = function (app) {
     return exit(res, 200, 'Job stack:', { jobs: stack })
   })
 
-  app.post('/api/job/create', job.create, function (req, res) {
+  app.post('/api/job/create', auth.token_passive, job.create, function (req, res) {
 
-    api_job_create.create(req.body.job, function (error, new_model) {
+    api_job_create.create(req.body.job, req.body.token, function (error, new_model) {
 
       if (error) {
         return exit(res, 422, error.message, error)

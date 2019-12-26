@@ -51,7 +51,6 @@ exports.get = get;
 function create(req,res,next){
 
 	if(!exists(req.body.url)) return exit(res,422,'Missing url property.');
-	if(!exists(req.body.user)) return exit(res,422,'Missing user property.');
 	if(!exists(req.body.ping)) return exit(res,422,'Missing ping property.');
 
 	if(!exists(req.body.method)) req.body.method = 'GET';

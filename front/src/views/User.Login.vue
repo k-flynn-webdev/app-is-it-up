@@ -20,7 +20,7 @@
 </template>
 
 <script>
-
+  import Paths from '@/constants/paths'
   import Card from '@/components/Card.vue'
   import UserService from '../helpers/UserService.js'
 
@@ -43,9 +43,8 @@
         return UserService.login(this.user)
           .then(response => {
             this.$root.$emit('message', response.data.message)
-            let self = this;
-            setTimeout( function () {
-              self.$router.push('/')
+            setTimeout(() => {
+              this.$router.push({ name: Paths['HOME']})
             }, 1500)
           })
           .catch(error => {
