@@ -24,7 +24,7 @@ module.exports = {
 		max : 200,
 	},
 	token : {
-		expires : envs.parsed.TOKEN_EXPIRE,
+		expires : Number(envs.parsed.TOKEN_EXPIRE),
 		secret : envs.parsed.TOKEN_SECRET,
 	},
 	node_env : envs.parsed.NODE_ENV.toLowerCase(),

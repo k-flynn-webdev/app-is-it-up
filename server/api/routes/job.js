@@ -22,9 +22,9 @@ function exit (res, status, message, data) {
 
 module.exports = function (app) {
 
-  app.get('/api/job/all', auth.userOnly, function (req, res) {
+  app.get('/api/job/all', auth.token_passive, function (req, res) {
 
-    api_job_get.get(req.body.job, function (error, jobs) {
+    api_job_stack.get_stack(req.body.token, function (error, jobs) {
 
       if (error) {
         return exit(res, 422, error.message, error)
@@ -32,19 +32,20 @@ module.exports = function (app) {
 
       return exit(res, 200, 'Success jobs found.', { jobs: jobs })
     })
+
   })
 
   // todo //
   app.get('/api/job/stack', auth.adminOnly, function (req, res) {
 
-    let stack = api_job_stack.get_jobs()
-
-    return exit(res, 200, 'Job stack:', { jobs: stack })
+    // let stack = api_job_stack.get_jobs()
+    //
+    // return exit(res, 200, 'Job stack:', { jobs: stack })
   })
 
   app.post('/api/job/create', auth.token_passive, job.create, function (req, res) {
 
-    api_job_create.create(req.body.job, req.body.token, function (error, new_model) {
+    api_job_create.create({ job: req.body.job, auth: req.body.token }, function (error, new_model) {
 
       if (error) {
         return exit(res, 422, error.message, error)
@@ -57,14 +58,14 @@ module.exports = function (app) {
 
   app.get('/api/job/:job', job.get, function (req, res) {
 
-    api_job_get.get(req.body.job, function (error, job) {
-
-      if (error) {
-        return exit(res, 422, error.message, error)
-      }
-
-      return exit(res, 200, 'Success job found.', { job: job })
-    })
+    // api_job_get.get(req.body.job, function (error, job) {
+    //
+    //   if (error) {
+    //     return exit(res, 422, error.message, error)
+    //   }
+    //
+    //   return exit(res, 200, 'Success job found.', { job: job })
+    // })
   })
 
   app.put('/api/job/:job', job.update, function (req, res) {
