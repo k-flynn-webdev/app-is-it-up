@@ -30,6 +30,10 @@ function get_user () {
   }
 }
 
+function get_user_payload () {
+  return  JSON.parse(localStorage.getItem(USER_PAYLOAD))
+}
+
 function set_user (response) {
   if (response === null || response === undefined) {
     localStorage.removeItem(USER_TOKEN)
@@ -65,6 +69,7 @@ function remove (url, params, cfg) {
 const services = {
   user: {
     get: get_user,
+    get_payload: get_user_payload,
     set: set_user
   },
   get: get,

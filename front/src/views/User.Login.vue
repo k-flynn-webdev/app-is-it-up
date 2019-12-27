@@ -43,6 +43,7 @@
         return UserService.login(this.user)
           .then(response => {
             this.$root.$emit('message', response.data.message)
+            this.$root.$emit('user')
             setTimeout(() => {
               this.$router.push({ name: Paths['HOME']})
             }, 1500)

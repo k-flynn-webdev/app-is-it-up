@@ -30,7 +30,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "job" */ './views/Job.vue')
+      component: () => import(/* webpackChunkName: "user_job" */ './views/Job.vue')
     },
     {
       path: '/user/create',
@@ -48,13 +48,13 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "user_login" */ './views/User.Login.vue')
     },
-    {
-      path: '/user/logout',
-      name: Paths['USER_LOGOUT'],
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "user_logout" */ './views/User.Logout.vue')
-    },
+    // {
+    //   path: '/user/logout',
+    //   name: Paths['USER_LOGOUT'],
+    //   // route level code-splitting
+    //   // this generates a separate chunk (about.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import(/* webpackChunkName: "user_logout" */ './views/User.Logout.vue')
+    // },
   ]
 })

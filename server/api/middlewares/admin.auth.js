@@ -1,12 +1,32 @@
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const m_token = require('../../models/token.js')
 const config = require(path.join(__dirname, '..', '..', 'config', 'config.js'))
+
+const tokens_black_listed = []
 
 const example = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1MTI3NTMsImV4cCI6MTU3NDExNzU1M30.SRSqRpqnvPImX6rr282-fDg8T-xwJuztObkBnB5DZW0'
 const short = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1MTUyNjcsImV4cCI6MTU3MzUxNTMyN30.nuO3lxyc-KqHo3KaLQg0X1Dhj5yZo0EYy0WP10BoJxA'
 
+function init () {
+  m_token.find()
+    .then(items => {
+      console.log(`Loading black list: ${items.length} tokens.`)
+    })
+    .catch(err => {
+      // todo log error s here
+    })
+}
+
+init()
+
 function create (input) {
   let payload = input
+
+  if (payload.raw) {
+    delete payload.raw
+  }
+
   const JWTToken = jwt.sign(payload, config.token.secret, { expiresIn: config.token.expires })
   return JWTToken
 }
@@ -31,8 +51,8 @@ function tokenCleanUp (token, res) {
     let tmp2 = tmp.split(bearer)
     tmp = tmp2[1].trim()
   } else {
-  	return null
-	}
+    return null
+  }
   return tmp
 }
 
@@ -72,13 +92,46 @@ function token_passive (req, res, next) {
       req.body.token = {}
     }
 
-    req.body.token = Object.assign(req.body.token, decoded)
+    req.body.token = Object.assign(req.body.token, decoded, { raw: token })
 
     return next()
   })
 }
 
 exports.token_passive = token_passive
+
+function tokenBlackList (token, next) {
+
+  if (!token) {
+    return next('No token recieved.')
+  }
+
+  if (token.length < 100) {
+    return next('Invalid token recieved.')
+  }
+
+  let tokenString = token.toString()
+  let exists = tokens_black_listed.filter(item => {
+    item === tokenString
+  })
+
+  if (exists.length > 0) {
+    return next('Already exists.')
+  }
+
+  let tmp = new m_token({ token: token })
+  tmp.save()
+    .then(item => {
+      tokens_black_listed.push(token)
+      return next(null, 'User logged out successfully.')
+    })
+    .catch(err => {
+      // log any errors
+      return next(err)
+    })
+}
+
+exports.tokenBlackList = tokenBlackList
 
 function userOnly (req, res, next) {
 

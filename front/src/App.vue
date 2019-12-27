@@ -14,7 +14,7 @@
     <message-c />
 
     </div>
-    <router-view/>
+    <router-view :user="user" />
     <Footer/>
   </div>
 </template>
@@ -31,19 +31,34 @@ require('@/assets/style/text.css');
 
 import MessageC from '@/components/MessageC.vue'
 import Footer from '@/components/Footer.vue'
+import HttpService from '@/helpers/HttpService'
 
 
 export default {
-  name: 'App', 
+  name: 'App',
   created(){
     document.title = process.env.VUE_APP_NAME;
     // this.$store.dispatch('user/init', this.$request.get_SecureKeyFile );
   },
+  data(){
+    return {
+      user: null
+    }
+  },
   computed : {    
   },  
   methods : {
+    updateUser () {
+      console.log('user was detected.')
+      this.user = HttpService.user.get_payload()
+    }
   },
   mounted(){
+    this.$root.$on('user', this.updateUser)
+    this.updateUser()
+  },
+  beforeDestroy(){
+    this.$root.$off('user')
   },
   components: {
     MessageC,

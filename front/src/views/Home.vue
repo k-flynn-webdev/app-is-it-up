@@ -1,10 +1,16 @@
 <template>
     <div class="home">
-        <div class="register">
-            <router-link class="register" to="/user/create">Register</router-link>
-            <router-link class="login" to="/user/login">Login</router-link>
-            <router-link class="logout" to="/user/logout">Logout</router-link>
+
+        <p>{{ user }}</p>
+
+        <div class="nav">
+            <ul class="links">
+                <li v-if="!hasUser"><router-link class="register" to="/user/create">Register</router-link></li>
+                <li v-if="!hasUser"><router-link class="login" to="/user/login">Login</router-link></li>
+                <li v-if="hasUser"><logout /></li>
+            </ul>
         </div>
+
         <JobCreate v-on:success=GetJobs />
         <JobList v-bind:jobs=jobs />
     </div>
@@ -12,9 +18,11 @@
 
 <script>
 
+  import JobService from '../helpers/JobService.js'
+
   import JobCreate from '@/components/JobCreate.vue'
   import JobList from '@/components/JobList.vue'
-  import JobService from '../helpers/JobService.js'
+  import Logout from '@/components/Logout.vue'
 
   export default {
     name: 'home',
@@ -23,9 +31,21 @@
         jobs: [],
       }
     },
+    computed: {
+      hasUser () {
+        if (!this.user) {
+          return false
+        }
+        return true
+      }
+    },
+    props: {
+      user: Object
+    },
     components: {
       JobCreate,
       JobList,
+      Logout
     },
     methods: {
       GetJobs: function () {
@@ -43,6 +63,7 @@
       },
     },
     mounted () {
+      this.$root.$on('user', this.GetJobs)
       this.$root.$on('add-job', this.AddJob)
       this.$root.$on('get-jobs', this.GetJobs)
       this.GetJobs()
@@ -52,8 +73,15 @@
 
 
 <style>
-    .register {
+    .nav {
         text-align: right;
+    }
+    .nav .links {
+        decorator: none;
+    }
+    .nav .links li{
+        display: inline-block;
+        margin: 0 .33rem;
     }
 </style>
 

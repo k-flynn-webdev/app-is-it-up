@@ -57,11 +57,14 @@
     },
     methods: {
       GetJob: function () {
-        JobService.get_job({ job_id: this.$route.params.job_id }).then(response => {
-          this.job = response.data.data.job[0]
-          this.job.full = true
-        }).catch(error => {
-        })
+        JobService.get(this.$route.params.job_id)
+          .then(response => {
+            this.job = response.data.data.job[0]
+            this.job.full = true
+          })
+          .catch(error => {
+            this.$root.$emit('message', error.response.data.message)
+          })
       },
       OnValidate: function () {
 

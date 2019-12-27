@@ -28,15 +28,16 @@ function create ({ job, auth }, next) {
 
         job_model.save()
           .then(model => {
-            console.log(model)
             let success = jobs_array.insert(job_model)
             if (!success) {
               throw new Error('A problem occurred on the Job Stack.')
             }
+
+            return next(null, job_model)
           })
       })
       .catch(err => {
-        console.log
+        console.log(err)
         // todo make a note of error in log
         return next(err)
       })

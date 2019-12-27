@@ -17,7 +17,6 @@ function get_jobs () {
 exports.get_jobs = get_jobs
 
 function get_stack (auth, next) {
-	console.log(auth)
 
   if (!auth) {
     console.log('returning all public items')

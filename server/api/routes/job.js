@@ -32,15 +32,6 @@ module.exports = function (app) {
 
       return exit(res, 200, 'Success jobs found.', { jobs: jobs })
     })
-
-  })
-
-  // todo //
-  app.get('/api/job/stack', auth.adminOnly, function (req, res) {
-
-    // let stack = api_job_stack.get_jobs()
-    //
-    // return exit(res, 200, 'Job stack:', { jobs: stack })
   })
 
   app.post('/api/job/create', auth.token_passive, job.create, function (req, res) {
@@ -48,24 +39,23 @@ module.exports = function (app) {
     api_job_create.create({ job: req.body.job, auth: req.body.token }, function (error, new_model) {
 
       if (error) {
-        return exit(res, 422, error.message, error)
+        return exit(res, 422, error.message || error, error)
       }
 
       return exit(res, 201, 'Success new job created.', { job: new_model })
-
     })
   })
 
-  app.get('/api/job/:job', job.get, function (req, res) {
+  app.get('/api/job/:job', auth.token_passive, job.get, function (req, res) {
 
-    // api_job_get.get(req.body.job, function (error, job) {
-    //
-    //   if (error) {
-    //     return exit(res, 422, error.message, error)
-    //   }
-    //
-    //   return exit(res, 200, 'Success job found.', { job: job })
-    // })
+    api_job_get.get({ job: req.body.job, auth: req.body.token }, function (error, job) {
+
+      if (error) {
+        return exit(res, 422, error.message || error, error)
+      }
+
+      return exit(res, 200, 'Success job found.', { job: job })
+    })
   })
 
   app.put('/api/job/:job', job.update, function (req, res) {
@@ -73,7 +63,7 @@ module.exports = function (app) {
     api_job_update.update(req.body.job, function (error, new_model) {
 
       if (error) {
-        return exit(res, 422, error.message, error)
+        return exit(res, 422, error.message || error, error)
       }
 
       return exit(res, 201, 'Success job updated.', { job: new_model })
@@ -86,7 +76,7 @@ module.exports = function (app) {
     api_job_remove.remove(req.body.job, function (error, job) {
 
       if (error) {
-        return exit(res, 422, error.message, error)
+        return exit(res, 422, error.message || error, error)
       }
 
       // find all pings and remove

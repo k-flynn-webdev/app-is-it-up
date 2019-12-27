@@ -20,8 +20,8 @@ function all () {
   return Http.get('/api/job/all')
 }
 
-function get (jobID) {
-  return Http.get(`/api/job/${jobID}`)
+function get (jobId) {
+  return Http.get(`/api/job/${jobId}`)
 }
 
 function create (job) {
