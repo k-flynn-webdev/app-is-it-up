@@ -59,7 +59,7 @@
       GetJob: function () {
         JobService.get(this.$route.params.job_id)
           .then(response => {
-            this.job = response.data.data.job[0]
+            this.job = response.data.data.job
             this.job.full = true
           })
           .catch(error => {
@@ -81,8 +81,6 @@
         if (!this.OnValidate()) {
           return
         }
-
-        console.log(this.job)
 
         JobService.update(this.job)
           .then(response => {

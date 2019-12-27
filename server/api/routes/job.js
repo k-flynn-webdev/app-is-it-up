@@ -65,9 +65,9 @@ module.exports = function (app) {
     })
   })
 
-  app.put('/api/job/:job', job.update, function (req, res) {
+  app.put('/api/job/:job', auth.token_passive, job.update, function (req, res) {
 
-    api_job_update.update(req.body.job, function (error, job) {
+    api_job_update.update({ job: req.body.job, auth: req.body.token }, function (error, job) {
 
       if (error) {
         return exit(res, 422, error.message || error, error)
@@ -80,20 +80,25 @@ module.exports = function (app) {
     })
   })
 
-  app.delete('/api/job/:job', job.get, function (req, res) {
+  app.delete('/api/job/:job', auth.token_passive, job.get, function (req, res) {
 
-    api_job_remove.remove(req.body.job, function (error, job) {
+    api_job_remove.remove({ job: req.body.job, auth: req.body.token }, function (error, job) {
 
       if (error) {
         return exit(res, 422, error.message || error, error)
       }
 
-      // find all pings and remove
-      pings.remove(job)
-
       let safe_job = api_job_shared.safe_export(job)
 
-      return exit(res, 200, 'Success job removed.', { job: safe_job })
+      pings.remove(job, function(error, pings_removed){
+
+        if (error) {
+          return exit(res, 422, error.message || error, error)
+        }
+
+        return exit(res, 200, 'Success job removed.', { job: safe_job, pings_removed: pings_removed })
+      })
+
     })
   })
 

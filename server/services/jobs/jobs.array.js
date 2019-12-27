@@ -1,7 +1,6 @@
 const path = require('path')
 const logger = require(path.join('..', '..', 'helpers', 'logger.js'))
 
-
 // global array of jobs for speed
 let jobs = null
 

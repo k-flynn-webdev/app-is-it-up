@@ -1,55 +1,67 @@
-const jobs_array = require('../../../services/jobs/jobs.array.js');
+const jobs_array = require('../../../services/jobs/jobs.array.js')
+const m_job = require('../../../models/job.js')
 
-const valid = require('./api.job.shared.js').valid;
-const shared = require('./api.job.shared.js');
-const logger = require('../../../helpers/logger.js');
+const shared = require('./api.job.shared.js')
+const logger = require('../../../helpers/logger.js')
 
+function update ({ job, auth }, next) {
 
+  m_job.findOne({ job_id: job.job_id })
+    .then(result => {
 
-function update(job,next){
+      if (!result) {
+        throw new Error('No job with that id found.')
+      }
 
-	shared.find(job,function(error,{found}){
+      if (!auth) {
 
-		if(error){
-			return next(error);
-		}
+        if (result.user.id) {
+          throw new Error('Must login to see this job.')
+        }
 
-		if(found.length === 0){
-			return next(new Error('Job does not exist.'));
-		}
+      } else {
 
-		let new_model = shared.update(found[0],job);
+        if (auth.role !== 'admin' &&
+          result.user.id.toString() !== auth.id.toString()) {
+          throw new Error('Must login to see this job.')
+        }
 
-		new_model.save(function(result){
+      }
 
-			if(error){
-				return next(error);
-			}
+      let new_model = shared.update(result, job)
+      let hasUpdated = updateStack(new_model)
 
-			// does job exist in stack???
-			// todo create integration test for this!
+      new_model.save()
+        .then(item => {
+          return next(null, item)
+        })
 
-			let index = jobs_array.find_job(new_model.job_id);
-
-			if(!new_model.active){
-				new_model.has_updated = jobs_array.remove(new_model);
-				logger.log(`Job(stack: ${index}) removed: ${new_model.job_id} ${new_model.has_updated}`);
-			}
-			if(new_model.active && index === -1){
-				new_model.has_updated = jobs_array.insert(new_model);
-				logger.log(`Job(stack: ${index}) added: ${new_model.job_id} ${new_model.has_updated}`);
-			} else {
-				new_model.has_updated = jobs_array.update(new_model);
-				logger.log(`Job(stack: ${index}) updated: ${new_model.job_id} ${new_model.has_updated}`);
-			}
-
-			return next(null,new_model);
-
-		});
-	});
+    })
+    .catch(err => {
+      logger.log(err)
+      return next(err)
+    })
 }
-exports.update = update;
 
+exports.update = update
 
+function updateStack (job) {
 
+  job.has_updated = false
+  let index = jobs_array.find_job(job.job_id)
+
+  if (!job.active) {
+    job.has_updated = jobs_array.remove(job)
+    logger.log(`Job(stack: ${index}) removed: ${job.job_id} ${job.has_updated}`)
+  }
+  if (job.active && index === -1) {
+    job.has_updated = jobs_array.insert(job)
+    logger.log(`Job(stack: ${index}) added: ${job.job_id} ${job.has_updated}`)
+  } else {
+    job.has_updated = jobs_array.update(job)
+    logger.log(`Job(stack: ${index}) updated: ${job.job_id} ${job.has_updated}`)
+  }
+
+  return job.has_updated
+}
 

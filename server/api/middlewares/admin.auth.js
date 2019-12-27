@@ -60,6 +60,10 @@ exports.tokenCleanUp = tokenCleanUp
 
 function token_passive (req, res, next) {
 
+  if (!req.headers.authorization) {
+    return next()
+  }
+
   let token = req.headers.authorization.toString()
 
   if (token === undefined || token === null) {

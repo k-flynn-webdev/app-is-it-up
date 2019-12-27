@@ -58,7 +58,6 @@ function update (req, res, next) {
 
   if (!exists(req.params)) return exit(res, 422, 'Missing job id.')
   if (!exists(req.params.job)) return exit(res, 422, 'Missing job id.')
-  if (!exists(req.body.user)) return exit(res, 422, 'Missing user property.')
 
   prepare(req)
   next()
@@ -90,9 +89,9 @@ function prepare (input) {
   if (exists(input.params) && exists(input.params.job)) {
     input.body.job.job_id = sanitizer(input.params.job)
   }
-  if (exists(input.body.user)) {
-    input.body.job.user = sanitizer(input.body.user)
-  }
+  // if (exists(input.body.user)) {
+  //   input.body.job.user = sanitizer(input.body.user)
+  // }
 }
 
 
