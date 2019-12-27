@@ -76,6 +76,15 @@ function token_passive (req, res, next) {
     return next()
   }
 
+  // Blacklist check ..
+  let exists = tokens_black_listed.filter(item => {
+    item === token
+  })
+  if (exists.length > 0) {
+    // todo check with postman that this works
+    return exit(res, 401, 'Token previously consumed.')
+  }
+
   jwt.verify(token, config.token.secret, function (error, decoded) {
 
     if (error) {
