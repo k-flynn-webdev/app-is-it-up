@@ -21,7 +21,7 @@ function init () {
 init()
 
 function create (input) {
-  let payload = input
+  let payload = Object.assign({},input)
 
   if (payload.raw) {
     delete payload.raw

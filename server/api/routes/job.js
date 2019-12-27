@@ -6,6 +6,7 @@ const api_job_get = require('../logic/job/api.job.get.js')
 const api_job_create = require('../logic/job/api.job.create.js')
 const api_job_update = require('../logic/job/api.job.update.js')
 const api_job_remove = require('../logic/job/api.job.remove.js')
+const api_job_shared = require('../logic/job/api.job.shared.js')
 const pings = require('../../services/pings/pings.funcs.js')
 
 const api_job_stack = require('../../services/jobs/jobs.array.js')
@@ -30,19 +31,23 @@ module.exports = function (app) {
         return exit(res, 422, error.message, error)
       }
 
-      return exit(res, 200, 'Success jobs found.', { jobs: jobs })
+      let safe_jobs = jobs.map(item => api_job_shared.safe_export(item))
+
+      return exit(res, 200, 'Success jobs found.', { jobs: safe_jobs })
     })
   })
 
   app.post('/api/job/create', auth.token_passive, job.create, function (req, res) {
 
-    api_job_create.create({ job: req.body.job, auth: req.body.token }, function (error, new_model) {
+    api_job_create.create({ job: req.body.job, auth: req.body.token }, function (error, job) {
 
       if (error) {
         return exit(res, 422, error.message || error, error)
       }
 
-      return exit(res, 201, 'Success new job created.', { job: new_model })
+      let safe_job = api_job_shared.safe_export(job)
+
+      return exit(res, 201, 'Success new job created.', { job: safe_job })
     })
   })
 
@@ -54,19 +59,23 @@ module.exports = function (app) {
         return exit(res, 422, error.message || error, error)
       }
 
-      return exit(res, 200, 'Success job found.', { job: job })
+      let safe_job = api_job_shared.safe_export(job)
+
+      return exit(res, 200, 'Success job found.', { job: safe_job })
     })
   })
 
   app.put('/api/job/:job', job.update, function (req, res) {
 
-    api_job_update.update(req.body.job, function (error, new_model) {
+    api_job_update.update(req.body.job, function (error, job) {
 
       if (error) {
         return exit(res, 422, error.message || error, error)
       }
 
-      return exit(res, 201, 'Success job updated.', { job: new_model })
+      let safe_job = api_job_shared.safe_export(job)
+
+      return exit(res, 201, 'Success job updated.', { job: safe_job })
 
     })
   })
@@ -82,12 +91,13 @@ module.exports = function (app) {
       // find all pings and remove
       pings.remove(job)
 
-      return exit(res, 200, 'Success job removed.', { job: job })
+      let safe_job = api_job_shared.safe_export(job)
+
+      return exit(res, 200, 'Success job removed.', { job: safe_job })
     })
   })
 
   return app
-
 }
 
 

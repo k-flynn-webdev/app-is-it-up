@@ -1,5 +1,28 @@
 const m_job = require('../../../models/job.js')
 
+
+
+function safe_export (job) {
+  // let freshJob = Object.assign({}, job)
+  // todo object assign with a mongoose object goes weird!
+  let freshJob = {}
+  freshJob.periods = job.periods
+  freshJob.meta = job.meta
+  freshJob.user = job.user
+  freshJob.method = job.method
+  freshJob.params = job.params
+  freshJob.active = job.active
+  freshJob.status = job.status
+  freshJob.fails = job.fails
+  freshJob.url = job.url
+  freshJob.ping = job.ping
+  freshJob.job_id = job.job_id
+  return freshJob
+}
+
+exports.safe_export = safe_export
+
+
 function valid_url (input) {
   let temp = input.toLowerCase().trim()
 

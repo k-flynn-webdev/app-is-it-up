@@ -72,7 +72,7 @@ module.exports = function (app) {
         return exit(res, 400, error.message || error)
       }
 
-      return exit(res, 201, 'user logged out.')
+      return exit(res, 201, 'User logged out.')
     })
   })
 

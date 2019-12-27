@@ -82,13 +82,17 @@
           return
         }
 
-        JobService.update(this.job).then(response => {
-          this.$refs.btn_update.OnSuccess()
-          this.$root.$emit('message', response.data.message)
-        }).catch(error => {
-          this.$refs.btn_update.OnFail()
-          this.$root.$emit('message', error.response.data.message)
-        })
+        console.log(this.job)
+
+        JobService.update(this.job)
+          .then(response => {
+            this.$refs.btn_update.OnSuccess()
+            this.$root.$emit('message', response.data.message)
+          })
+          .catch(error => {
+            this.$refs.btn_update.OnFail()
+            this.$root.$emit('message', error.response.data.message)
+          })
       },
       OnDelete: function () {
         event.preventDefault()

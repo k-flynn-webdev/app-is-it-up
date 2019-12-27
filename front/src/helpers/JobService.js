@@ -29,11 +29,11 @@ function create (job) {
 }
 
 function update (job) {
-  return Http.put(`/api/job/${job.id}`, job)
+  return Http.put(`/api/job/${job.job_id}`, job)
 }
 
 function remove (job) {
-  return Http.remove(`/api/job/${job.id}`)
+  return Http.remove(`/api/job/${job.job_id}`)
 }
 
 function stack () {
