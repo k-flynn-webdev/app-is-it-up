@@ -112,6 +112,7 @@ export default {
 }
 
 .icon {
+  
   margin: 0 auto;
   text-align: center;
   width: 1.55rem;
