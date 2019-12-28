@@ -1,6 +1,6 @@
 {
   "name": "is-it-up-api",
-  "version": "0.6.6",
+  "version": "0.6.9",
   "description": "Basic uptime-downtime app.",
   "main": "app.js",
   "scripts": {
@@ -12,14 +12,17 @@
   "keywords": [
     "app",
     "nodejs"
-  ], 
+  ],
   "jest": {
-    "setupFilesAfterEnv": ["./test/setup.js"],
-     "testEnvironment": "node"
+    "setupFilesAfterEnv": [
+      "./test/setup.js"
+    ],
+    "testEnvironment": "node"
   },
   "author": "kevin flynn",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^3.0.7",
     "body-parser": "^1.18.3",
     "content-filter": "^1.1.2",
     "cookie-parser": "^1.4.3",
@@ -27,6 +30,7 @@
     "dotenv": "^8.0.0",
     "express": "^4.16.3",
     "express-rate-limit": "^3.2.1",
+    "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
     "mongoose": "^5.7.1",
     "morgan": "^1.9.1",

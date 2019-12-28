@@ -1,6 +1,6 @@
 {
   "name": "is-it-up",
-  "version": "0.6.6",
+  "version": "0.6.9",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",

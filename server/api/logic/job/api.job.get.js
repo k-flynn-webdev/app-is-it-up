@@ -1,33 +1,44 @@
-const jobs_array = require('../../../services/jobs/jobs.array.js');
+const m_job = require('../../../models/job.js')
 
-const valid = require('./api.job.shared.js').valid;
-const shared = require('./api.job.shared.js');
+function get ({ job, auth }, next) {
 
+  m_job.findOne({ job_id: job.job_id })
+    .then(result => {
 
+      if (!result) {
+        throw new Error('No job with that id found.')
+      }
 
-function get(job,next){
-	shared.find(job, function(error, result){
+      // public job
+      if (!result.user.id) {
+        return next(null, result)
+      }
 
-		if(error){
-			return next(error);
-		}
+      if (!auth) {
+        if (result.user.id) {
+          throw new Error('Must login to see this job.')
+        }
+      }
 
-		if(result.found.length === 0){
+      if (auth) {
+        if (auth.role === 'admin') {
+          return next(null, result)
+        }
 
-			if(result.user){
-				return next(new Error('No jobs for that user found.'));
-			}
+        if (result.user.id.toString() === auth.id.toString()) {
+          return next(null, result)
+        }
 
-			if(result.job_id){
-				return next(new Error('Job does not exist.'));
-			}
-
-		}
-
-		return next(null,result.found);
-	});
+				throw new Error('User account not allowed.')
+      }
+    })
+    .catch(err => {
+      // todo log error
+      return next(err)
+    })
 }
-exports.get = get;
+
+exports.get = get
 
 
 

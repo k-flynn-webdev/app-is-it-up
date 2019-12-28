@@ -158,8 +158,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+  
 label {
   display: block;
   font-weight: bold;
@@ -176,6 +176,10 @@ label {
   width: 100%;
 }
 
+</style>
+
+<style scoped>
+
 .periods {
   display: inline-block;
   margin: 0 .5rem;
@@ -184,4 +188,8 @@ label {
 .item-fail {
   margin: .3rem;
 }
+
 </style>
+
+
+

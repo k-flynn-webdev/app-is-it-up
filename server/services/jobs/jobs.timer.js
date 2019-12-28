@@ -2,7 +2,7 @@
 // // todo listen for stop event?
 
 let timer = parseInt(process.env.time) || 10; // todo change this to 30 secs in production maybe as env?..
-let delay = 10;
+let delay = 2;
 let modes = ['stop','in-progress'];
 let mode = modes[0];
 

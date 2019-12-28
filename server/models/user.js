@@ -5,10 +5,10 @@ var user = mongoose.Schema({
 	email : { type: String, required: true },
 	password : { type: String, required: true },
 	meta : {
-		created : { type: Date, required: true, default : Date.now() },
+		updated : { type: Date, required: true, default : Date.now() },
 		login : { type: Date, required: true, default : Date.now() },
 	},
-
+	role : { type: String, required: true, default: 'user' },
 	jobs : { type: Array, required: false },
 })
 module.exports = mongoose.model('User', user);

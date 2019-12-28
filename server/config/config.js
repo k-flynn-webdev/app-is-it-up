@@ -23,6 +23,10 @@ module.exports = {
 		time : 10 * 60 * 1000, 
 		max : 200,
 	},
+	token : {
+		expires : Number(envs.parsed.TOKEN_EXPIRE),
+		secret : envs.parsed.TOKEN_SECRET,
+	},
 	node_env : envs.parsed.NODE_ENV.toLowerCase(),
 	db : envs.parsed.DATABASEURL,
 };

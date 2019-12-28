@@ -1,35 +1,48 @@
-const jobs_array = require('../../../services/jobs/jobs.array.js');
+const jobs_array = require('../../../services/jobs/jobs.array.js')
+const m_job = require('../../../models/job.js')
 
-const valid = require('./api.job.shared.js').valid;
-const shared = require('./api.job.shared.js');
-const logger = require('../../../helpers/logger.js');
+const shared = require('./api.job.shared.js')
+const logger = require('../../../helpers/logger.js')
 
+function remove ({ job, auth }, next) {
 
+  m_job.findOne({ job_id: job.job_id })
+    .then(result => {
 
-function remove(job,next){
+      if (!result) {
+        throw new Error('No job with that id found.')
+      }
 
-	shared.remove(job, function(error,result){
+      if (!auth) {
 
-		if(error){
-			return next(error);
-		}
+        if (result.user.id) {
+          throw new Error('Must login to remove this job.')
+        }
 
-		if(result.result.deletedCount < 1){
-			return next(new Error('Job does not exist.'));
-		}
+      } else {
 
-		let global_removed = jobs_array.remove(result);
-		logger.log(`Job(stack:--) removed: ${job.job_id} ${global_removed}`);
+        if (auth.role !== 'admin' &&
+          result.user.id.toString() !== auth.id.toString()) {
+          throw new Error('User not allowed to delete this job.')
+        }
 
-		// remove from user via event 
+      }
 
-		return next(null,result);
-	});
+      let index = jobs_array.find_job(result.job_id)
+      result.has_updated = jobs_array.remove(result)
+      logger.log(`Job(stack: ${index}) removed: ${result.job_id} ${result.has_updated}`)
+
+      result.deleteOne()
+        .then(item => {
+          return next(null, item)
+        })
+
+    })
+    .catch(err => {
+      logger.log(err)
+      return next(err)
+    })
 }
-exports.remove = remove;
 
-
-// todo remove from global space also ...
-
-
+exports.remove = remove
 
