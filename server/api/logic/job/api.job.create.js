@@ -3,6 +3,8 @@ const jobs_array = require('../../../services/jobs/jobs.array.js')
 
 const valid = require('./api.job.shared.js').valid
 const shared = require('./api.job.shared.js')
+const logger = require('../../../helpers/logger.js')
+
 
 function create ({ job, auth }, next) {
 
@@ -16,7 +18,7 @@ function create ({ job, auth }, next) {
   create_model(job, function (error, job_model) {
 
     if (error) {
-      return next(error)
+      throw error
     }
 
     m_job.find({ job_id: job_model.job_id })
@@ -28,17 +30,17 @@ function create ({ job, auth }, next) {
 
         job_model.save()
           .then(model => {
-            let success = jobs_array.insert(job_model)
+            let success = jobs_array.insert(model)
+
             if (!success) {
               throw new Error('A problem occurred on the Job Stack.')
             }
 
-            return next(null, job_model)
+            return next(null, model)
           })
       })
       .catch(err => {
-        console.log(err)
-        // todo make a note of error in log
+        logger.log(err)
         return next(err)
       })
   })

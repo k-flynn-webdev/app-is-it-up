@@ -50,10 +50,6 @@ function updateStack (job) {
   job.has_updated = false
   let index = jobs_array.find_job(job.job_id)
 
-  if (!job.active) {
-    job.has_updated = jobs_array.remove(job)
-    logger.log(`Job(stack: ${index}) removed: ${job.job_id} ${job.has_updated}`)
-  }
   if (job.active && index === -1) {
     job.has_updated = jobs_array.insert(job)
     logger.log(`Job(stack: ${index}) added: ${job.job_id} ${job.has_updated}`)

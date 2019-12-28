@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link class="poster" to="/">
+      <router-link class="site-logo" to="/">
       <div class="logo" style="transform:translateY(25%)translateX(-25%);">
         <svg  width="100%" height="100%" viewBox="0 0 183 190" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
             <path d="M58.889,94.523l-23.777,-23.777l70.71,-70.711l70.711,70.711l-23.777,23.777l-46.934,-46.933l-46.933,46.933Z"/>
@@ -11,10 +11,18 @@
       <h1 class="logo-text"> Is It Up</h1>
     </router-link>
 
+    <div class="links">
+      <ul>
+        <li v-if="!hasUser"><router-link class="register" to="/user/create">Register</router-link></li>
+        <li v-if="!hasUser"><router-link class="login" to="/user/login">Login</router-link></li>
+        <li v-if="hasUser"><logout /></li>
+      </ul>
+    </div>
+
     <message-c />
 
     </div>
-    <router-view :user="user" />
+    <router-view/>
     <Footer/>
   </div>
 </template>
@@ -32,6 +40,7 @@ require('@/assets/style/text.css');
 import MessageC from '@/components/MessageC.vue'
 import Footer from '@/components/Footer.vue'
 import HttpService from '@/helpers/HttpService'
+import Logout from '@/components/Logout.vue'
 
 
 export default {
@@ -45,11 +54,16 @@ export default {
       user: null
     }
   },
-  computed : {    
+  computed : {
+    hasUser () {
+      if (!this.user) {
+        return false
+      }
+      return true
+    }
   },  
   methods : {
     updateUser () {
-      console.log('user was detected.')
       this.user = HttpService.user.get_payload()
     }
   },
@@ -63,6 +77,8 @@ export default {
   components: {
     MessageC,
     Footer,
+    Logout
+
   },
 }
 
@@ -72,8 +88,27 @@ export default {
 <style>
 
 #nav {
-  margin-top: -.66rem;
   margin-bottom: 3rem;
+  text-align: center;
+}
+
+#nav .site-logo {
+  /*flex-grow: 1;*/
+}
+
+#nav .links {
+  /*flex-grow: 0;*/
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  vertical-align: middle;
+}
+
+#nav .links li {
+ text-align: right;
+  decorator: none;
+  display: inline-block;
+  margin: 0 .33rem;
 }
 
 .icon {

@@ -1,16 +1,5 @@
 <template>
     <div class="home">
-
-        <p>{{ user }}</p>
-
-        <div class="nav">
-            <ul class="links">
-                <li v-if="!hasUser"><router-link class="register" to="/user/create">Register</router-link></li>
-                <li v-if="!hasUser"><router-link class="login" to="/user/login">Login</router-link></li>
-                <li v-if="hasUser"><logout /></li>
-            </ul>
-        </div>
-
         <JobCreate v-on:success=GetJobs />
         <JobList v-bind:jobs=jobs />
     </div>
@@ -22,7 +11,6 @@
 
   import JobCreate from '@/components/JobCreate.vue'
   import JobList from '@/components/JobList.vue'
-  import Logout from '@/components/Logout.vue'
 
   export default {
     name: 'home',
@@ -31,21 +19,9 @@
         jobs: [],
       }
     },
-    computed: {
-      hasUser () {
-        if (!this.user) {
-          return false
-        }
-        return true
-      }
-    },
-    props: {
-      user: Object
-    },
     components: {
       JobCreate,
-      JobList,
-      Logout
+      JobList
     },
     methods: {
       GetJobs: function () {
@@ -71,18 +47,7 @@
   }
 </script>
 
-
 <style>
-    .nav {
-        text-align: right;
-    }
-    .nav .links {
-        decorator: none;
-    }
-    .nav .links li{
-        display: inline-block;
-        margin: 0 .33rem;
-    }
 </style>
 
 
