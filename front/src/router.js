@@ -48,6 +48,14 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "user_login" */ './views/User.Login.vue')
     },
+    {
+      path: '/user/panel',
+      name: Paths['USER_PANEL'],
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "user_panel" */ './views/User.Panel.vue')
+    },
     // {
     //   path: '/user/logout',
     //   name: Paths['USER_LOGOUT'],

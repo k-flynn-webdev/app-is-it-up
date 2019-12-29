@@ -17,21 +17,22 @@
 
 		<div class="links">
 			<ul>
-				<li v-if="!hasUser" class="link">
+				<li v-if="!hasUser">
 					<router-link to="/user/create">Register</router-link>
 				</li>
-				<li v-if="!hasUser" class="link">
+				<li v-if="!hasUser">
 					<router-link to="/user/login">Login</router-link>
 				</li>
-				<li v-if="hasUser" class="link">
-					<logout :user="user" />
+				<li v-if="hasUser">
+					<router-link to="/user/panel">{{ nameRender }}</router-link>
+				</li>
+				<li v-if="hasUser">
+					<logout/>
 				</li>
 			</ul>
 		</div>
 
-		<slot>
-
-		</slot>
+		<slot/>
 
 	</div>
 </template>
@@ -39,6 +40,8 @@
 <script>
 	import HttpService from '@/helpers/HttpService'
 	import Logout from '@/components/Logout.vue'
+
+	const nameLength = 15
 
 	export default {
 		name: 'nav-bar',
@@ -53,6 +56,12 @@
 					return false
 				}
 				return true
+			},
+			nameRender () {
+				if (this.user.name && this.user.name.length > nameLength) {
+					return this.user.name.substring(0, (nameLength - 2)) + '..'
+				}
+				return this.user.name
 			}
 		},
 		methods: {
@@ -103,7 +112,7 @@
 	display: inline-block;
 }
 
-@media (max-width: 360px) {
+@media (max-width: 400px) {
 	#nav {
 		text-align: left;
 	}
@@ -113,20 +122,15 @@
 	}
 }
 
-
-.link {
+#nav .links li a, .link {
+	font-weight: bold;
+	text-decoration: none;
 	margin: 0 .33rem;
 	transition: 0.3s;
 	border-bottom: 2px solid hsla(100, 1%, 90%, 0.1);
 }
-
-.link:hover {
+#nav .links li a:hover, .link:hover {
 	border-bottom: 2px solid hsla(100, 1%, 90%, 0.9);
-}
-
-#nav .links li a {
-	font-weight: bold;
-	text-decoration: none;
 }
 
 .icon {

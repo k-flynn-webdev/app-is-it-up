@@ -2,6 +2,7 @@ const auth = require('../middlewares/admin.auth.js')
 const valid_user = require('../middlewares/user.js')
 const user_shared = require('../logic/user/api.user.shared.js')
 const api_user_create = require('../logic/user/api.user.create.js').create
+const api_user_update = require('../logic/user/api.user.update.js').update
 const api_user_login = require('../logic/user/api.user.login.js').login
 const admin_auth = require('../middlewares/admin.auth.js')
 // const api_ping_get = require('../logic/api.ping.get.js');
@@ -27,7 +28,7 @@ module.exports = function (app) {
   // todo update
   // todo delete
 
-  app.post('/api/user/create', valid_user.create, function (req, res) {
+  app.post('/api/user', valid_user.create, function (req, res) {
 
     api_user_create(req.body.user, function (error, newUser) {
 
@@ -59,20 +60,31 @@ module.exports = function (app) {
     })
   })
 
-  app.post('/api/user/logout', auth.token_passive, function (req, res) {
+  app.post('/api/user/logout', auth.token_required, function (req, res) {
 
-    let tokenRaw = null
-    if (req.body.token && req.body.token.raw) {
-      tokenRaw = req.body.token.raw
-    }
-
-    auth.tokenBlackList(tokenRaw, function (error, result) {
+    auth.add_token_to_blackList(req, function (error, result) {
 
       if (error) {
         return exit(res, 400, error.message || error)
       }
 
       return exit(res, 201, 'User logged out.')
+    })
+  })
+
+  app.put('/api/user', auth.token_required, valid_user.update, function (req, res) {
+
+    api_user_update({ user: req.body.user, auth: req.body.token }, function (error, newUser) {
+
+      if (error) {
+        return exit(res, 422, error.message, error)
+      }
+
+      newUser = user_shared.safe_export(newUser)
+
+      let newToken = admin_auth.create(newUser)
+
+      return exit(res, 200, 'Success User updated.', { account: newUser, token: newToken })
     })
   })
 

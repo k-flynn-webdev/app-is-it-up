@@ -14,7 +14,7 @@ import Http from './HttpService.js'
 // let user = read();
 
 function create (input) {
-  const request = Http.post('/api/user/create', input)
+  const request = Http.post('/api/user', input)
     .then(result => {
       Http.user.set(result)
       return result
@@ -40,11 +40,21 @@ function logout () {
   return request
 }
 
+function update (input) {
+  const request = Http.put('/api/user', input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
+}
+
 const services = {
   create: create,
   login: login,
   logout: logout,
-  // update : logout,
+  update : update,
+  get_payload: Http.user.get_payload,
   // read : read,
 }
 

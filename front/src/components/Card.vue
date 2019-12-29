@@ -28,7 +28,7 @@
 	background-color: var(--colour-dark);
 }
 
-@media (max-width: 360px) {
+@media (max-width: 400px) {
 	.card {
 		margin: 1.25rem 0.25rem;
 		padding: 0.5rem;
