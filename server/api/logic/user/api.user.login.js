@@ -27,6 +27,8 @@ function login (input, next) {
             throw new Error('Incorrect password.')
           }
 
+          // todo unstagger these promises
+
           user_model.meta.login = Date.now()
 
           user_model.save()

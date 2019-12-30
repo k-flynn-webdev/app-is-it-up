@@ -33,7 +33,7 @@ function create ({ job, auth }, next) {
             let success = jobs_array.insert(model)
 
             if (!success) {
-              throw new Error('A problem occurred on the Job Stack.')
+              throw new Error('Job was not inserted into the stack.')
             }
 
             return next(null, model)
@@ -67,7 +67,7 @@ function create_model (input, next) {
 exports.create_model = create_model
 
 function create_id (input) {
-  let temp = input.url + input.method + input.params + input.ping + input.user.id
+  let temp = input.url + input.method + input.params + input.ping + input.user.id + input.user.name
 
   let hash = 0, i, chr
   if (temp.length === 0) return hash

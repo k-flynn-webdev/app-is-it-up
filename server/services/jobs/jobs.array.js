@@ -72,7 +72,7 @@ exports.find_user = find_user
 function insert (job) {
   let search = find_job(job.job_id)
   let inserted = false
-  if (search === -1 && job.active) {
+  if (search === -1) {
     jobs.push(job)
     inserted = true
     // logger.log('job insert success: ' + '\n' + job );

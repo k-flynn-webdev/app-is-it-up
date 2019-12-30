@@ -14,6 +14,8 @@ const jobSchema = new mongoose.Schema({
     month: { type: Number, required: true, default: 1 },
   },
   meta: {
+    created: { type: Date, required: false, default: Date.now() },
+    updated: { type: Date, required: false, default: Date.now() },
     max: { type: Number, required: true, default: 0 },
     num: { type: Number, required: true, default: 0 },
     next: { type: Date, required: true, default: Date.now() },
