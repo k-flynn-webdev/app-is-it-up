@@ -72,7 +72,7 @@ module.exports = function (app) {
     })
   })
 
-  app.put('/api/user', auth.token_required, valid_user.update, function (req, res) {
+  app.patch('/api/user', auth.token_required, valid_user.update, function (req, res) {
 
     api_user_update({ user: req.body.user, auth: req.body.token }, function (error, newUser) {
 
@@ -84,10 +84,7 @@ module.exports = function (app) {
 
       let newToken = admin_auth.create(newUser)
 
-      console.log('newUser')
-      console.log(newUser)
-
-      return exit(res, 200, 'Success User updated.', { account: newUser, token: newToken })
+      return exit(res, 201, 'Success User updated.', { account: newUser, token: newToken })
     })
   })
 

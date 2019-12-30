@@ -41,12 +41,13 @@ function logout () {
 }
 
 function update (input) {
-  const request = Http.put('/api/user', input)
+  const request = Http.patch('/api/user', input)
     .then(result => {
       Http.user.set(result)
       return result
     })
   return request
+
 }
 
 const services = {

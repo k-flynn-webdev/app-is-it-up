@@ -1,7 +1,7 @@
 <template>
 	<card>
 		<h1>User</h1>
-		<form class="form" @submit="onSubmit">
+		<form class="form" @submit.prevent="onSubmit">
 			<div class="form-item-block">
 				<label for="name"> Name </label>
 				<input id="name" minLength="4" type="string" name="name"
@@ -77,8 +77,8 @@
 				if (this.waiting) {
 					return
 				}
-
 				this.waiting = true
+
 				// todo : validate all input
 
 				// what changed??
@@ -96,20 +96,20 @@
 
 				return UserService.update(newUser)
 					.then(response => {
-						this.resetWaiting()
 						this.$root.$emit('message', response.data.message)
 						this.$root.$emit('user')
 						this.updateUser()
+						this.resetWaiting()
 					})
 					.catch(error => {
-						this.resetWaiting()
 						this.$root.$emit('message', error.response.data.message)
+						this.resetWaiting()
 					})
 
 			},
 			resetWaiting () {
 				setTimeout(() => {
-					this.warning = false
+					this.waiting = false
 				}, 500)
 			}
 		}
