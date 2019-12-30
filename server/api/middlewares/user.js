@@ -118,14 +118,17 @@ function prepare (input) {
   let tmp = {}
   if (exists(input.body.name)) {
     tmp.name = sanitizer(input.body.name)
+    delete input.body.name
   }
   if (exists(input.body.email)) {
     tmp.email = sanitizer(input.body.email)
+    delete input.body.email
   }
   if (exists(input.body.password)) {
     tmp.password = sanitizer(input.body.password)
+    delete input.body.password
   }
-  input.body = { user: tmp }
+  input.body = Object.assign(input.body, { user: tmp })
 }
 
 

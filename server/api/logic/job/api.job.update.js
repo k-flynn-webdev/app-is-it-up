@@ -14,7 +14,6 @@ function update ({ job, auth }, next) {
       }
 
       if (!auth) {
-
         if (result.user.id) {
           throw new Error('Must login to see this job.')
         }

@@ -84,6 +84,9 @@ module.exports = function (app) {
 
       let newToken = admin_auth.create(newUser)
 
+      console.log('newUser')
+      console.log(newUser)
+
       return exit(res, 200, 'Success User updated.', { account: newUser, token: newToken })
     })
   })

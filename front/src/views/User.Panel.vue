@@ -4,17 +4,17 @@
 		<form class="form" @submit="onSubmit">
 			<div class="form-item-block">
 				<label for="name"> Name </label>
-				<input id="name" minLength="4" required type="string" name="name"
+				<input id="name" minLength="4" type="string" name="name"
 							 placeholder="name" v-model="user.name">
 			</div>
 			<div class="form-item-block">
 				<label for="email"> Email </label>
-				<input id="email" minLength="4" required type="email" name="email"
+				<input id="email" minLength="4" type="email" name="email"
 							 placeholder="me @ me.com" v-model="user.email">
 			</div>
 			<div class="form-item-block">
 				<label for="password"> Password </label>
-				<input id="password" minLength="8" required type="password" name="password"
+				<input id="password" minLength="8" type="password" name="password"
 							 placeholder="* * *" v-model="user.password">
 			</div>
 			<div v-if="hasChanged" style="text-align: right;">
@@ -35,6 +35,7 @@
 		},
 		data () {
 			return {
+				waiting: false,
 				userControl: {
 					name: '',
 					email: '',
@@ -73,6 +74,11 @@
 				this.user.email = tmp.email
 			},
 			onSubmit: function () {
+				if (this.waiting) {
+					return
+				}
+
+				this.waiting = true
 				// todo : validate all input
 
 				// what changed??
@@ -90,15 +96,22 @@
 
 				return UserService.update(newUser)
 					.then(response => {
+						this.resetWaiting()
 						this.$root.$emit('message', response.data.message)
 						this.$root.$emit('user')
 						this.updateUser()
 					})
 					.catch(error => {
+						this.resetWaiting()
 						this.$root.$emit('message', error.response.data.message)
 					})
 
 			},
+			resetWaiting () {
+				setTimeout(() => {
+					this.warning = false
+				}, 500)
+			}
 		}
 	}
 </script>

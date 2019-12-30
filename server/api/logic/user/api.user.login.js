@@ -21,7 +21,7 @@ function login (input, next) {
     })
     .then(item => {
       if (!shared.exists(item)) {
-        throw new Error('Account mmissing.')
+        throw new Error('Account missing.')
       }
 
       bcrypt.compare(config.HASH_SECRET + input.password, item.password)

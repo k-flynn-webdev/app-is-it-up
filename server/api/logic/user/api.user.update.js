@@ -1,37 +1,79 @@
-// const jobs_array = require('../../../services/jobs/jobs.array.js');
+const bcrypt = require('bcrypt')
+const m_user = require('../../../models/user.js')
+const valid = require('../../middlewares/user.js').valid
+const shared = require('./api.user.shared.js')
+const config = require('../../../config/config.js')
 
-// const valid = require('./api.job.shared.js').valid;
-// const shared = require('./api.job.shared.js');
 
-
-
-function update({ user, auth },next){
-
-	// shared.find(job,function(error,found){
-	//
-	// 	if(error){
-	// 		return next(error);
-	// 	}
-	//
-	// 	if(found.length === 0){
-	// 		return next(new Error('Job does not exist.'));
-	// 	}
-	//
-	// 	let new_model = shared.update(found[0],job);
-	//
-	// 	new_model.save(function(result){
-	//
-	// 		if(error){
-	// 			return next(error);
-	// 		}
-	//
-	// 		new_model.has_updated = jobs_array.update(new_model);
-	// 		return next(null,new_model);
-	//
-	// 	});
-	// });
+function updatePassword(user) {
+	bcrypt.genSalt(config.SALT_ROUNDS)
+		.then(salt => {
+			bcrypt.hash(config.HASH_SECRET + user.password, salt)
+				.then(hash => {
+					user_model.password = hash
+					console.log('new password updated')
+				})
+		})
 }
-exports.update = update;
+
+function update ({ user, auth }, next) {
+	if (user.name && !valid.name(user.name)) return next(new Error('Invalid Name.'))
+	if (user.email && !valid.email(user.email)) return next(new Error('Invalid Email.'))
+
+	if (user.password) {
+		let passwordTest = valid.password(user.password)
+		if (passwordTest !== true) return next(new Error(passwordTest))
+	}
+
+	console.log(user)
+	console.log(auth)
+
+	m_user.findOne({_id: auth.id})
+		.then(user_model => {
+
+			if (!user_model) {
+				throw new Error('No user with that id found.')
+			}
+
+			if (user.name) {
+				user_model.name = user.name
+				console.log('new name updated')
+			}
+
+			if (user.email) {
+				user_model.email = user.email
+				console.log('new email updated')
+			}
+
+			if (user.password) {
+				bcrypt.genSalt(config.SALT_ROUNDS)
+					.then(salt => {
+						bcrypt.hash(config.HASH_SECRET + user.password, salt)
+							.then(hash => {
+								user_model.password = hash
+								console.log('new password updated')
+								return user_model.save()
+									.then(result => {
+										console.log('model done updating & saving.')
+										return next(null, result)
+									})
+							})
+					})
+			} else {
+				return user_model.save()
+					.then(result => {
+						console.log('model done updating & saving.')
+						return next(null, result)
+					})
+			}
+		})
+		.catch(err => {
+			throw err
+			return next(err)
+		})
+}
+
+exports.update = update
 
 
 

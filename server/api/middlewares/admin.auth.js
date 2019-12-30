@@ -90,11 +90,7 @@ function tokenVerify (token, req, res, next) {
 			}
 		}
 
-		if (!req.body.token) {
-			req.body.token = {}
-		}
-
-		req.body.token = Object.assign(req.body.token, decoded, { raw: token })
+		req.body = Object.assign(req.body, { token: decoded})
 
 		return next()
 	})
