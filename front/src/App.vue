@@ -77,31 +77,6 @@ label, .label {
 	padding-bottom: .35rem;
 }
 
-.button {
-	margin-top: .5rem;
-	font-weight: bold;
-	color: var(--colour-pop);
-	border: 1px solid var(--colour-pop);
-	background-color: var(--colour-dark);
-	transition: .2s;
-}
-
-button:focus, .button:focus {
-	background-color: hsla(210, 33%, 75%, .5);
-	border: 1px solid white;
-}
-
-.button:hover, .button:active {
-	background-color: var(--colour-mid);
-}
-
-.button.success {
-	background-color: var(--colour-success);
-}
-
-.button.fail {
-	background-color: var(--colour-fail);
-}
 
 input, select {
 	padding: 0 .5rem;

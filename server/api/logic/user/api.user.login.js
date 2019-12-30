@@ -5,33 +5,43 @@ const shared = require('./api.user.shared.js')
 const config = require('../../../config/config.js')
 
 function login (input, next) {
-  if (!valid.email(input.email)) return next(new Error('Invalid Email.'))
-  let passwordTest = valid.password(input.password)
-  if (passwordTest !== true) return next(new Error(passwordTest))
+	if (!valid.email(input.email)) return next(new Error('Invalid Email.'))
+	let passwordTest = valid.password(input.password)
+	if (passwordTest !== true) return next(new Error(passwordTest))
 
-  m_user.find({ email: input.email })
-    .then(items => {
-      // todo make a log of the login
+	m_user.findOne({ email: input.email })
+		.then(user_model => {
+			// todo make a log of the login
 
-      if (items.length < 1) {
-        throw new Error('No account found with that Email.')
-      }
+			if (!user_model || user_model.length < 1) {
+				throw new Error('No account found with that Email.')
+			}
 
-      return items[0]
-    })
-    .then(item => {
-      if (!shared.exists(item)) {
-        throw new Error('Account missing.')
-      }
+			if (!shared.exists(user_model)) {
+				throw new Error('Account missing.')
+			}
 
-      bcrypt.compare(config.HASH_SECRET + input.password, item.password)
-        .then(result => next(null, item))
-    })
-    .catch(err => {
-      // todo make a note of error in log
-      return next(err)
-    })
+			return bcrypt.compare(config.HASH_SECRET + input.password, user_model.password)
+        .then(result => {
+          if (!result) {
+            throw new Error('Incorrect password.')
+          }
+
+          user_model.meta.login = Date.now()
+
+          user_model.save()
+            .then(result => {
+              return next(null, user_model)
+            })
+        })
+		})
+
+		.catch(err => {
+			// todo make a note of error in log
+			return next(err)
+		})
 }
+
 exports.login = login
 
 

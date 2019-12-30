@@ -1,32 +1,28 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 var user = mongoose.Schema({
-	name : { type: String, required: true },
-	email : { type: String, required: true },
-	password : { type: String, required: true },
-	meta : {
-		updated : { type: Date, required: true, default : Date.now() },
-		login : { type: Date, required: true, default : Date.now() },
+	name: { type: String, required: true },
+	email: { type: String, required: true },
+	password: { type: String, required: true },
+	meta: {
+		created: { type: Date, required: true, default: Date.now() },
+		updated: { type: Date, required: true, default: Date.now() },
+		login: { type: Date, required: true, default: Date.now() },
+		magic_link: { type: String, required: false, default: '' },
 	},
-	role : { type: String, required: true, default: 'user' },
-	jobs : { type: Array, required: false },
+	role: { type: String, required: true, default: 'user' },
+	jobs: { type: Array, required: false },
 })
-module.exports = mongoose.model('User', user);
-
-
-function preSaveFunc(objec ){
-	return object;
-}
-exports.preSaveFunc = preSaveFunc;
 
 user.pre('save', function (next) {
-	preSaveFunc(this);
-	next();
-});
-user.pre('update', function (next) {
-	preSaveFunc(this);	
-	next();
-});
+	this.meta.updated = Date.now()
+	next()
+})
+
+module.exports = mongoose.model('User', user)
+
+
+
 
 // spec
 

@@ -17,8 +17,9 @@
 				<input id="password" minLength="8" type="password" name="password"
 							 placeholder="* * *" v-model="user.password">
 			</div>
-			<div v-if="hasChanged" style="text-align: right;">
-				<button class="button" @click="onSubmit">Update</button>
+			<div style="text-align: right;">
+				<button-c ref="btn_update" class="button" :disabled="!hasChanged" @click="onSubmit">Update
+				</button-c>
 			</div>
 		</form>
 	</card>
@@ -26,12 +27,15 @@
 
 <script>
 	import Card from '@/components/Card.vue'
+	import ButtonC from '@/components/ButtonC.vue'
+
 	import UserService from '../helpers/UserService.js'
 
 	export default {
 		name: 'user-panel',
 		components: {
-			Card,
+			ButtonC,
+			Card
 		},
 		data () {
 			return {
@@ -50,13 +54,13 @@
 		},
 		computed: {
 			hasChanged () {
-				if (this.userControl.name !== this.user.name) {
+				if (this.userControl.name !== this.user.name && this.user.name !== '') {
 					return true
 				}
-				if (this.userControl.email !== this.user.email) {
+				if (this.userControl.email !== this.user.email && this.user.email !== '') {
 					return true
 				}
-				if (this.user.password.length > 0) {
+				if (this.user.password !== '') {
 					return true
 				}
 				return false
@@ -70,8 +74,10 @@
 				let tmp = UserService.get_payload()
 				this.userControl.name = tmp.name
 				this.userControl.email = tmp.email
+				this.userControl.password = ''
 				this.user.name = tmp.name
 				this.user.email = tmp.email
+				this.user.password = ''
 			},
 			onSubmit: function () {
 				if (this.waiting) {
@@ -96,12 +102,13 @@
 
 				return UserService.update(newUser)
 					.then(response => {
+						this.$refs.btn_update.OnSuccess()
 						this.$root.$emit('message', response.data.message)
-						this.$root.$emit('user')
 						this.updateUser()
 						this.resetWaiting()
 					})
 					.catch(error => {
+						this.$refs.btn_update.OnFail()
 						this.$root.$emit('message', error.response.data.message)
 						this.resetWaiting()
 					})

@@ -1,11 +1,13 @@
 <template>
 
     <card>
-        <form>
+        <form @submit.prevent="OnSubmit">
             <job-render :attrs=attrs :job=job>
 
                 <div style="text-align:right;">
-                    <button-c ref="btn_create" v-on:click=OnSubmit>Create</button-c>
+                    <button-c ref="btn_create" :disabled="validURL" @click=OnSubmit>
+                        <span>Create</span>
+                    </button-c>
                 </div>
 
             </job-render>
@@ -45,7 +47,12 @@
       Card,
       JobRender,
     },
-    computed: {},
+    computed: {
+        validURL () {
+            if (this.job.url !== '') return false
+            return true
+        }
+    },
     methods: {
       OnValidate: function () {
 
@@ -57,8 +64,6 @@
         return true
       },
       OnSubmit: function () {
-        event.preventDefault()
-
         if (!this.OnValidate()) {
           return
         }

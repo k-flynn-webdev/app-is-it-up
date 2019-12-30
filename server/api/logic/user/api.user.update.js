@@ -12,6 +12,18 @@ function update ({ user, auth }, next) {
 		if (passwordTest !== true) return next(new Error(passwordTest))
 	}
 
+	if (user.email && auth.email !== user.email) {
+		m_user.find({ email: user.email })
+			.then(emailFound => {
+				if (emailFound.length > 0) {
+					throw new Error('Email address is already in use.')
+				}
+			})
+			.catch(err => {
+				return next(err)
+			})
+	}
+
 	m_user.findOne({ _id: auth.id })
 		.then(user_model => {
 
