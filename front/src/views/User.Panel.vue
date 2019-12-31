@@ -18,7 +18,8 @@
 							 placeholder="* * *" v-model="user.password">
 			</div>
 			<div style="text-align: right;">
-				<button-c ref="btn_update" class="button" :disabled="!hasChanged" @click="onSubmit">Update
+				<button-c ref="btn_update" class="button" :disabled="!hasChanged" @click="onSubmit">
+					<span>Update</span>
 				</button-c>
 			</div>
 		</form>

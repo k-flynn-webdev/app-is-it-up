@@ -84,7 +84,7 @@
 
         <div class="option">
           <label for="user"> User </label>
-          <p>{{ job.user }}</p>
+          <p>{{ job.user.name }}</p>
         </div> 
 
       </div>
