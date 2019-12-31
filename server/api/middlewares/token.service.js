@@ -1,18 +1,38 @@
-const path = require('path')
 const jwt = require('jsonwebtoken')
 const m_token = require('../../models/token.js')
 const config = require('../../config/config.js')
 const logger = require('../../helpers/logger.js')
+const exit = require('../middlewares/exit.js')
 
 const tokens_black_listed = []
 
+
+
 function init () {
+
 	m_token.find()
 		.then(items => {
-			logger.log(`Loading black list: ${items.length} tokens.`)
+
+			let oldTokens = []
+
+			// cleanup old tokens
 			for (let i = 0, j = items.length; i < j; i++) {
-				tokens_black_listed.push(items[i].token.toString())
+				jwt.verify(items[i].token, config.token.secret, function (error, result) {
+					if (error) {
+						oldTokens.push(items[i]._id)
+					} else {
+						tokens_black_listed.push(items[i].token.toString())
+					}
+				})
 			}
+
+			logger.log(tokens_black_listed.length + ' Tokens loaded')
+
+			// remove old tokens
+			return m_token.deleteMany({ _id: oldTokens })
+		})
+		.then(result => {
+			logger.log(result.deletedCount + ' Tokens expired & removed')
 		})
 		.catch(err => {
 			logger.log(err)
@@ -23,21 +43,10 @@ init()
 
 function create (input) {
 	let payload = Object.assign({}, input)
-	const JWTToken = jwt.sign(payload, config.token.secret, { expiresIn: config.token.expires })
-	return JWTToken
+	return jwt.sign(payload, config.token.secret, { expiresIn: config.token.expires })
 }
 
 exports.create = create
-
-// console.log(create({email:'test@test.com',role:'admin'}))
-
-function exit (res, status, message, data) {
-	res.status(status).json({
-		status: status,
-		message: message,
-		data: data,
-	})
-}
 
 function tokenCleanUp (token) {
 	let tmp = token
@@ -84,19 +93,19 @@ function tokenVerify (token, req, res, next) {
 			logger.log(error)
 			if (error.message === 'jwt expired') {
 				// todo send user to relogin!
-				return exit(res, 401, error.name || error)
+				return exit(res, 401, error.name || error, 'Please relogin.')
 			} else {
-				return exit(res, 401, error.name || error)
+				return exit(res, 401, error.name || error, 'Please relogin.')
 			}
 		}
 
-		req.body = Object.assign(req.body, { token: decoded})
+		req.body = Object.assign(req.body, { token: decoded })
 
 		return next()
 	})
 }
 
-function token_required (req, res, next) {
+function required (req, res, next) {
 
 	let token = tokenHeader(req)
 
@@ -114,9 +123,9 @@ function token_required (req, res, next) {
 
 }
 
-exports.token_required = token_required
+exports.required = required
 
-function token_passive (req, res, next) {
+function passive (req, res, next) {
 
 	let token = tokenHeader(req)
 
@@ -134,34 +143,27 @@ function token_passive (req, res, next) {
 
 }
 
-exports.token_passive = token_passive
+exports.passive = passive
 
 function add_token_to_blackList (req, next) {
 
-	let tokenRaw = null
-	if (req.headers && req.headers.authorization) {
-		tokenRaw = req.headers.authorization
-	}
+	let token = tokenHeader(req)
 
-	if (!tokenRaw) {
-		return next('No token recieved.')
-	}
-
-	if (tokenRaw.length < 100) {
+	if (!token || token.length < 100) {
 		return next('Invalid token recieved.')
 	}
 
-	let tokenString = tokenRaw.toString()
-	let exists = tokens_black_listed.filter(item => item === tokenString)
+	let exists = tokens_black_listed.filter(item => item === token)
 
 	if (exists.length > 0) {
 		return next('Token already exists.')
 	}
 
-	let tmp = new m_token({ token: tokenRaw })
+	let tmp = new m_token({ token: token })
 	tmp.save()
-		.then(item => {
-			tokens_black_listed.push(tokenRaw)
+		.then(() => {
+			tokens_black_listed.push(token)
+			logger.log('New token added to blacklist.')
 			return next(null, 'User logged out successfully.')
 		})
 		.catch(err => {

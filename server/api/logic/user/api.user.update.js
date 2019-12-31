@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const m_user = require('../../../models/user.js')
 const valid = require('../../middlewares/user.js').valid
 const config = require('../../../config/config.js')
+const logger = require('../../../helpers/logger.js')
 
 function update ({ user, auth }, next) {
 	if (user.name && !valid.name(user.name)) return next(new Error('Invalid Name.'))
@@ -12,20 +13,24 @@ function update ({ user, auth }, next) {
 		if (passwordTest !== true) return next(new Error(passwordTest))
 	}
 
-	if (user.email && auth.email !== user.email) {
-		m_user.find({ email: user.email })
-			.then(emailFound => {
-				if (emailFound.length > 0) {
-					throw new Error('Email address is already in use.')
-				}
-			})
-			.catch(err => {
-				return next(err)
-			})
-	}
-
 	m_user.findOne({ _id: auth.id })
 		.then(user_model => {
+
+			if (!user_model.meta.verified) {
+				throw new Error('Email address is not verified, please verify first.')
+			}
+
+			if (user.email && auth.email !== user.email) {
+				m_user.find({ email: user.email })
+					.then(emailFound => {
+						if (emailFound.length > 0) {
+							throw new Error('Email address is already in use.')
+						}
+					})
+					.catch(err => {
+						return next(err)
+					})
+			}
 
 			if (!user_model) {
 				throw new Error('No user with that id found.')
@@ -48,11 +53,12 @@ function update ({ user, auth }, next) {
 			return next(null, result)
 		})
 		.catch(err => {
+			logger.log(err)
 			return next(err)
 		})
 }
 
-exports.update = update
+module.exports = update
 
 function updatePassword (input, user_model) {
 	if (input.password) {

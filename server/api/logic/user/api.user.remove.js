@@ -1,33 +1,38 @@
-const jobs_array = require('../../../services/jobs/jobs.array.js');
+const bcrypt = require('bcrypt')
+const m_user = require('../../../models/user.js')
+const logger = require('../../../helpers/logger.js')
 
-const valid = require('./api.job.shared.js').valid;
-const shared = require('./api.job.shared.js');
+function remove (auth, next) {
 
+	m_user.findOneAndDelete({ _id: auth.id })
+		.then(user_model => {
 
+			if (!user_model || user_model.length > 0) {
+				throw new Error('User not found')
+			}
 
-function remove(job,next){
-
-	shared.remove(job, function(error,result){
-
-		if(error){
-			return next(error);
-		}
-
-		if(result.deletedCount === 0){
-			return next(new Error('Job does not exist.'));
-		}
-
-		let global_removed = jobs_array.remove(result);
-
-		// remove from user via event 
-
-		return next(null,result);
-	});
+			console.log('user_model')
+			console.log(user_model)
+			// todo check this????
+		//
+		//
+		// 	return updatePassword(user, user_model)
+		// })
+		// .then(user_model => {
+		// 	return user_model.save()
+		// })
+		// .then(result => {
+		// 	return next(null, result)
+		// })
+		// .catch(err => {
+		// 	logger.log(err)
+		// 	return next(err)
+		})
 }
-exports.remove = remove;
+
+module.exports = remove
 
 
-// todo remove from global space also ...
 
 
 

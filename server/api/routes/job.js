@@ -1,7 +1,5 @@
 const job = require('../middlewares/job.js')
-const auth = require('../middlewares/admin.auth.js')
-// const api_job_all = require('../logic/api.job.all.js');
-// const api_ping_get = require('../logic/api.ping.get.js');
+const token = require('../middlewares/token.service.js')
 const api_job_get = require('../logic/job/api.job.get.js')
 const api_job_create = require('../logic/job/api.job.create.js')
 const api_job_update = require('../logic/job/api.job.update.js')
@@ -10,99 +8,119 @@ const api_job_shared = require('../logic/job/api.job.shared.js')
 const pings = require('../../services/pings/pings.funcs.js')
 
 const api_job_stack = require('../../services/jobs/jobs.array.js')
+const exit = require('../middlewares/exit.js')
 
-function exit (res, status, message, data) {
-  res.status(status).json({
-    status: status,
-    message: message,
-    data: data,
-  })
+
+function isVerifiedMsg (auth) {
+	if (auth && auth.meta) {
+		return 'User email needs to be verified.'
+	}
+	return null
 }
 
 // todo make sure owner is valid & exists ...
 
 module.exports = function (app) {
 
-  app.get('/api/job/all', auth.token_passive, function (req, res) {
+	app.get('/api/job/all', token.passive, function (req, res) {
 
-    api_job_stack.get_stack(req.body.token, function (error, jobs) {
+		api_job_stack.get_stack(req.body.token, function (error, jobs) {
 
-      if (error) {
-        return exit(res, 422, error.message, error)
-      }
+			if (error) {
+				return exit(res, 422, error.message, error)
+			}
 
-      let safe_jobs = jobs.map(item => api_job_shared.safe_export(item))
+			let safe_jobs = jobs.map(item => api_job_shared.safe_export(item))
 
-      return exit(res, 200, 'Success jobs found.', { jobs: safe_jobs })
-    })
-  })
+			return exit(res, 200, 'Success jobs found.', { jobs: safe_jobs })
+		})
+	})
 
-  app.post('/api/job/create', auth.token_passive, job.create, function (req, res) {
+	app.post('/api/job/create', token.passive, job.create, function (req, res) {
 
-    api_job_create.create({ job: req.body.job, auth: req.body.token }, function (error, job) {
+		api_job_create.create({ job: req.body.job, auth: req.body.token }, function (error, job) {
 
-      if (error) {
-        return exit(res, 422, error.message || error, error)
-      }
+			if (error) {
+				return exit(res, 422, error.message || error, error)
+			}
 
-      let safe_job = api_job_shared.safe_export(job)
+			let safe_job = api_job_shared.safe_export(job)
 
-      return exit(res, 201, 'Success new job created.', { job: safe_job })
-    })
-  })
+			// todo attach job to user ..
 
-  app.get('/api/job/:job', auth.token_passive, job.get, function (req, res) {
+			return exit(
+				res,
+				201,
+				'Success new job created.',
+				{ job: safe_job },
+				isVerifiedMsg(req.body.token)
+			)
+		})
+	})
 
-    api_job_get.get({ job: req.body.job, auth: req.body.token }, function (error, job) {
+	app.get('/api/job/:job', token.passive, job.get, function (req, res) {
 
-      if (error) {
-        return exit(res, 422, error.message || error, error)
-      }
+		api_job_get.get({ job: req.body.job, auth: req.body.token }, function (error, job) {
 
-      let safe_job = api_job_shared.safe_export(job)
+			if (error) {
+				return exit(res, 422, error.message || error, error)
+			}
 
-      return exit(res, 200, 'Success job found.', { job: safe_job })
-    })
-  })
+			let safe_job = api_job_shared.safe_export(job)
 
-  app.put('/api/job/:job', auth.token_passive, job.update, function (req, res) {
+			return exit(res,
+				200,
+				'Success job found.',
+				{ job: safe_job },
+				isVerifiedMsg(req.body.token)
+			)
+		})
+	})
 
-    api_job_update.update({ job: req.body.job, auth: req.body.token }, function (error, job) {
+	app.patch('/api/job/:job', token.passive, job.update, function (req, res) {
 
-      if (error) {
-        return exit(res, 422, error.message || error, error)
-      }
+		api_job_update.update({ job: req.body.job, auth: req.body.token }, function (error, job) {
 
-      let safe_job = api_job_shared.safe_export(job)
+			if (error) {
+				return exit(res, 422, error.message || error, error)
+			}
 
-      return exit(res, 201, 'Success job updated.', { job: safe_job })
+			let safe_job = api_job_shared.safe_export(job)
 
-    })
-  })
+			return exit(res, 201, 'Success job updated.', { job: safe_job })
 
-  app.delete('/api/job/:job', auth.token_passive, job.get, function (req, res) {
+		})
+	})
 
-    api_job_remove.remove({ job: req.body.job, auth: req.body.token }, function (error, job) {
+	app.delete('/api/job/:job', token.passive, job.get, function (req, res) {
 
-      if (error) {
-        return exit(res, 422, error.message || error, error)
-      }
+		api_job_remove.remove({ job: req.body.job, auth: req.body.token }, function (error, job) {
 
-      let safe_job = api_job_shared.safe_export(job)
+			if (error) {
+				return exit(res, 422, error.message || error, error)
+			}
 
-      pings.remove(job, function(error, pings_removed){
+			let safe_job = api_job_shared.safe_export(job)
 
-        if (error) {
-          return exit(res, 422, error.message || error, error)
-        }
+      // todo update job on user ..
 
-        return exit(res, 200, 'Success job removed.', { job: safe_job, pings_removed: pings_removed })
-      })
+      pings.remove(job, function (error, pings_removed) {
 
-    })
-  })
+				if (error) {
+					return exit(res, 422, error.message || error, error)
+				}
 
-  return app
+				return exit(res,
+          200,
+          'Success job removed.',
+          { job: safe_job, pings_removed: pings_removed },
+					isVerifiedMsg(req.body.token)
+          )
+			})
+		})
+	})
+
+	return app
 }
 
 

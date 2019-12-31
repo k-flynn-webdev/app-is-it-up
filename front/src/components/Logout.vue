@@ -1,5 +1,5 @@
 <template>
-	<a href="#home" @click.stop="onLogout">Logout</a>
+	<a href="#home" @click="onLogout">Logout</a>
 </template>
 
 <script>
@@ -7,6 +7,7 @@
 	import UserService from '../helpers/UserService.js'
 
 	import Paths from '../constants/paths.js'
+	import sharedVars from '../constants/sharedVars.js'
 
 	export default {
 		name: 'user-logout',
@@ -21,11 +22,17 @@
 					return
 				}
 				this.waiting = true
+
 				UserService.logout()
 					.then(response => {
 						this.$root.$emit('message', response.data.message)
 						this.$root.$emit('user')
-						this.$router.push({ name: Paths['HOME']})
+						this.$root.$emit('get-jobs')
+
+						setTimeout(() => {
+							this.$router.push({ name: Paths['HOME']})
+						}, sharedVars.page_push)
+
 					})
 					.catch(err => {
 						this.$root.$emit('message', err.response.data.message)
@@ -35,7 +42,7 @@
 			resetWaiting () {
 				setTimeout(() => {
 					this.waiting = false
-				}, 500)
+				}, sharedVars.wait_ms)
 			}
 		}
 	}

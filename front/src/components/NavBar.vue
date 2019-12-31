@@ -17,18 +17,25 @@
 
 		<div class="links">
 			<ul>
-				<li v-if="!hasUser">
-					<router-link to="/user/create">Register</router-link>
-				</li>
-				<li v-if="!hasUser">
-					<router-link to="/user/login">Login</router-link>
-				</li>
-				<li v-if="hasUser">
-					<router-link to="/user/panel">{{ nameRender }}</router-link>
-				</li>
-				<li v-if="hasUser">
-					<logout/>
-				</li>
+
+				<template v-if="!hasUser">
+					<li>
+						<router-link to="/user/create">Register</router-link>
+					</li>
+					<li>
+						<router-link to="/user/login">Login</router-link>
+					</li>
+				</template>
+
+				<template v-if="hasUser">
+					<li>
+						<router-link to="/user/panel">{{ nameRender }}</router-link>
+					</li>
+					<li>
+						<logout/>
+					</li>
+				</template>
+
 			</ul>
 		</div>
 

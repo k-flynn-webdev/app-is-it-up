@@ -1,4 +1,5 @@
 const sanitizer = require('sanitizer').sanitize
+const exit = require('../middlewares/exit.js')
 
 function exists (input) {
   if (input === null || input === undefined) return false
@@ -8,18 +9,6 @@ function exists (input) {
 
 exports.exists = exists
 
-function exit (res, status, message, data) {
-
-  let obj = {
-    status: status,
-    message: message,
-    data: data,
-  }
-
-  if (process.env.NODE_ENV === 'test') return res(obj)
-
-  return res.status(status).json(obj)
-}
 
 function user (req, res, next) {
   if (!exists(req.body.user)) return exit(res, 422, 'Missing user property.')

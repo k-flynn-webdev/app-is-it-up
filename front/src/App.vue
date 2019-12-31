@@ -31,16 +31,9 @@
 		},
 		data () {
 			return {
-				user: null
 			}
 		},
 		computed: {
-			hasUser () {
-				if (!this.user) {
-					return false
-				}
-				return true
-			}
 		},
 		mounted () {
 		},

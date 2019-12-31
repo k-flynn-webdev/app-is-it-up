@@ -21,6 +21,7 @@
 
 <script>
 	import Paths from '@/constants/paths'
+	import sharedVars from '../constants/sharedVars.js'
 	import Card from '@/components/Card.vue'
 	import UserService from '../helpers/UserService.js'
 
@@ -51,7 +52,7 @@
 						this.$root.$emit('user')
 						setTimeout(() => {
 							this.$router.push({ name: Paths['HOME'] })
-						}, 1500)
+						}, sharedVars.page_push)
 					})
 					.catch(error => {
 						this.$root.$emit('message', error.response.data.message)
@@ -61,7 +62,7 @@
 			resetWaiting () {
 				setTimeout(() => {
 					this.waiting = false
-				}, 500)
+				}, sharedVars.wait_ms)
 			}
 		}
 	}

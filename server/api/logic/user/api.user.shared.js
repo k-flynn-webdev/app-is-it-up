@@ -79,6 +79,13 @@ function safe_export (user) {
 	if (exists(user.role)) {
 		freshUser.role = user.role
 	}
+  if (exists(user.meta.verified)) {
+    freshUser.meta = {
+      created: user.meta.created,
+      login: user.meta.login,
+      verified: user.meta.verified
+    }
+  }
 	if (exists(user._id)) {
 		freshUser.id = user._id
 	}

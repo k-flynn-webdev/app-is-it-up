@@ -8,6 +8,7 @@ var user = mongoose.Schema({
 		created: { type: Date, required: true, default: Date.now() },
 		updated: { type: Date, required: true, default: Date.now() },
 		login: { type: Date, required: true, default: Date.now() },
+		verified: { type: Boolean, required: true, default: false },
 		magic_link: { type: String, required: false, default: '' },
 	},
 	role: { type: String, required: true, default: 'user' },

@@ -22,6 +22,16 @@
 	import ButtonC from '@/components/ButtonC.vue'
 	import JobRender from '@/components/Job.vue'
 	import JobService from '../helpers/JobService.js'
+	import sharedVars from '../constants/sharedVars.js'
+
+	const defaultJob = {
+		active: true,
+		url: '',
+		params: '',
+		method: 'GET',
+		ping: 30,
+		full: false,
+	}
 
 	export default {
 		name: 'JobCreate',
@@ -79,6 +89,7 @@
 						this.$refs.btn_create.OnSuccess()
 						this.$root.$emit('message', response.data.message)
 						this.$root.$emit('add-job', response.data.data.job)
+						this.resetJob()
 						this.resetWaiting()
 					})
 					.catch(error => {
@@ -88,10 +99,18 @@
 					})
 
 			},
+			resetJob () {
+				this.job.active = defaultJob.active
+				this.job.url = defaultJob.url
+				this.job.params = defaultJob.params
+				this.job.method = defaultJob.method
+				this.job.ping = defaultJob.ping
+				this.job.full = defaultJob.full
+			},
 			resetWaiting () {
 				setTimeout(() => {
 					this.waiting = false
-				}, 500)
+				}, sharedVars.wait_ms)
 			}
 		},
 

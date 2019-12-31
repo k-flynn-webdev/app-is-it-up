@@ -31,6 +31,7 @@
 	import ButtonC from '@/components/ButtonC.vue'
 
 	import UserService from '../helpers/UserService.js'
+	import sharedVars from '../constants/sharedVars.js'
 
 	export default {
 		name: 'user-panel',
@@ -105,8 +106,9 @@
 					.then(response => {
 						this.$refs.btn_update.OnSuccess()
 						this.$root.$emit('message', response.data.message)
-						this.updateUser()
+						this.$root.$emit('user')
 						this.resetWaiting()
+						this.updateUser()
 					})
 					.catch(error => {
 						this.$refs.btn_update.OnFail()
@@ -118,7 +120,7 @@
 			resetWaiting () {
 				setTimeout(() => {
 					this.waiting = false
-				}, 500)
+				}, sharedVars.wait_ms)
 			}
 		}
 	}

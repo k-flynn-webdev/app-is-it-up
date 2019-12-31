@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const m_user = require('../../../models/user.js')
 const valid = require('../../middlewares/user.js').valid
 const config = require('../../../config/config.js')
+const logger = require('../../../helpers/logger.js')
 
 function create (user, next) {
 	if (!valid.name(user.name)) return next(new Error('Invalid Name.'))
@@ -22,7 +23,7 @@ function create (user, next) {
 			user_model.name = user.name
 			user_model.email = user.email
 
-			return updatePassword(user, user_model)
+			return createPassword(user, user_model)
 		})
 		.then(user_model => {
 			return user_model.save()
@@ -31,13 +32,14 @@ function create (user, next) {
 			return next(null, result)
 		})
 		.catch(err => {
+			logger.log(err)
 			return next(err)
 		})
 }
 
-exports.create = create
+module.exports = create
 
-function updatePassword (input, user_model) {
+function createPassword (input, user_model) {
 	if (input.password) {
 		return bcrypt.genSalt(config.SALT_ROUNDS)
 			.then(salt => {

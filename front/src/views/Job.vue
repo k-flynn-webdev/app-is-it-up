@@ -1,115 +1,144 @@
 <template>
-    <card>
-        <job-render :attrs=attrs :job=job>
-            <div class="text-right">
-                <button-c ref="btn_update" v-on:click=OnUpdate> Update</button-c>
-                <div style="display:inline-block;width:1rem;"></div>
-                <button-c ref="btn_delete" v-on:click=OnDelete> Delete</button-c>
-            </div>
-        </job-render>
-    </card>
+	<card>
+		<job-render :attrs=attrs :job=job>
+			<div class="text-right">
+				<button-c ref="btn_update" @click=OnUpdate> Update</button-c>
+				<div style="display:inline-block;width:1rem;"></div>
+				<button-c ref="btn_delete" @click=OnDelete> Delete</button-c>
+			</div>
+		</job-render>
+	</card>
 
 </template>
 
 <script>
 
-  import ButtonC from '@/components/ButtonC.vue'
-  import Card from '@/components/Card.vue'
-  import JobRender from '@/components/Job.vue'
-  import JobService from '../helpers/JobService.js'
+	import Card from '@/components/Card.vue'
+	import ButtonC from '@/components/ButtonC.vue'
+	import JobRender from '@/components/Job.vue'
+	import JobService from '../helpers/JobService.js'
+	import sharedVars from '../constants/sharedVars.js'
 
-  export default {
-    name: 'Job',
-    data () {
-      return {
-        attrs: {
-          active: [true, false],
-          pings: [1, 15, 30, 45, 60],
-          methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        },
-        job: {
-          active: false,
-          status: false,
-          fails: [],
-          url: '',
-          ping: 0,
-          method: '',
-          params: '',
-          meta: {
-            max: 0,
-            num: 0,
-            next: '',
-          },
-          periods: {
-            day: 0,
-            week: 0,
-            month: 0,
-          },
-          user: '',
-          job_id: '',
-        },
-      }
-    },
-    components: {
-      ButtonC,
-      Card,
-      JobRender,
-    },
-    methods: {
-      GetJob: function () {
-        JobService.get(this.$route.params.job_id)
-          .then(response => {
-            this.job = response.data.data.job
-            this.job.full = true
-          })
-          .catch(error => {
-            this.$root.$emit('message', error.response.data.message)
-          })
-      },
-      OnValidate: function () {
+	export default {
+		name: 'Job',
+		data () {
+			return {
+				waiting: false,
+				attrs: {
+					active: [true, false],
+					pings: [1, 15, 30, 45, 60],
+					methods: ['GET', 'POST', 'PUT', 'DELETE'],
+				},
+				job: {
+					active: false,
+					status: false,
+					fails: [],
+					url: '',
+					ping: 0,
+					method: '',
+					params: '',
+					meta: {
+						max: 0,
+						num: 0,
+						next: '',
+					},
+					periods: {
+						day: 0,
+						week: 0,
+						month: 0,
+					},
+					user: '',
+					job_id: '',
+				},
+			}
+		},
+		components: {
+			Card,
+			ButtonC,
+			JobRender,
+		},
+		methods: {
+			GetJob: function () {
+				this.waiting = true
+				JobService.get(this.$route.params.job_id)
+					.then(response => {
+						this.job = response.data.data.job
+						this.job.full = true
+						this.resetWaiting()
+					})
+					.catch(error => {
+						this.resetWaiting()
+						this.$root.$emit('message', error.response.data.message)
+					})
+			},
+			OnValidate: function () {
 
-        if (this.job.url.length < 4) return false
-        if (this.job.method === '') return false
-        if (this.job.ping === '') return false
+				if (this.job.url.length < 4) {
+					return false
+				}
+				if (this.job.method === '') {
+					return false
+				}
+				if (this.job.ping === '') {
+					return false
+				}
 
-        // todo
-        return true
-      },
-      OnUpdate: function () {
-        event.preventDefault()
+				// todo
+				return true
+			},
+			OnUpdate: function () {
 
-        if (!this.OnValidate()) {
-          return
-        }
+				if (!this.OnValidate()) {
+					return
+				}
 
-        JobService.update(this.job)
-          .then(response => {
-            this.$refs.btn_update.OnSuccess()
-            this.$root.$emit('message', response.data.message)
-          })
-          .catch(error => {
-            this.$refs.btn_update.OnFail()
-            this.$root.$emit('message', error.response.data.message)
-          })
-      },
-      OnDelete: function () {
-        event.preventDefault()
+				if (this.waiting) {
+					return
+				}
+				this.waiting = true
 
-        JobService.remove({ job_id: this.$route.params.job_id }).then(response => {
-          this.$refs.btn_delete.OnSuccess()
-          this.$root.$emit('message', response.data.message)
-          let self = this
-          setTimeout(function () {
-            self.$router.push('/')
-          }, 3.5 * 1000)
-        }).catch(error => {
-          this.$refs.btn_delete.OnSuccess()
-          this.$root.$emit('message', error.response.data.message)
-        })
-      },
-    },
-    mounted () {
-      this.GetJob()
-    },
-  }
+				JobService.update(this.job)
+					.then(response => {
+						this.$refs.btn_update.OnSuccess()
+						this.$root.$emit('message', response.data.message)
+						this.resetWaiting()
+					})
+					.catch(error => {
+						this.$refs.btn_update.OnFail()
+						this.$root.$emit('message', error.response.data.message)
+						this.resetWaiting()
+					})
+			},
+			OnDelete: function () {
+				if (this.waiting) {
+					return
+				}
+				this.waiting = true
+
+				JobService.remove({ job_id: this.$route.params.job_id })
+					.then(response => {
+						this.$refs.btn_delete.OnSuccess()
+						this.$root.$emit('message', response.data.message)
+
+						setTimeout(() => {
+							this.$router.push({ name: 'home' })
+						}, sharedVars.page_push)
+
+					})
+					.catch(error => {
+						this.$refs.btn_delete.OnSuccess()
+						this.$root.$emit('message', error.response.data.message)
+						this.resetWaiting()
+					})
+			},
+			resetWaiting () {
+				setTimeout(() => {
+					this.waiting = false
+				}, sharedVars.wait_ms)
+			}
+		},
+		mounted () {
+			this.GetJob()
+		},
+	}
 </script>
