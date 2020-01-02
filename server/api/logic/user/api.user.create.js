@@ -23,6 +23,15 @@ function create (user, next) {
 			user_model.name = user.name
 			user_model.email = user.email
 
+			let magicObject = {
+				name: user_model.name,
+				time: Date.now(),
+				id: user_model._id
+			}
+			let magicLink = jwt.sign(magicObject, 'magic-links-token').toString().slice(5,-5)
+
+			user_model.meta.magic_link = magicLink
+
 			return createPassword(user, user_model)
 		})
 		.then(user_model => {

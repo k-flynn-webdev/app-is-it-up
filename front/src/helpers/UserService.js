@@ -34,7 +34,15 @@ function update (input) {
       return result
     })
   return request
+}
 
+function verify (input) {
+  const request = Http.get(`/api/user/verify/${input}`)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
 }
 
 const services = {
@@ -42,6 +50,7 @@ const services = {
   login: login,
   logout: logout,
   update : update,
+  verify: verify,
   get_payload: Http.user.get_payload,
 }
 

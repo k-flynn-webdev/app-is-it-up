@@ -17,13 +17,13 @@ export default new Router({
       component: Home
     },
     {
-      path: '/public/stack',
-      name: Paths['PUBLIC_STACK'],
+      path: '/user/verify/:verify',
+      name: Paths['USER_VERIFY'],
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "stack" */ './views/Stack.vue')
-    },    
+      component: () => import(/* webpackChunkName: "verify" */ './views/Verify.vue')
+    },
     {
       path: '/job/:job_id',
       name: Paths['JOB'],

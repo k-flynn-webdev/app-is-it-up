@@ -84,6 +84,16 @@ function create (req, res, next) {
 
 exports.create = create
 
+function verify (req, res, next) {
+  if (!exists(req.params)) return exit(res, 422, 'Missing verify link.')
+  if (!exists(req.params.verify)) return exit(res, 422, 'Missing verify link.')
+  if (req.params.verify.length < 100) return exit(res, 422, 'Invalid verify link.')
+
+  prepare(req)
+  next()
+}
+exports.verify = verify
+
 function login (req, res, next) {
 
   if (!exists(req.body.email)) return exit(res, 422, missing('email'))
@@ -115,6 +125,9 @@ function prepare (input) {
   if (exists(input.body.password)) {
     tmp.password = sanitizer(input.body.password)
     delete input.body.password
+  }
+  if (exists(input.params.verify)) {
+    tmp.verify = sanitizer(input.params.verify)
   }
   input.body = Object.assign(input.body, { user: tmp })
 }
