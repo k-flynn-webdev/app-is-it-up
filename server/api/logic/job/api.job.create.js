@@ -17,7 +17,8 @@ function create ({ job, auth }, next) {
 	create_model(job, function (error, job_model) {
 
 		if (error) {
-			throw error
+			logger.log(error)
+			return next(error)
 		}
 
 		m_job.find({ job_id: job_model.job_id })
@@ -43,7 +44,6 @@ function create ({ job, auth }, next) {
 				return next(err)
 			})
 	})
-
 }
 
 exports.create = create
