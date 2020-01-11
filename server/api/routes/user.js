@@ -1,6 +1,7 @@
 const token = require('../middlewares/token.service.js')
 const valid_user = require('../middlewares/user.js')
 const user_shared = require('../logic/user/api.user.shared.js')
+const api_user_details = require('../logic/user/user.details.js')
 const api_user_create = require('../logic/user/api.user.create.js')
 const api_user_verify = require('../logic/user/user.verify.js')
 const api_user_login = require('../logic/user/api.user.login.js')
@@ -11,6 +12,24 @@ const exit = require('../middlewares/exit.js')
 // todo make sure owner is valid & exists ...
 
 module.exports = function (app) {
+
+	app.get('/api/user', token.required, function (req, res) {
+
+		api_user_details(req.body.token, function (error, newUser) {
+
+			if (error) {
+				return exit(res, 422, error.message || error, error)
+			}
+
+			newUser = user_shared.safe_export(newUser)
+
+			return exit(res,
+				200,
+				'Success User found.',
+				{ account: newUser }
+			)
+		})
+	})
 
 	app.post('/api/user', valid_user.create, function (req, res) {
 

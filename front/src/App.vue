@@ -88,5 +88,37 @@ input:focus, select:focus {
 	outline: 2px solid white;
 }
 
+.form {
+	margin: 0.66rem 0;
+}
+
+.form-item-block {
+	margin: 0 auto;
+}
+
+.form-item-block input {
+	width: 100%;
+	margin-bottom: 1rem;
+}
+
+label {
+	display: block;
+	font-weight: bold;
+	text-align: left;
+}
+
+
+.flex-wrap {
+	flex-wrap: wrap;
+}
+.flex-items .option {
+	margin: .2rem .2rem;
+}
+.flex-items .option.block {
+	flex-grow: 2;
+}
+.flex-items .option.block input{
+	width: 100%;
+}
 
 </style>

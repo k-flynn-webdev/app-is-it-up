@@ -1,5 +1,13 @@
 import Http from './HttpService.js'
 
+function get () {
+  const request = Http.get('/api/user')
+    .then(result => {
+      return result
+    })
+  return request
+}
+
 function create (input) {
   const request = Http.post('/api/user', input)
     .then(result => {
@@ -51,6 +59,7 @@ const services = {
   logout: logout,
   update : update,
   verify: verify,
+  get: get,
   get_payload: Http.user.get_payload,
 }
 

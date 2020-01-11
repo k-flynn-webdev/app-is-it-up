@@ -1,28 +1,46 @@
 <template>
 	<card>
-		<h1>User</h1>
-		<form class="form" @submit.prevent="onSubmit">
-			<div class="form-item-block">
+		<h1>User Account</h1>
+		<form class="form flex-items flex-wrap" @submit.prevent="onSubmit">
+
+			<div class="option block">
 				<label for="name"> Name </label>
 				<input id="name" minLength="4" type="string" name="name"
 							 placeholder="name" v-model="user.name">
 			</div>
-			<div class="form-item-block">
+			<div class="option block">
 				<label for="email"> Email </label>
 				<input id="email" minLength="4" type="email" name="email"
 							 placeholder="me @ me.com" v-model="user.email">
 			</div>
-			<div class="form-item-block">
+			<div class="option block">
 				<label for="password"> Password </label>
 				<input id="password" minLength="8" type="password" name="password"
 							 placeholder="* * *" v-model="user.password">
 			</div>
-			<div style="text-align: right;">
-				<button-c ref="btn_update" class="button" :disabled="!hasChanged" @click="onSubmit">
-					<span>Update</span>
-				</button-c>
-			</div>
+
 		</form>
+
+		<div class="option block">
+			<h1>User Details</h1>
+
+			<div class="text-left">
+				<p> Role: {{ userControl.role }} </p>
+				<p> ID: {{ userControl.id }} </p>
+				<p> Created: {{ userControl.meta.created }} </p>
+				<p> Login: {{ userControl.meta.login }} </p>
+				<p> Verified: {{ userControl.meta.verified }} </p>
+			</div>
+
+		</div>
+
+
+
+		<div style="text-align: right;">
+			<button-c ref="btn_update" class="button" :disabled="!hasChanged" @click="onSubmit">
+				<span>Update</span>
+			</button-c>
+		</div>
 	</card>
 </template>
 
@@ -46,6 +64,11 @@
 					name: '',
 					email: '',
 					password: '',
+					meta: {
+						login: '',
+						created: '',
+						verified: ''
+					}
 				},
 				user: {
 					name: '',
@@ -69,16 +92,34 @@
 			}
 		},
 		mounted () {
-			this.updateUser()
+			// this.updateUser()
+			this.getUser()
 		},
 		methods: {
-			updateUser () {
-				let tmp = UserService.get_payload()
-				this.userControl.name = tmp.name
-				this.userControl.email = tmp.email
+			getUser () {
+				UserService.get()
+				.then(response => {
+					this.updateUser(response.data.data.account)
+					// this.userControl = response.data.data
+				})
+				.catch(err => {
+					this.$root.$emit('message', err.response.data.message)
+				})
+			},
+			updateUser (user) {
+				// let tmp = UserService.get_payload()
+				this.userControl.name = user.name
+				this.userControl.email = user.email
 				this.userControl.password = ''
-				this.user.name = tmp.name
-				this.user.email = tmp.email
+				this.userControl.role = user.role
+				this.userControl.meta.login = new Date(user.meta.login).toLocaleDateString()
+				this.userControl.meta.created = new Date(user.meta.created).toLocaleDateString()
+				this.userControl.meta.verified = user.meta.verified
+				this.userControl.id = user.id
+
+
+				this.user.name = user.name
+				this.user.email = user.email
 				this.user.password = ''
 			},
 			onSubmit: function () {
@@ -128,18 +169,7 @@
 
 
 <style>
-.form {
-	margin: .5rem 0.5rem 1rem 0.5rem;
-}
 
-.form-item-block {
-	margin: 0 auto;
-}
-
-.form-item-block input {
-	width: 100%;
-	margin-bottom: 1rem;
-}
 </style>
 
 
