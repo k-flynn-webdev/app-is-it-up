@@ -20,7 +20,7 @@ module.exports = {
 	ip : envs.parsed.IP,
 	version : app_version,
 	rate : { 
-		time : 10 * 60 * 1000, 
+		time : 10 * 60 * 1000,
 		max : 200,
 	},
 	token : {

@@ -81,6 +81,7 @@ input, select {
 }
 
 input {
+	box-sizing: border-box;
 	border-radius: var(--border-radius);
 }
 
