@@ -86,6 +86,28 @@ function tokenBlackListCheck (token) {
 	return false
 }
 
+/**
+ * Used for decoding, NOT verifying, used only by the logout route
+ * @param token
+ * @param req
+ * @param res
+ * @param next
+ */
+function tokenDecode (token, req, res, next) {
+	let decoded = jwt.decode(token)
+
+	if (!decoded)	 {
+		let err = new Error('Token issued appears broken')
+		logger.log(err)
+		return next(err)
+	}
+
+	decoded.logout = true
+
+	req.body = Object.assign(req.body, { token: decoded })
+	return next()
+}
+
 function tokenVerify (token, req, res, next) {
 	jwt.verify(token, config.token.secret, function (error, decoded) {
 
@@ -104,6 +126,26 @@ function tokenVerify (token, req, res, next) {
 		return next()
 	})
 }
+
+/**
+ * If a token has expired will not error but will continue so the user can be logged out regardless
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+function logout (req, res, next) {
+
+	let token = tokenHeader(req)
+
+	if (!token || token.length < 100) {
+		return exit(res, 401, 'Token required, please login.')
+	}
+
+	tokenDecode(token, req, res, next)
+}
+
+exports.logout = logout
 
 function required (req, res, next) {
 

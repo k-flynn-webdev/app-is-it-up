@@ -18,7 +18,7 @@ Aims:
 - email verify via http magic link
 - email signup??
 
-
+ - when logging out with expiredtoken DO NOT kick back an error or track it ... otherwise front end is trapped ;o
 
 make something public private
 if public the job url or job owner page can be shared but not edited.

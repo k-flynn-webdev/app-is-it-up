@@ -71,7 +71,7 @@ module.exports = function (app) {
 		})
 	})
 
-	app.post('/api/user/logout', token.required, function (req, res) {
+	app.post('/api/user/logout', token.logout, function (req, res) {
 
 		token.add_token_to_blackList(req, function (error, result) {
 
@@ -81,7 +81,8 @@ module.exports = function (app) {
 
 			return exit(res,
 				201,
-				'User logged out.'
+				result,
+				result
 			)
 		})
 	})
