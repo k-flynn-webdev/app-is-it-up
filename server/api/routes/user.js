@@ -55,6 +55,8 @@ module.exports = function (app) {
 
 		api_user_login(req.body.user, function (error, newUser) {
 
+			console.log(error,newUser)
+
 			if (error) {
 				return exit(res, 422, error.message || error, error)
 			}

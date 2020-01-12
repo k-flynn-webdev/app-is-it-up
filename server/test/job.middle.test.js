@@ -1,6 +1,6 @@
 const job = require('../api/middlewares/job.js');
 
-let temp_job = { url : 'https://www.google.com/', user : '5d8cc974f14001679cb90caf', ping : 212, job_id : 247259029 };
+let temp_job = { url : 'https://www.google.com/', user : { id: '5d8cc974f14001679cb90caf', name: 'test' }, ping : 212, job_id : 247259029 };
 
 process.env.TEST_SUITE = 'middle-job-test';
 
@@ -33,22 +33,25 @@ describe('Middleware Job', function() {
 	});
 
 	it('create should error on missing url', function() {
-		job.create({ body : { ping : temp_job.ping, user: temp_job.user }}, function(error,result){
+		let resObject = function(error, result) {
 			expect(error.message).toBe('Missing url property.');
-		});
+		}
+		job.create({ body : { ping : temp_job.ping, user: temp_job.user }}, resObject, function(){});
 	});
 	it('create should error on missing ping', function() {
-		job.create({ body : { url : temp_job.url, user: temp_job.user }}, function(error,result){
+		let resObject = function(error, result) {
 			expect(error.message).toBe('Missing ping property.');
-		});
+		}
+		job.create({ body : { url : temp_job.url, user: temp_job.user }}, resObject, function(){});
 	});
 	it('create should error on user ping', function() {
-		job.create({ body : { url : temp_job.url, ping: temp_job.ping }}, function(error,result){
+		let resObject = function(error, result) {
 			expect(error.message).toBe('Missing user property.');
-		});
+		}
+		job.create({ body : { url : temp_job.url, ping: temp_job.ping }}, resObject, function(){});
 	});
 	it('create should error on empty properties', function() {
-		job.create({ body : { url : '', ping : '', user: '' }}, function(error,result){
+		job.create({ body : { url : '', ping : '', user: '' }}, function(){},function(error,result){
 			expect(error.message).toBe('Missing url property.');
 		});
 	});
@@ -58,16 +61,16 @@ describe('Middleware Job', function() {
 			expect(tmp.body.job.url).toBe(tmp.body.url);	
 			expect(tmp.body.job.method).toBe('GET');	
 			expect(tmp.body.job.ping.toString()).toBe(tmp.body.ping.toString());	
-			expect(tmp.body.job.user.toString()).toBe(tmp.body.user.toString());	
+			expect(tmp.body.user.toString()).toBe(tmp.body.user.toString());
 		});
 	});
 
 	it('update requires a id and user regardless', function() {
 		let tmp = { params : { job : temp_job.job_id }, body : temp_job};
 		job.update(tmp, null, function(result){
-			expect(tmp.body.job.url).toBe(temp_job.url);	
+			expect(tmp.body.job.url).toBe(temp_job.url);
 			expect(tmp.body.job.ping.toString()).toBe(temp_job.ping.toString());	
-			expect(tmp.body.job.user.toString()).toBe(temp_job.user.toString());	
+			expect(tmp.body.user.toString()).toBe(temp_job.user.toString());
 		});
 	});
 	

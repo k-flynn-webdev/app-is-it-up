@@ -7,10 +7,6 @@ const logger = require('../../../helpers/logger.js')
 
 
 function login (input, next) {
-	if (!valid.email(input.email)) return next(new Error('Invalid Email.'))
-	let passwordTest = valid.password(input.password)
-	if (passwordTest !== true) return next(new Error(passwordTest))
-
 	let user_model = null
 
 	m_user.findOne({ email: input.email })

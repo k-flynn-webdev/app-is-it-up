@@ -29,6 +29,9 @@ function update ({ job, auth }, next) {
 			let new_model = shared.update(result, job)
 			let hasUpdated = updateStack(new_model)
 
+			// auto return for test
+			// if(process.env.NODE_ENV === 'test') return next(null, new_model)
+
 			return new_model.save()
 		})
 		.then(item => {

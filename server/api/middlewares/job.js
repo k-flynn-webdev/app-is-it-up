@@ -43,6 +43,12 @@ function create (req, res, next) {
 
 exports.create = create
 
+/**
+ * Edits the request object with the result and moves onto next
+ * @param req
+ * @param res
+ * @param next
+ */
 function update (req, res, next) {
 
   if (!exists(req.params)) return exit(res, 422, 'Missing job id.')
