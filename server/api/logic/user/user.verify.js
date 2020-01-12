@@ -2,9 +2,12 @@ const jwt = require('jsonwebtoken')
 const m_user = require('../../../models/user.js')
 const logger = require('../../../helpers/logger.js')
 
+
 function verify (user, next) {
 
-	m_user.find({ magic_link: user.verify })
+	let search = { 'meta.magic_link' : user.verify.toString() }
+
+	m_user.find(search)
 		.then(items => {
 
 				if (items.length === 0) {

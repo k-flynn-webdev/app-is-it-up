@@ -10,12 +10,25 @@ Aims:
 
 
 [USER]
-- login, password is verified before checking for user, dont
+- login, password is verified before checking for user, dont ✅
 
-- magic link generation
-- email verify via http magic link
+[FRONT_END]
+- show user login/creation date & time ✅
+- repeatedly update a job even though no change! fix
+
+[FRONT-END, ADMIN]
+- create admin panel for managing users
+	- power to reset delete etc a user
+- create admin panel for managing jobs
+	- power to create, edit, rollback etc
+- create admin panel for managing server
+	- manage data base space, resets deletions etc and server load/timing?
+
+[SERVER]
+- magic link generation ✅
+- email verify via http magic link ✅
 - email signup??
-
+- test for verification links and process
 
 
 

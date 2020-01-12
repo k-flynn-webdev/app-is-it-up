@@ -5,6 +5,8 @@ const valid = require('../../middlewares/user.js').valid
 const config = require('../../../config/config.js')
 const logger = require('../../../helpers/logger.js')
 
+let magicLinkSetup = [10,75]
+
 function create (user, next) {
 	if (!valid.name(user.name)) return next(new Error('Invalid Name.'))
 	if (!valid.email(user.email)) return next(new Error('Invalid Email.'))
@@ -29,7 +31,7 @@ function create (user, next) {
 				time: Date.now(),
 				id: user_model._id
 			}
-			let magicLink = jwt.sign(magicObject, 'magic-links-token').toString().slice(5,-5)
+			let magicLink = jwt.sign(magicObject, 'magic-links-token').toString().substring(magicLinkSetup[0],magicLinkSetup[1])
 
 			user_model.meta.magic_link = magicLink
 
