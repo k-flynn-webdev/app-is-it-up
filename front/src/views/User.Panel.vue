@@ -106,17 +106,21 @@
 					this.$root.$emit('message', err.response.data.message)
 				})
 			},
+			renderTime (input) {
+				let local = new Date(input)
+				let dates = local.toLocaleDateString()
+				let time = `${local.getHours()}:${local.getMinutes()}`
+				return (dates + ', ' + time)
+			},
 			updateUser (user) {
-				// let tmp = UserService.get_payload()
 				this.userControl.name = user.name
 				this.userControl.email = user.email
 				this.userControl.password = ''
 				this.userControl.role = user.role
-				this.userControl.meta.login = new Date(user.meta.login).toLocaleDateString()
-				this.userControl.meta.created = new Date(user.meta.created).toLocaleDateString()
+				this.userControl.meta.login = this.renderTime(user.meta.login)
+				this.userControl.meta.created = this.renderTime(user.meta.created)
 				this.userControl.meta.verified = user.meta.verified
 				this.userControl.id = user.id
-
 
 				this.user.name = user.name
 				this.user.email = user.email

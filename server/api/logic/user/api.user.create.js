@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const m_user = require('../../../models/user.js')
 const valid = require('../../middlewares/user.js').valid
 const config = require('../../../config/config.js')
