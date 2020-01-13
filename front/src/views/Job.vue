@@ -1,10 +1,12 @@
 <template>
+
 	<card>
 		<job-render :attrs=attrs :job=job>
 			<div class="text-right">
 				<button-c ref="btn_update" @click=OnUpdate> Update</button-c>
 				<div style="display:inline-block;width:1rem;"></div>
 				<button-c ref="btn_delete" @click=OnDelete> Delete</button-c>
+				<div style="display:inline-block;width:1rem;"></div>
 			</div>
 		</job-render>
 	</card>
@@ -24,6 +26,10 @@
 		data () {
 			return {
 				waiting: false,
+				/**
+				 * Used to make sure we dont send the same update twice
+				 */
+				checkSum: null,
 				attrs: {
 					active: [true, false],
 					pings: [1, 15, 30, 45, 60],
@@ -57,51 +63,52 @@
 			ButtonC,
 			JobRender,
 		},
+
+		mounted () {
+			this.GetJob()
+		},
+
 		methods: {
+			createCheckSum (input) {
+				return (input.url + input.method + input.params + input.ping + input.user.id)
+			},
 			GetJob: function () {
-				this.waiting = true
 				JobService.get(this.$route.params.job_id)
 					.then(response => {
 						this.job = response.data.data.job
 						this.job.full = true
-						this.resetWaiting()
+						this.checkSum = this.createCheckSum(this.job)
 					})
 					.catch(error => {
-						this.resetWaiting()
 						this.$root.$emit('message', error.response.data.message)
 					})
 			},
 			OnValidate: function () {
 
-				if (this.job.url.length < 4) {
-					return false
-				}
-				if (this.job.method === '') {
-					return false
-				}
-				if (this.job.ping === '') {
-					return false
-				}
+				if (this.job.url.length < 4) return false
+				if (this.job.method === '') return false
+				if (this.job.ping === '') return false
 
 				// todo
 				return true
 			},
 			OnUpdate: function () {
+				event.preventDefault()
 
 				if (!this.OnValidate()) {
 					return
 				}
 
-				if (this.waiting) {
-					return
+				if (this.checkSum === this.createCheckSum(this.job)) {
+					return this.$root.$emit('message', 'No change to send.')
 				}
-				this.waiting = true
 
 				JobService.update(this.job)
 					.then(response => {
 						this.$refs.btn_update.OnSuccess()
 						this.$root.$emit('message', response.data.message)
 						this.resetWaiting()
+						this.checkSum = this.createCheckSum(this.job)
 					})
 					.catch(error => {
 						this.$refs.btn_update.OnFail()
@@ -136,9 +143,6 @@
 					this.waiting = false
 				}, sharedVars.wait_ms)
 			}
-		},
-		mounted () {
-			this.GetJob()
 		},
 	}
 </script>

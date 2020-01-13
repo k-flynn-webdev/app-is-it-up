@@ -35,7 +35,6 @@
 		</div>
 
 
-
 		<div style="text-align: right;">
 			<button-c ref="btn_update" class="button" :disabled="!hasChanged" @click="onSubmit">
 				<span>Update</span>
@@ -59,6 +58,10 @@
 		},
 		data () {
 			return {
+				/**
+				 * Used to make sure we dont send the same update twice
+				 */
+				checkSum: null,
 				waiting: false,
 				userControl: {
 					name: '',
@@ -91,20 +94,24 @@
 				return false
 			}
 		},
+
 		mounted () {
-			// this.updateUser()
 			this.getUser()
 		},
+
 		methods: {
+			createCheckSum (input) {
+				return (input.name + input.email + input.password)
+			},
 			getUser () {
 				UserService.get()
-				.then(response => {
-					this.updateUser(response.data.data.account)
-					// this.userControl = response.data.data
-				})
-				.catch(err => {
-					this.$root.$emit('message', err.response.data.message)
-				})
+					.then(response => {
+						this.updateUser(response.data.data.account)
+						this.checkSum = this.createCheckSum(this.job)
+					})
+					.catch(err => {
+						this.$root.$emit('message', err.response.data.message)
+					})
 			},
 			renderTime (input) {
 				let local = new Date(input)
@@ -127,6 +134,11 @@
 				this.user.password = ''
 			},
 			onSubmit: function () {
+
+				if (this.checkSum === this.createCheckSum(this.userControl)) {
+					return this.$root.$emit('message', 'No change to send.')
+				}
+
 				if (this.waiting) {
 					return
 				}
