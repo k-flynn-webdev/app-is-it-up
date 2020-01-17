@@ -8,13 +8,18 @@ Aims:
 	- CI/CD
 
 
+[SERVER]
+- magic link generation ✅
+- email verify via http magic link ✅
+- email signup??
+- test for verification links and process
 
 [USER]
 - login, password is verified before checking for user, dont ✅
 
 [FRONT_END]
 - show user login/creation date & time ✅
-- repeatedly update a job even though no change! fix
+- repeatedly update a job even though no change! fix ✅
 
 [FRONT-END, ADMIN]
 - create admin panel for managing users
@@ -23,13 +28,6 @@ Aims:
 	- power to create, edit, rollback etc
 - create admin panel for managing server
 	- manage data base space, resets deletions etc and server load/timing?
-
-[SERVER]
-- magic link generation ✅
-- email verify via http magic link ✅
-- email signup??
-- test for verification links and process
-
 
 
 	cleanup navbar to include user acc details
