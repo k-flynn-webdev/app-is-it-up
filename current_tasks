@@ -12,6 +12,7 @@ Aims:
 - magic link generation ✅
 - email verify via http magic link ✅
 - email signup??
+- email lost password/account reset
 - test for verification links and process
 
 [USER]

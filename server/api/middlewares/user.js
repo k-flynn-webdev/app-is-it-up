@@ -87,7 +87,7 @@ exports.create = create
 function verify (req, res, next) {
   if (!exists(req.params)) return exit(res, 422, 'Missing verify link.')
   if (!exists(req.params.verify)) return exit(res, 422, 'Missing verify link.')
-  if (req.params.verify.length < 100) return exit(res, 422, 'Invalid verify link.')
+  if (req.params.verify.length < 60) return exit(res, 422, 'Invalid verify link.')
 
   prepare(req)
   next()

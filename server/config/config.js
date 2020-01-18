@@ -29,4 +29,9 @@ module.exports = {
 	},
 	node_env : envs.parsed.NODE_ENV.toLowerCase(),
 	db : envs.parsed.DATABASEURL,
+	mail : {
+		api: envs.parsed.MAIL_API,
+		host: envs.parsed.MAIL_HOST,
+		domain: envs.parsed.MAIL_DOMAIN,
+	}
 };

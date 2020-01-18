@@ -9,6 +9,7 @@ const api_user_update = require('../logic/user/api.user.update.js')
 const api_user_remove = require('../logic/user/api.user.remove.js')
 const exit = require('../middlewares/exit.js')
 
+
 // todo make sure owner is valid & exists ...
 
 module.exports = function (app) {
@@ -38,6 +39,16 @@ module.exports = function (app) {
 			if (error) {
 				return exit(res, 422, error.message || error, error)
 			}
+
+			// now send email
+			const email_data = {
+				from: 'Kubedev <hi@kubedev.co.uk>',
+				to: newUser.email,
+				subject: 'Welcome',
+				text: 'Here is your new account, to get started visit : http://isitup.kubedev.co.uk/user/verify/' + newUser.meta.magic_link
+			};
+
+			app.emit('EMAIL_SEND', email_data)
 
 			newUser = user_shared.safe_export(newUser)
 
@@ -126,6 +137,8 @@ module.exports = function (app) {
 			)
 		})
 	})
+
+
 
 	app.get('/api/user/verify/:verify', valid_user.verify, function (req, res) {
 
