@@ -4,6 +4,7 @@ const m_user = require('../../../models/user.js')
 const valid = require('../../middlewares/user.js').valid
 const config = require('../../../config/config.js')
 const logger = require('../../../helpers/logger.js')
+const token = require('../../middlewares/token.service.js')
 
 let magicLinkSetup = [10,75]
 
@@ -26,14 +27,8 @@ function create (user, next) {
 			user_model.name = user.name
 			user_model.email = user.email
 
-			let magicObject = {
-				name: user_model.name,
-				time: Date.now(),
-				id: user_model._id
-			}
-			let magicLink = jwt.sign(magicObject, 'magic-links-token').toString().substring(magicLinkSetup[0],magicLinkSetup[1])
-
-			user_model.meta.magic_link = magicLink
+			user_model.meta.verified = false
+			user_model.meta.magic_link = token.magic(user_model)
 
 			return createPassword(user, user_model)
 		})

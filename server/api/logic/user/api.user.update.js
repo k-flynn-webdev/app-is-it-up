@@ -3,6 +3,8 @@ const m_user = require('../../../models/user.js')
 const valid = require('../../middlewares/user.js').valid
 const config = require('../../../config/config.js')
 const logger = require('../../../helpers/logger.js')
+const token = require('../../middlewares/token.service.js')
+
 
 function update ({ user, auth }, next) {
 	if (user.name && !valid.name(user.name)) return next(new Error('Invalid Name.'))
@@ -42,7 +44,11 @@ function update ({ user, auth }, next) {
 
 			if (user.email) {
 				user_model.email = user.email
+				// todo trigger verify email process
+				user_model.meta.verified = false
+				user_model.meta.magic_link = token.magic(user_model)
 			}
+
 
 			return updatePassword(user, user_model)
 		})

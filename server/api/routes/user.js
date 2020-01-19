@@ -4,11 +4,11 @@ const user_shared = require('../logic/user/api.user.shared.js')
 const api_user_details = require('../logic/user/user.details.js')
 const api_user_create = require('../logic/user/api.user.create.js')
 const api_user_verify = require('../logic/user/user.verify.js')
+const api_user_reset = require('../logic/user/user.reset.js')
 const api_user_login = require('../logic/user/api.user.login.js')
 const api_user_update = require('../logic/user/api.user.update.js')
 const api_user_remove = require('../logic/user/api.user.remove.js')
 const exit = require('../middlewares/exit.js')
-
 
 // todo make sure owner is valid & exists ...
 
@@ -40,15 +40,7 @@ module.exports = function (app) {
 				return exit(res, 422, error.message || error, error)
 			}
 
-			// now send email
-			const email_data = {
-				from: 'Kubedev <hi@kubedev.co.uk>',
-				to: newUser.email,
-				subject: 'Welcome',
-				text: 'Here is your new account, to get started visit : http://isitup.kubedev.co.uk/user/verify/' + newUser.meta.magic_link
-			};
-
-			app.emit('EMAIL_SEND', email_data)
+			app.emit('EMAIL_CREATE', newUser.email, newUser.meta.magic_link)
 
 			newUser = user_shared.safe_export(newUser)
 
@@ -106,8 +98,11 @@ module.exports = function (app) {
 				return exit(res, 422, error.message || error, error)
 			}
 
-			newUser = user_shared.safe_export(newUser)
+			if (req.body.user.email && !newUser.meta.verify) {
+				app.emit('EMAIL_VERIFY', newUser.email, newUser.meta.magic_link)
+			}
 
+			newUser = user_shared.safe_export(newUser)
 			let newToken = token.create(newUser)
 
 			return exit(res,
@@ -138,11 +133,54 @@ module.exports = function (app) {
 		})
 	})
 
-
-
+	/**
+	 * Verify a users account, one time process to ensure email
+	 */
 	app.get('/api/user/verify/:verify', valid_user.verify, function (req, res) {
 
 		api_user_verify(req.body.user, function (error, newUser) {
+
+			if (error) {
+				return exit(res, 422, error.message || error, error)
+			}
+
+			newUser = user_shared.safe_export(newUser)
+
+			let newToken = token.create(newUser)
+
+			return exit(res,
+				200,
+				'Success User verified.',
+				{ account: newUser, token: newToken }
+			)
+		})
+	})
+
+	/**
+	 * Triggers reset user password process via email, will invalidate a account until the next stage is complete..
+	 */
+	app.post('/api/user/reset/', valid_user.hasEmail, function (req, res) {
+
+		api_user_reset.resetStart(req.body.user, function (error, newUser) {
+
+			if (error) {
+				return exit(res, 422, error.message || error, error)
+			}
+
+			app.emit('EMAIL_RESET', newUser.email, newUser.meta.magic_link)
+
+			return exit(res,
+				200,
+				'Success a reset email has been sent.')
+		})
+	})
+
+	/**
+	 * User reset password with the above token
+	 */
+	app.patch('/api/user/reset/:verify', valid_user.verify, function (req, res) {
+
+		api_user_reset.resetComplete(req.body, function (error, newUser) {
 
 			if (error) {
 				return exit(res, 422, error.message || error, error)

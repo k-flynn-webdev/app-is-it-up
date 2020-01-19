@@ -41,11 +41,7 @@ function valid_password (input) {
   return true
 }
 
-// console.log(hasUpperCase('1111') === false);
-// console.log(hasUpperCase('1111tttt') === false);
-// console.log(hasUpperCase('1111ttttTTT') === true);
-// console.log(hasUpperCase('TTTttt') === true);
-// console.log(hasUpperCase('!@#!$') === false);
+
 
 function hasUpperCase (input) {
   let tmpNoNumber = input.replace(/[^A-Za-z]/g, '')
@@ -61,6 +57,8 @@ function hasNumber (input) {
   if (strip.length > 0) return true
   return false
 }
+
+
 
 exports.valid = {
   name: valid_name,
@@ -104,6 +102,21 @@ function login (req, res, next) {
 }
 
 exports.login = login
+
+function hasEmail (req, res, next) {
+  if (!exists(req.body.email)) return exit(res, 422, missing('email'))
+  prepare(req)
+  next()
+}
+exports.hasEmail = hasEmail
+
+function hasPassword (req, res, next) {
+  if (!exists(req.body.password)) return exit(res, 422, missing('password'))
+
+  prepare(req)
+  next()
+}
+exports.hasPassword = hasPassword
 
 function update (req, res, next) {
   prepare(req)

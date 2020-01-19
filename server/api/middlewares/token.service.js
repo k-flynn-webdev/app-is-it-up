@@ -6,6 +6,7 @@ const exit = require('../middlewares/exit.js')
 
 const tokens_black_listed = []
 
+let magicLinkSetup = [10, 75]
 
 
 function init () {
@@ -40,6 +41,19 @@ function init () {
 }
 
 init()
+
+function magic (input) {
+	let magicObject = {
+		name: input.name,
+		time: Date.now(),
+		id: input._id
+	}
+	return jwt.sign(
+		magicObject,
+		'magic-links-token').toString().substring(magicLinkSetup[0], magicLinkSetup[1])
+}
+
+exports.magic = magic
 
 function create (input) {
 	let payload = Object.assign({}, input)

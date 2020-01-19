@@ -7,7 +7,7 @@
  * @param notify		A notify message to leave the user
  */
 
-function exit (res, status, message, data, notify) {
+function exit (res, status, message, data= {}, notify) {
 
 	if(process.env.NODE_ENV === 'test')
 		return ({
