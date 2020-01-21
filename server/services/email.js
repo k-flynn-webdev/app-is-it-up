@@ -6,11 +6,10 @@ const mailgun = require('mailgun-js')({
 	host: mail_config.host
 })
 
-const EMAIL_SEND = 'EMAIL_SEND'
-const EMAIL_RESET = 'EMAIL_RESET'
-const EMAIL_VERIFY = 'EMAIL_VERIFY'
-const EMAIL_CREATE = 'EMAIL_CREATE'
 const FROM = '"Kubedev" <hi@kubedev.co.uk>'
+const ACCOUNT_RESET = 'ACCOUNT_RESET'
+const ACCOUNT_VERIFY = 'ACCOUNT_VERIFY'
+const ACCOUNT_CREATE = 'ACCOUNT_CREATE'
 
 const welcomeMsg = ((link) => {
 	return `Hello, you've signed up to isitup.kubedev.co.uk, to get started visit : \nhttp://127.0.0.1:8080/user/verify/${link}`
@@ -22,15 +21,17 @@ const resetMsg = ((link) => {
 	return `Hello, you've recently requested a reset on your account password, to get started visit : \nhttp://127.0.0.1:8080/user/reset/${link}`
 })
 
+
+
 let app_temp = null
 let has_init = false
 
 function init (app) {
 	if (!has_init) {
 		app_temp = app
-		app.on(EMAIL_CREATE, accountCreate)
-		app.on(EMAIL_VERIFY, emailVerify)
-		app.on(EMAIL_RESET, accountReset)
+		app.on(ACCOUNT_CREATE, accountCreate)
+		app.on(ACCOUNT_VERIFY, accountVerify)
+		app.on(ACCOUNT_RESET, accountReset)
 		has_init = true
 	}
 }
@@ -41,7 +42,7 @@ exports.init = init
 /**
  * Email API
  *
- * @param emailData 	{Object}	data to send
+ * @param emailData 	{Object}	data to send (from, to, subject, text)
  */
 const emailSend = (emailData) => {
 	mailgun.messages().send(emailData, (err, result) => {
@@ -58,31 +59,28 @@ const emailSend = (emailData) => {
 /**
  * Send a user account creation email
  *
- * @param to 			{String}	email address to
- * @param verify 	{String}	verify token
+ * @param user 	{Object}	user object
  */
-const accountCreate = (to, verify) => {
-	emailSend({ from: FROM, to: to, subject: 'Welcome', text: welcomeMsg(verify) })
+const accountCreate = (user) => {
+	emailSend({ from: FROM, to: user.email, subject: 'Welcome', text: welcomeMsg(user.meta.magic_link) })
 }
 
 /**
  * Send a user account verify email
  *
- * @param to 			{String}	email address to
- * @param verify 	{String}	verify token
+ * @param user 	{Object}	user object
  */
-const emailVerify = (to, verify) => {
-	emailSend({ from: FROM, to: to, subject: 'Update', text: verifyMsg(verify) })
+const accountVerify = (user) => {
+	emailSend({ from: FROM, to: user.email, subject: 'Update', text: verifyMsg(user.meta.magic_link) })
 }
 
 /**
  * Send a user reset email
  *
- * @param to 			{String}	email address to
- * @param verify 	{String}	verify link
+ * @param user 	{Object}	user object
  */
-const accountReset = (to, verify) => {
-	emailSend({ from: FROM, to: to, subject: 'Account reset', text: resetMsg(verify) })
+const accountReset = (user) => {
+	emailSend({ from: FROM, to: user.email, subject: 'Account reset', text: resetMsg(user.meta.magic_link) })
 }
 
 

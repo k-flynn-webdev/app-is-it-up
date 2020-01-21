@@ -94,7 +94,7 @@
 					})
 					.catch(error => {
 						this.$refs.btn_create.OnFail()
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 						this.resetWaiting()
 					})
 

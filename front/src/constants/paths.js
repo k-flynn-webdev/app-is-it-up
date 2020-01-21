@@ -6,6 +6,7 @@ const USER_CREATE = 'user-create'
 const USER_LOGIN = 'user-login'
 const USER_PANEL = 'user-panel'
 const USER_VERIFY = 'user-verify'
+const USER_RESET = 'user-reset'
 
 const ADMIN_CREATE = 'admin-create'
 const ADMIN_LOGIN = 'admin-login'

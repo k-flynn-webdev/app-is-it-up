@@ -21,7 +21,7 @@
 						this.$router.push({ name: Paths['HOME'] })
 					})
 					.catch(error => {
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 						this.$router.push({ name: Paths['HOME'] })
 					})
 

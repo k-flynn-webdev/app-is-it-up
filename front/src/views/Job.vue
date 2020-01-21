@@ -80,7 +80,7 @@
 						this.checkSum = this.createCheckSum(this.job)
 					})
 					.catch(error => {
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 					})
 			},
 			OnValidate: function () {
@@ -112,7 +112,7 @@
 					})
 					.catch(error => {
 						this.$refs.btn_update.OnFail()
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 						this.resetWaiting()
 					})
 			},
@@ -134,7 +134,7 @@
 					})
 					.catch(error => {
 						this.$refs.btn_delete.OnSuccess()
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 						this.resetWaiting()
 					})
 			},

@@ -34,8 +34,8 @@
 						}, sharedVars.page_push)
 
 					})
-					.catch(err => {
-						this.$root.$emit('message', err.response.data.message)
+					.catch(error => {
+						this.$root.$emit('message', error.response.data.message || error)
 						this.resetWaiting()
 					})
 			},

@@ -25,6 +25,14 @@ export default new Router({
       component: () => import(/* webpackChunkName: "verify" */ './views/Verify.vue')
     },
     {
+      path: '/user/reset/:verify',
+      name: Paths['USER_RESET'],
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "reset" */ './views/Reset.vue')
+    },
+    {
       path: '/job/:job_id',
       name: Paths['JOB'],
       // route level code-splitting

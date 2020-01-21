@@ -44,6 +44,24 @@ function update (input) {
   return request
 }
 
+function resetStart (input) {
+  const request = Http.post('/api/user/reset', input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
+}
+
+function resetComplete (input) {
+  const request = Http.patch(`/api/user/reset/${input.verify}`, input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
+}
+
 function verify (input) {
   const request = Http.get(`/api/user/verify/${input}`)
     .then(result => {
@@ -59,6 +77,8 @@ const services = {
   logout: logout,
   update : update,
   verify: verify,
+  resetStart: resetStart,
+  resetComplete: resetComplete,
   get: get,
   get_payload: Http.user.get_payload,
 }

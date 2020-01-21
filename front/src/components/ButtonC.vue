@@ -57,6 +57,7 @@
 
 .button {
 	margin-top: .5rem;
+	padding: 0.2rem 0.5rem;
 	font-weight: bold;
 	color: var(--colour-pop);
 	border: 1px solid var(--colour-pop);

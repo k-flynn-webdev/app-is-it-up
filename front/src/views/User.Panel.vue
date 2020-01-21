@@ -107,10 +107,10 @@
 				UserService.get()
 					.then(response => {
 						this.updateUser(response.data.data.account)
-						this.checkSum = this.createCheckSum(this.job)
+						this.checkSum = this.createCheckSum(this.user)
 					})
-					.catch(err => {
-						this.$root.$emit('message', err.response.data.message)
+					.catch(error => {
+						this.$root.$emit('message', error.response.data.message || error)
 					})
 			},
 			renderTime (input) {
@@ -135,7 +135,7 @@
 			},
 			onSubmit: function () {
 
-				if (this.checkSum === this.createCheckSum(this.userControl)) {
+				if (this.checkSum === this.createCheckSum(this.user) && this.user.password === '') {
 					return this.$root.$emit('message', 'No change to send.')
 				}
 
@@ -164,12 +164,12 @@
 						this.$refs.btn_update.OnSuccess()
 						this.$root.$emit('message', response.data.message)
 						this.$root.$emit('user')
+						this.updateUser(response.data.data.account)
 						this.resetWaiting()
-						this.updateUser()
 					})
 					.catch(error => {
 						this.$refs.btn_update.OnFail()
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 						this.resetWaiting()
 					})
 

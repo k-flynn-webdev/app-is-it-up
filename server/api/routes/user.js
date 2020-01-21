@@ -12,6 +12,19 @@ const exit = require('../middlewares/exit.js')
 
 // todo make sure owner is valid & exists ...
 
+// TODO
+// on user create, trigger a user creation event for other things to tap into
+// on user update, trigger an update event for things to check/react to
+// on user deletion trigger a user removal/cleanup event
+// breakdown: shared (findbyid, findbymagiclink, findbyemail)
+// breakdown: shared (updatebyid)
+// move all validation into the user model
+// shared sanitize of all vars in params & body
+// so all the error checking happens when a model is saved so it's not duplicated
+// all requests are shallow checked for params & body.vars instead
+
+
+
 module.exports = function (app) {
 
 	app.get('/api/user', token.required, function (req, res) {
@@ -22,12 +35,10 @@ module.exports = function (app) {
 				return exit(res, 422, error.message || error, error)
 			}
 
-			newUser = user_shared.safe_export(newUser)
-
 			return exit(res,
 				200,
 				'Success User found.',
-				{ account: newUser }
+				{ account: user_shared.safe_export(newUser) }
 			)
 		})
 	})
@@ -40,17 +51,15 @@ module.exports = function (app) {
 				return exit(res, 422, error.message || error, error)
 			}
 
-			app.emit('EMAIL_CREATE', newUser.email, newUser.meta.magic_link)
-
-			newUser = user_shared.safe_export(newUser)
-
-			let newToken = token.create(newUser)
+			app.emit('ACCOUNT_CREATE', newUser.email, newUser)
 
 			return exit(res,
 				200,
 				'Success User created.',
-				{ account: newUser, token: newToken }
-			)
+				{
+					account: user_shared.safe_export(newUser),
+					token: token.create(user_shared.safe_export(newUser))
+				})
 		})
 	})
 
@@ -62,15 +71,13 @@ module.exports = function (app) {
 				return exit(res, 422, error.message || error, error)
 			}
 
-			newUser = user_shared.safe_export(newUser)
-
-			let newToken = token.create(newUser)
-
 			return exit(res,
 				200,
 				'Success User login.',
-				{ account: newUser, token: newToken }
-			)
+				{
+					account: user_shared.safe_export(newUser),
+					token: token.create(user_shared.safe_export(newUser))
+				})
 		})
 	})
 
@@ -82,11 +89,7 @@ module.exports = function (app) {
 				return exit(res, 400, error.message || error, error)
 			}
 
-			return exit(res,
-				201,
-				result,
-				result
-			)
+			return exit(res, 201, result, result)
 		})
 	})
 
@@ -102,14 +105,13 @@ module.exports = function (app) {
 				app.emit('EMAIL_VERIFY', newUser.email, newUser.meta.magic_link)
 			}
 
-			newUser = user_shared.safe_export(newUser)
-			let newToken = token.create(newUser)
-
 			return exit(res,
 				201,
 				'Success User updated.',
-				{ account: newUser, token: newToken }
-			)
+				{
+					account: user_shared.safe_export(newUser),
+					token: token.create(user_shared.safe_export(newUser))
+				})
 		})
 	})
 
@@ -121,15 +123,15 @@ module.exports = function (app) {
 				return exit(res, 422, error.message || error, error)
 			}
 
-			newUser = user_shared.safe_export(newUser)
-
 			// todo remove all jobs & pings
 
 			return exit(res,
 				201,
 				'Success User removed.',
-				{ account: newUser, token: null }
-			)
+				{
+					account: user_shared.safe_export(newUser),
+					token: null
+				})
 		})
 	})
 
@@ -144,15 +146,13 @@ module.exports = function (app) {
 				return exit(res, 422, error.message || error, error)
 			}
 
-			newUser = user_shared.safe_export(newUser)
-
-			let newToken = token.create(newUser)
-
 			return exit(res,
 				200,
 				'Success User verified.',
-				{ account: newUser, token: newToken }
-			)
+				{
+					account: user_shared.safe_export(newUser),
+					token: token.create(user_shared.safe_export(newUser))
+				})
 		})
 	})
 

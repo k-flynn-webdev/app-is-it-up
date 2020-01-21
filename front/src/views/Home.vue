@@ -31,7 +31,7 @@
 						this.jobs = response.data.data.jobs
 					})
 					.catch(error => {
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 					})
 			},
 			AddJob: function (job) {
