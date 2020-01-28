@@ -201,30 +201,33 @@ function passive (req, res, next) {
 
 exports.passive = passive
 
-function add_token_to_blackList (req, next) {
+/**
+ * Creates a token to blacklist in the db
+ */
+function add_token_to_blackList (req) {
 
 	let token = tokenHeader(req)
 
 	if (!token || token.length < 100) {
-		return next('Invalid token recieved.')
+		return Promise.reject('Invalid token recieved.')
 	}
 
 	let exists = tokens_black_listed.filter(item => item === token)
 
 	if (exists.length > 0) {
-		return next('Token already exists.')
+		return Promise.reject('Token already exists.')
 	}
 
 	let tmp = new m_token({ token: token })
-	tmp.save()
+	return tmp.save()
 		.then(() => {
 			tokens_black_listed.push(token)
 			logger.log('New token added to blacklist.')
-			return next(null, 'User logged out successfully.')
+			return Promise.resolve('User logged out successfully.')
 		})
 		.catch(err => {
 			logger.log(err)
-			return next(err)
+			return Promise.reject(err)
 		})
 }
 

@@ -46,8 +46,9 @@ user.pre('save', function (next) {
 	next()
 })
 
+user.statics.createPassword = createPassword
+
 user.methods.safeExport = safeExport
-user.methods.createPassword = createPassword
 user.methods.comparePassword = comparePassword
 
 module.exports = mongoose.model('User', user)
@@ -107,16 +108,15 @@ function createPassword (input) {
  * Compares the input against the test (db password)
  *
  * @param {string}			input			user password input
- * @param {string}			test			password from db
- * @returns {Promise<never>}
+ * @returns {Promise<never>}			on success returns user model
  */
-function comparePassword(input, test) {
-	return bcrypt.compare(config.HASH_SECRET + input, test)
+function comparePassword(input) {
+	return bcrypt.compare(config.HASH_SECRET + input, this.password)
 		.then(passwordTest => {
 			if (!passwordTest) {
 				throw new Error('Incorrect password.')
 			}
-			return Promise.resolve(true)
+			return Promise.resolve(this)
 		})
 		.catch(err => {
 			return Promise.reject(err)
@@ -126,9 +126,11 @@ function comparePassword(input, test) {
 /**
  * Export a user model with only the items needed.
  *
+ *
+ * @param 	{Boolean}	export including meta
  * @returns {model}		userModel minus items
  */
-function safeExport () {
+function safeExport (meta = false) {
 
   let freshUser = {}
 
@@ -141,13 +143,14 @@ function safeExport () {
 	if (has.Exists(this.role)) {
 		freshUser.role = this.role
 	}
-  if (has.Exists(this.meta.verified)) {
-    freshUser.meta = {
-      created: this.meta.created,
-      login: this.meta.login,
-      verified: this.meta.verified
-    }
-  }
+	if (meta) {
+		freshUser.meta = {
+			login: this.meta.login,
+			created: this.meta.created,
+			updated: this.meta.updated,
+			verified: this.meta.link_verify.length < 1
+		}
+	}
 	if (has.Exists(this._id)) {
 		freshUser.id = this._id
 	}
