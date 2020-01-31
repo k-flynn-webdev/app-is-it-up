@@ -167,22 +167,30 @@ module.exports = function (app) {
 
 	app.delete('/api/user', token.required, function (req, res) {
 
-		// api_user_remove(req.body.token, function (error, newUser) {
-		//
-		// 	if (error) {
-		// 		return exit(res, 422, error.message || error, error)
-		// 	}
-		//
-		// 	// todo remove all jobs & pings
-		//
-		// 	return exit(res,
-		// 		201,
-		// 		'Success User removed.',
-		// 		{
-		// 			account: user_shared.safe_export(newUser),
-		// 			token: null
-		// 		})
-		// })
+		m_user.findOne({ _id: req.body.token.id })
+			.then(userFound => {
+
+				if (!userFound || userFound.length === 0) {
+					throw new Error('User does not exist, please contact support.')
+				}
+
+				return m_user.deleteOne({ _id: req.body.token.id })
+			})
+			.then(result => {
+
+				logger.log('Account removed: ' + result._id)
+				app.emit('ACCOUNT_REMOVED', result)
+				// 	// todo remove all jobs & pings & meta
+
+				return exit(res, 201, 'Success User removed.',
+					{ account: null, token: null })
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
+
+				return exit(res, 400, message, err)
+			})
 	})
 
 	/**
