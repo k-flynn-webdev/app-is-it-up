@@ -62,7 +62,7 @@ const emailSend = (emailData) => {
  * @param user 	{Object}	user object
  */
 const accountCreate = (user) => {
-	emailSend({ from: FROM, to: user.email, subject: 'Welcome', text: welcomeMsg(user.meta.magic_link) })
+	emailSend({ from: FROM, to: user.email, subject: 'Welcome', text: welcomeMsg(user.meta.link_verify) })
 }
 
 /**
@@ -71,7 +71,7 @@ const accountCreate = (user) => {
  * @param user 	{Object}	user object
  */
 const accountVerify = (user) => {
-	emailSend({ from: FROM, to: user.email, subject: 'Update', text: verifyMsg(user.meta.magic_link) })
+	emailSend({ from: FROM, to: user.email, subject: 'Update', text: verifyMsg(user.meta.link_verify) })
 }
 
 /**
@@ -80,7 +80,7 @@ const accountVerify = (user) => {
  * @param user 	{Object}	user object
  */
 const accountReset = (user) => {
-	emailSend({ from: FROM, to: user.email, subject: 'Account reset', text: resetMsg(user.meta.magic_link) })
+	emailSend({ from: FROM, to: user.email, subject: 'Account reset', text: resetMsg(user.meta.link_recover) })
 }
 
 

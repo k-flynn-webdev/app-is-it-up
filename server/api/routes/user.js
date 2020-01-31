@@ -165,6 +165,9 @@ module.exports = function (app) {
 		// })
 	})
 
+	/**
+	 * Delete a user account
+	 */
 	app.delete('/api/user', token.required, function (req, res) {
 
 		m_user.findOne({ _id: req.body.token.id })
@@ -178,8 +181,8 @@ module.exports = function (app) {
 			})
 			.then(result => {
 
-				logger.log('Account removed: ' + result._id)
 				app.emit('ACCOUNT_REMOVED', result)
+
 				// 	// todo remove all jobs & pings & meta
 
 				return exit(res, 201, 'Success User removed.',
@@ -234,43 +237,80 @@ module.exports = function (app) {
 	/**
 	 * Triggers reset user password process via email, will invalidate a account until the next stage is complete..
 	 */
-	app.post('/api/user/reset/', userMiddle.hasEmail, function (req, res) {
+	app.post('/api/user/reset/', userMiddle.hasEmail, userMiddle.prepare, function (req, res) {
 
-		api_user_reset.resetStart(req.body.user, function (error, newUser) {
+		m_user.findOne({ email: req.body.email })
+			.then(result => {
 
-			if (error) {
-				return exit(res, 422, error.message || error, error)
-			}
+				if (!result) {
+					throw new Error('No account with that email found.')
+				}
 
-			app.emit('EMAIL_RESET', newUser.email, newUser.meta.magic_link)
+				if (result.email.toString() !== req.body.email.toString()) {
+					throw new Error('An error has occurred with that email.')
+				}
 
-			return exit(res,
-				200,
-				'Success a reset email has been sent.')
-		})
+				result.meta.link_verify = 'RESET PROCESS'
+				result.meta.link_recover = token.magic(result)
+
+				return result.save()
+			})
+			.then(result => {
+
+				app.emit('ACCOUNT_RESET', result)
+
+				return exit(res,
+					200,
+					'Success a reset email has been sent.')
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
+
+				return exit(res, 400, message, err)
+			})
 	})
 
 	/**
 	 * User reset password with the above token
 	 */
-	app.patch('/api/user/reset/:verify', userMiddle.verify, function (req, res) {
+	app.patch('/api/user/reset/:recover', userMiddle.recover, userMiddle.hasPassword, userMiddle.prepare, function (req, res) {
 
-		api_user_reset.resetComplete(req.body, function (error, newUser) {
+		m_user.findOne({ 'meta.link_recover': req.params.recover })
+			.then(result => {
 
-			if (error) {
-				return exit(res, 422, error.message || error, error)
-			}
+				if (!result) {
+					throw new Error('No account with that link found.')
+				}
 
-			newUser = user_shared.safe_export(newUser)
+				if (result.meta.link_recover.toString() !== req.params.recover.toString()) {
+					throw new Error('An error has occurred with that link.')
+				}
 
-			let newToken = token.create(newUser)
+				return m_user.createPassword(req.body.password, result)
+			})
+			.then(([hash, result]) => {
 
-			return exit(res,
-				200,
-				'Success User verified.',
-				{ account: newUser, token: newToken }
-			)
-		})
+				result.password = hash
+				result.meta.link_verify = ''
+				result.meta.link_recover = ''
+
+				return result.save()
+			})
+			.then(userModel => {
+
+				app.emit('ACCOUNT_VERIFIED', result)
+
+				return exit(res,
+					200,
+					'Success a new password has been set.')
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
+
+				return exit(res, 400, message, err)
+			})
 	})
 
 	return app

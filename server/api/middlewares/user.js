@@ -33,6 +33,16 @@ function verify (req, res, next) {
 
 exports.verify = verify
 
+function recover (req, res, next) {
+	if (!exists(req.params)) return exit(res, 422, 'Missing recover link.')
+	if (!exists(req.params.recover)) return exit(res, 422, 'Missing recover link.')
+	if (req.params.recover.length < 60) return exit(res, 422, 'Invalid recover link.')
+
+	next()
+}
+
+exports.recover = recover
+
 function login (req, res, next) {
 	if (!exists(req.body.email)) return exit(res, 422, missing('email'))
 	if (!exists(req.body.password)) return exit(res, 422, missing('password'))

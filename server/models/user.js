@@ -82,9 +82,10 @@ function validPassword (input) {
  * Create password func, has to be done as async as the setter needs sync ><
  *
  * @param 		{string}		input
+ * @param 		{Object}		model		user model to pass
  * @returns 	{promise}		hash
  */
-function createPassword (input) {
+function createPassword (input, model = null) {
 
 	if (!validPassword(input)) {
 		return Promise.reject(
@@ -97,6 +98,9 @@ function createPassword (input) {
 			return bcrypt.hash(config.HASH_SECRET + input, salt)
 		})
 		.then(hash => {
+			if (model) {
+				return Promise.resolve([hash, model])
+			}
 			return Promise.resolve(hash)
 		})
 		.catch(err => {
