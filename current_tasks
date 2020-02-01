@@ -15,7 +15,7 @@ Aims:
 - where possible use promises more!
 
 [BUGS]
- - when logging out with expiredtoken DO NOT kick back an error or track it ... otherwise front end is trapped ;o ✅
+- when logging out with expiredtoken DO NOT kick back an error or track it ... otherwise front end is trapped ;o ✅
 - login, password is verified before checking for user, dont ✅
 - update a job is highlighted even with no changes.
 
