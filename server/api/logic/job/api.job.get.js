@@ -1,4 +1,5 @@
 const m_job = require('../../../models/job.js')
+const logger = require('../../../helpers/logger.js')
 
 function get ({ job, auth }, next) {
 
@@ -33,7 +34,7 @@ function get ({ job, auth }, next) {
       }
     })
     .catch(err => {
-      // todo log error
+      logger.log(err)
       return next(err)
     })
 }

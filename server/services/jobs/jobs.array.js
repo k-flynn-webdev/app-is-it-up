@@ -19,21 +19,19 @@ exports.get_jobs = get_jobs
 function get_stack (auth, next) {
 
   if (!auth) {
-    console.log('returning all public items')
     return next(null, jobs.filter(job => !job.user.id))
   }
 
   if (auth.role && auth.role === 'admin') {
-    console.log('returning all admin items')
-    return next(null, jobs)
+    return next(null, jobs.filter(item => item))
   }
 
   if (auth.id && auth.id.length > 10) {
-    console.log('returning all user items')
     let tmp = jobs.filter(item => item.user.id && item.user.id.toString() === auth.id.toString())
     return next(null, tmp)
   }
 
+  logger.log('A problem occurred on the stack: ' + auth.id)
   return next('A problem on the stack occured.')
 }
 
@@ -72,7 +70,7 @@ exports.find_user = find_user
 function insert (job) {
   let search = find_job(job.job_id)
   let inserted = false
-  if (search === -1 && job.active) {
+  if (search === -1) {
     jobs.push(job)
     inserted = true
     // logger.log('job insert success: ' + '\n' + job );

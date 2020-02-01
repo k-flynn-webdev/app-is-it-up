@@ -27,7 +27,7 @@ function create(job,result){
 		date : Date.now(),
 	});
 
-	if(process.env.NODE_ENV === 'test') return;
+	if(process.env.NODE_ENV === 'test') return tmp_ping
 
 	tmp_ping.save()
 		.catch(err => {

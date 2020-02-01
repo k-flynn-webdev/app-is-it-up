@@ -20,7 +20,7 @@ module.exports = {
 	ip : envs.parsed.IP,
 	version : app_version,
 	rate : { 
-		time : 10 * 60 * 1000, 
+		time : 10 * 60 * 1000,
 		max : 200,
 	},
 	token : {
@@ -29,4 +29,9 @@ module.exports = {
 	},
 	node_env : envs.parsed.NODE_ENV.toLowerCase(),
 	db : envs.parsed.DATABASEURL,
+	mail : {
+		api: envs.parsed.MAIL_API,
+		host: envs.parsed.MAIL_HOST,
+		domain: envs.parsed.MAIL_DOMAIN,
+	}
 };

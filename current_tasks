@@ -1,0 +1,164 @@
+tasks: ✅ ❌
+
+perform a timed test of a url & return that result on the website
+- show the last 30 days of uptime only.
+	- future: show images and change over time with screencaptures at various sizes/devices?
+
+Aims:
+	- CI/CD
+
+
+
+[NICE]
+- redo all user code server side to be leaner and more dry.
+- start writing in more micro functions, less error prone and more steps/pieces to do things
+- where possible use promises more!
+
+[BUGS]
+- when logging out with expiredtoken DO NOT kick back an error or track it ... otherwise front end is trapped ;o ✅
+- login, password is verified before checking for user, dont ✅
+- update a job is highlighted even with no changes.
+
+[SERVER]
+- magic link generation ✅
+- email verify via http magic link ✅
+- email signup/send?? ✅
+- email lost password/account reset ✅
+- test for verification links and process
+
+[USER]
+
+[FRONT_END]
+- show user login/creation date & time ✅
+- repeatedly update a job even though no change! fix ✅
+
+[ADMIN]
+- create admin panel for managing users
+	- power to reset delete etc a user
+- create admin panel for managing jobs
+	- power to create, edit, rollback etc
+- create admin panel for managing server
+	- manage data base space, resets deletions etc and server load/timing?
+
+
+	cleanup navbar to include user acc details
+	add user details page
+	add email system
+	add email recovery with magic link
+	add account creation + email confirm
+
+
+ 
+
+
+
+
+
+make something public private
+if public the job url or job owner page can be shared but not edited.
+
+	- account creation process ------
+	- email signup?
+	- gated/secure urls behind password
+	- only an owner or admin can edit a job
+	- a public job can be shown to all
+
+- add custom name for a url for the badge .. 
+
+- creat a full end to end set of test for user and job creation ..
+
+add footer with version and url ✅
+add visual feedback for errors + success ✅
+add favicon + colour ✅
+add label status icons + colour ✅ 
+
+- setting up db backup ✅
+- setting up .env ✅
+- setting up nginx cfg file ✅
+- setting up pm2 cfg ✅
+
+add consts for all options from a single file to import .. hmmm
+
+bug: online updating not being reflected in stack? ✅
+bug: job number doesn't seem to update/save? (fixed was issue with stack update) ✅
+
+
+- app icon ✅
+- app description ✅
+- app lighthouse score to 100
+
+- create job comp to render based on page ✅
+
+- add local router for job inspection ✅
+	- add deletion ✅
+	- add update ✅
+
+front in vue:
+	post widget as owner  ✅
+	get widgets as owner  ✅
+	update a widget as owner ✅ 
+	delete a widget as owner ✅ 
+
+added eslinter to sublime ✅
+middle redone! ✅
+models are as is no logic. ✅
+shared ✅
+
+api get ✅
+api create ✅
+api update ✅
+api remove ✅ 
+
+api jobs array ✅
+api jobs exec ✅
+api jobs loop ✅
+api jobs timer ✅
+
+load all jobs on restart ✅
+
+api user get all ✅
+
+change props to params server side and model .. ✅
+change time to ping server side and model .. ✅
+add active && status to server api ✅
+update ping fail to be more space effcient/sensible? ✅
+add period pre calculations to server side .. ✅
+- bug with server creating a fail with only one date/time?? ✅
+- after updating or deleting a job, edit stack to reflect!!!! ✅
+
+cleanup what data is sent to user, dont need db id and version etc ..
+
+- deleting a job should cleanup all related pings ✅  
+- deleting a user should cleanup all job + pings
+- switch active dropdown to besides the url so params has more space ✅
+- home button logo animates fancy on selection/hover?
+
+css widget setup like design
+invert clock icon
+square all icons to same size
+make settings icon better / sublte
+
+back-end periods need max to be aware of how far through month has gone on first roll over?
+
+
+add public/private to api for results
+add badge render for jobs to save on api interaction
+- check for https on url?
+
+admin api:
+	for now fake user/admin
+	get all jobs present 
+	get all jobs global stack 
+	edit any job + global stack
+
+
+front
+	- user portal to assign jobs to
+
+
+future:
+add headers as optional property
+add timed loads for server (eg take time reading before and after each job is done and accumilation of all jobs ..)
+also a job should have a full info layout eg:
+	when last triggered by seconds, how long the request took, how much data was sent etc .. 
+

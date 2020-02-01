@@ -5,7 +5,13 @@ const jobSchema = new mongoose.Schema({
   method: { type: String, required: false, default: 'GET' },
   params: { type: String, required: false, default: '' },
   ping: { type: Number, required: true },
+  /**
+   * Is the job currently active/processing
+   */
   active: { type: Boolean, required: true, default: true },
+  /**
+   * Result of the last ping
+   */
   status: { type: Boolean, required: true, default: true },
   fails: { type: Array, required: false },
   periods: {
@@ -13,7 +19,17 @@ const jobSchema = new mongoose.Schema({
     week: { type: Number, required: true, default: 1 },
     month: { type: Number, required: true, default: 1 },
   },
+  /**
+   * Short hand name, set by the user for this url job
+   */
+  name: { type: String, required: false },
+  /**
+   * An array of the last 30 days of timing results [[day:avg]x30]
+   */
+  health: { typ: Array, required: false },
   meta: {
+    created: { type: Date, required: false, default: Date.now() },
+    updated: { type: Date, required: false, default: Date.now() },
     max: { type: Number, required: true, default: 0 },
     num: { type: Number, required: true, default: 0 },
     next: { type: Date, required: true, default: Date.now() },

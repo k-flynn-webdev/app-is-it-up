@@ -84,7 +84,7 @@
 
         <div class="option">
           <label for="user"> User </label>
-          <p>{{ job.user }}</p>
+          <p>{{ job.user.name }}</p>
         </div> 
 
       </div>
@@ -159,22 +159,6 @@ export default {
 </script>
 
 <style>
-  
-label {
-  display: block;
-  font-weight: bold;
-  text-align: left;
-}
-
-.flex-items .option {
-  margin: .2rem .2rem;
-}
-.flex-items .option.block {
-  flex-grow: 2;
-}
-.flex-items .option.block input{
-  width: 100%;
-}
 
 </style>
 

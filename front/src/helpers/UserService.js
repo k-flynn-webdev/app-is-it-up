@@ -1,20 +1,15 @@
 import Http from './HttpService.js'
 
-// const ALL = '/all';
-// const ADMIN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1NzM1OTgwMjIsImV4cCI6MTU3NDIwMjgyMn0.i41Bb4rzaMwL3J1TxV2t_zI1ODA2KcMbq30GevFNwsE'
-
-// const mergeParams = (params) => {
-// return Object.assign(params, { user : UserService.read(), headers: { authorization: 'Bearer ' + ADMIN }});
-// }
-
-// get via owner
-// const get_all = (params={}) => axios.post(`${BASE + ALL}`, mergeParams(params))
-
-// let user_default = '5d8cc974f14001679cb90caf';
-// let user = read();
+function get () {
+  const request = Http.get('/api/user')
+    .then(result => {
+      return result
+    })
+  return request
+}
 
 function create (input) {
-  const request = Http.post('/api/user/create', input)
+  const request = Http.post('/api/user', input)
     .then(result => {
       Http.user.set(result)
       return result
@@ -40,12 +35,52 @@ function logout () {
   return request
 }
 
+function update (input) {
+  const request = Http.patch('/api/user', input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
+}
+
+function resetStart (input) {
+  const request = Http.post('/api/user/reset', input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
+}
+
+function resetComplete (input) {
+  const request = Http.patch(`/api/user/reset/${input.verify}`, input)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
+}
+
+function verify (input) {
+  const request = Http.get(`/api/user/verify/${input}`)
+    .then(result => {
+      Http.user.set(result)
+      return result
+    })
+  return request
+}
+
 const services = {
   create: create,
   login: login,
   logout: logout,
-  // update : logout,
-  // read : read,
+  update : update,
+  verify: verify,
+  resetStart: resetStart,
+  resetComplete: resetComplete,
+  get: get,
+  get_payload: Http.user.get_payload,
 }
 
 export default services

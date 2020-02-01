@@ -17,13 +17,21 @@ export default new Router({
       component: Home
     },
     {
-      path: '/public/stack',
-      name: Paths['PUBLIC_STACK'],
+      path: '/user/verify/:verify',
+      name: Paths['USER_VERIFY'],
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "stack" */ './views/Stack.vue')
-    },    
+      component: () => import(/* webpackChunkName: "verify" */ './views/Verify.vue')
+    },
+    {
+      path: '/user/reset/:verify',
+      name: Paths['USER_RESET'],
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "reset" */ './views/Reset.vue')
+    },
     {
       path: '/job/:job_id',
       name: Paths['JOB'],
@@ -47,6 +55,14 @@ export default new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "user_login" */ './views/User.Login.vue')
+    },
+    {
+      path: '/user/panel',
+      name: Paths['USER_PANEL'],
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "user_panel" */ './views/User.Panel.vue')
     },
     // {
     //   path: '/user/logout',

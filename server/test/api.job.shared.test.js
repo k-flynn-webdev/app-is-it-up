@@ -1,6 +1,6 @@
 const jobs = require('../api/logic/job/api.job.shared.js');
 
-let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : '5d8cc974f14001679cb90caf', ping : 123, job_id : -1454934947 };
+let temp_job = { url : 'https://www.google.com/', active: true, method : '', params : '', user : { id: '5d8cc974f14001679cb90caf', name: 'temporary name here' }, ping : 123, job_id : -1454934947 };
 
 process.env.TEST_SUITE = 'shared-test';
 
@@ -102,20 +102,20 @@ describe('Job Shared', function() {
 		expect(jobs.valid.ping('-45631')).toBe(-45631);
 	});
 
-	it('valid should fail missing user', function() {
-		expect(jobs.valid.user('')).toBe(false);
+	it('valid should be null for missing user', function() {
+		expect(jobs.valid.user()).toBe(null);
 	});
 	it('valid should fail on invalid user', function() {
-		expect(jobs.valid.user('random123123')).toBe(false);
+		expect(jobs.valid.user({ id: 'random123123', name: 'sdfsdf' })).toBe(false);
 	});
 	it('valid should fail on malformed user <', function() {
-		expect(jobs.valid.user('5d8cc974f14001679cb90ca')).toBe(false);
-	});	
+		expect(jobs.valid.user({ id: '5d8cc974f14001679cb90ca', name: 'sddfd' })).toBe(false);
+	});
 	it('valid should fail on malformed user >', function() {
-		expect(jobs.valid.user('5d8cc974f14001679cb90ca11')).toBe(false);
-	});	
+		expect(jobs.valid.user({ id: '5d8cc974f14001679cb90ca11', name: 'sdfsd' })).toBe(false);
+	});
 	it('valid should return on valid user >', function() {
-		expect(jobs.valid.user(temp_job.user.toString())).toBe(temp_job.user.toString());
+		expect(jobs.valid.user(temp_job.user).toString()).toBe(temp_job.user.toString());
 	});
 
 	it('valid should fail on empty obj', function() {

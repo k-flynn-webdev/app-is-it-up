@@ -74,8 +74,8 @@ function valid_params (input) {
 function valid_user (input) {
   let valid_user = '5d8cc974f14001679cb90caf'
 
-  if (input.id === '') {
-    return { id: '', name: '' }
+  if (!input || !input.id && !input.name) {
+    return null
   }
 
   if (input.id.length !== valid_user.length) {

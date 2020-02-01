@@ -1,133 +1,324 @@
-const auth = require('../middlewares/admin.auth.js')
-const valid_user = require('../middlewares/user.js')
-const user_shared = require('../logic/user/api.user.shared.js')
-const api_user_create = require('../logic/user/api.user.create.js').create
-const api_user_login = require('../logic/user/api.user.login.js').login
-const admin_auth = require('../middlewares/admin.auth.js')
-// const api_ping_get = require('../logic/api.ping.get.js');
-// const api_job_get = require('../logic/job/api.job.get.js');
-// const api_job_create = require('../logic/job/api.job.create.js');
-// const api_job_update = require('../logic/job/api.job.update.js');
-// const api_job_remove = require('../logic/job/api.job.remove.js');
+const m_user = require('../../models/user.js')
+const exit = require('../../services/exit.js')
+const logger = require('../../helpers/logger.js')
+const userMiddle = require('../middlewares/user.js')
+const token = require('../../services/token.service.js')
 
-function exit (res, status, message, data) {
-  res.status(status).json({
-    status: status,
-    message: message,
-    data: data,
-  })
-}
-
-// todo make sure owner is valid & exists ...
+// TODO
+// add user verify & login events
+// on user create, trigger a user creation event for other things to tap into
+// on user update, trigger an update event for things to check/react to
+// on user deletion trigger a user removal/cleanup event
 
 module.exports = function (app) {
 
-  // todo create
-  // todo get
-  // todo update
-  // todo delete
+	app.get('/api/user', token.required, function (req, res) {
 
-  app.post('/api/user/create', valid_user.create, function (req, res) {
+		m_user.findOne({ _id: req.body.token.id })
+			.then(result => {
 
-    api_user_create(req.body.user, function (error, newUser) {
+				if (!result || result.length === 0) {
+					throw new Error('User does not exist, please contact support.')
+				}
 
-      if (error) {
-        return exit(res, 422, error.message, error)
-      }
+				return exit(res, 200, 'Success User found.', {
+					account: result.safeExport(true)
+				})
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
 
-      newUser = user_shared.safe_export(newUser)
+				return exit(res, 422, message, err)
+			})
+	})
 
-      let newToken = admin_auth.create(newUser)
+	app.post('/api/user', userMiddle.create, function (req, res) {
 
-      return exit(res, 200, 'Success User created.', { account: newUser, token: newToken })
-    })
-  })
+		m_user.find({ email: req.body.email })
+			.then(items => {
 
-  app.post('/api/user/login', valid_user.login, function (req, res) {
+				if (items.length > 0) {
+					throw new Error('Email already in use.')
+				}
 
-    api_user_login(req.body.user, function (error, newUser) {
+				return m_user.createPassword(req.body.password)
+			})
+			.then(userPassword => {
+				let newUser = new m_user({
+					name: req.body.name,
+					email: req.body.email,
+					password: userPassword
+				})
 
-      if (error) {
-        return exit(res, 422, error.message, error)
-      }
+				newUser.meta.link_verify = token.magic(newUser)
 
-      newUser = user_shared.safe_export(newUser)
+				return newUser.save()
+			})
+			.then(userModel => {
 
-      let newToken = admin_auth.create(newUser)
+				app.emit('ACCOUNT_CREATE', userModel)
 
-      return exit(res, 200, 'Success User login.', { account: newUser, token: newToken })
-    })
-  })
+				return exit(res, 200, 'Success User created.', {
+					account: userModel.safeExport(),
+					token: token.create(userModel.safeExport())
+				})
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
 
-  app.post('/api/user/logout', auth.token_passive, function (req, res) {
+				return exit(res, 422, message, err)
+			})
+	})
 
-    let tokenRaw = null
-    if (req.body.token && req.body.token.raw) {
-      tokenRaw = req.body.token.raw
-    }
+	app.post('/api/user/login', userMiddle.login, userMiddle.prepare, function (req, res) {
 
-    auth.tokenBlackList(tokenRaw, function (error, result) {
+		m_user.findOne({ email: req.body.email })
+			.then(userFound => {
 
-      if (error) {
-        return exit(res, 400, error.message || error)
-      }
+				if (!userFound || userFound.length === 0) {
+					throw new Error('User does not exist, please contact support.')
+				}
 
-      return exit(res, 201, 'User logged out.')
-    })
-  })
+				return userFound.comparePassword(req.body.password)
+			})
+			.then(userResult => {
+				userResult.meta.login = Date.now()
 
-  // app.get('/api/job/:job', job.get, function (req, res) {
+				return userResult.save()
+			})
+			.then(userResult => {
 
-  // 	api_job_get.get(req.body.job, function(error, job){
+				app.emit('ACCOUNT_LOGIN', userResult)
 
-  // 		if(error){
-  // 			return exit(res,422,error.message,error);
-  // 		}
+				return exit(res, 200, 'Success User login.', {
+					account: userResult.safeExport(),
+					token: token.create(userResult.safeExport())
+				})
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
 
-  // 		return exit(res,200,'Success job found.',{ job : job });
-  // 	});
-  // });
+				return exit(res, 422, message, err)
+			})
+	})
 
-  // app.post('/api/job/create', job.create, function (req, res) {
+	app.post('/api/user/logout', token.logout, function (req, res) {
 
-  // 	api_job_create.create(req.body.job, function(error, new_model){
+		token.add_token_to_blackList(req)
+			.then(result => {
 
-  // 		if(error){
-  // 			return exit(res,422,error.message,error);
-  // 		}
+				app.emit('ACCOUNT_LOGOUT', result)
 
-  // 		return exit(res,201,'Success new job created.',{ job : new_model });
+				return exit(res, 201, result, result)
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
 
-  // 	});
-  // });
+				return exit(res, 400, message, err)
+			})
+	})
 
-  // app.put('/api/job/:job', job.update, function (req, res) {
+	app.patch('/api/user', token.required, userMiddle.update, userMiddle.prepare, function (req, res) {
 
-  // 	api_job_update.update(req.body.job, function(error, new_model){
+		m_user.findOne({ _id: req.body.token.id })
 
-  // 		if(error){
-  // 			return exit(res,422,error.message,error);
-  // 		}
+			.then(userFound => {
 
-  // 		return exit(res,201,'Success job updated.',{ job : new_model });
+				if (!userFound || userFound.length === 0) {
+					throw new Error('User does not exist, please contact support.')
+				}
 
-  // 	});
-  // });
+				return req.body.password ?
+					m_user.createPassword(req.body.password, userFound) :
+					Promise.resolve([null, userFound])
+			})
+			.then(([hash, userFound]) => {
 
-  // app.delete('/api/job/:job', job.get, function (req, res) {
+				if (req.body.name) {
+					userFound.name = req.body.name
+				}
+				if (req.body.email) {
+					userFound.email = req.body.email
+				}
 
-  // 	api_job_remove.remove(req.body.job, function(error, job){
+				if (req.body.password && hash) {
+					userFound.password = hash
+				}
 
-  // 		if(error){
-  // 			return exit(res,422,error.message,error);
-  // 		}
+				if (req.body.password || req.body.email) {
+					userFound.meta.link_verify = token.magic(userFound)
+					userFound.meta.link_recover = 'VERIFY PROCESS'
+					app.emit('ACCOUNT_VERIFY', userFound)
+				}
 
-  // 		return exit(res,200,'Success job removed.',{ job : job });
-  // 	});
-  // });
+				return userFound.save()
+			})
+			.then(result => {
+				app.emit('ACCOUNT_UPDATED', result)
 
-  return app
+				return exit(res, 200, 'Success User updated.', {
+					account: result.safeExport(),
+					token: token.create(result.safeExport())
+				})
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
 
+				return exit(res, 400, message, err)
+			})
+	})
+
+	/**
+	 * Delete a user account
+	 */
+	app.delete('/api/user', token.required, function (req, res) {
+
+		m_user.findOne({ _id: req.body.token.id })
+			.then(userFound => {
+
+				if (!userFound || userFound.length === 0) {
+					throw new Error('User does not exist, please contact support.')
+				}
+
+				return m_user.deleteOne({ _id: req.body.token.id })
+			})
+			.then(result => {
+
+				app.emit('ACCOUNT_REMOVED', result)
+
+				return exit(res, 201, 'Success User removed.',
+					{ account: null, token: null })
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
+
+				return exit(res, 400, message, err)
+			})
+	})
+
+	/**
+	 * Verify a users account, one time process to ensure email
+	 */
+	app.get('/api/user/verify/:verify', userMiddle.verify, userMiddle.prepare, function (req, res) {
+
+		m_user.findOne({ 'meta.link_verify': req.params.verify })
+			.then(result => {
+
+				if (!result) {
+					throw new Error('Verify link does not exist, please contact support.')
+				}
+
+				if (result.meta.link_verify !== req.params.verify) {
+					throw new Error('Verify link does not match, please contact support.')
+				}
+
+				result.meta.link_verify = ''
+				return result.save()
+			})
+			.then(result => {
+
+				app.emit('ACCOUNT_VERIFIED', result) // todo
+
+				return exit(res, 200, 'Success User verified.',
+					{
+						account: result.safeExport(),
+						token: token.create(result.safeExport())
+					})
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
+
+				return exit(res, 400, message, err)
+			})
+	})
+
+	/**
+	 * Triggers reset user password process via email, will invalidate a account until the next stage is complete..
+	 */
+	app.post('/api/user/reset/', userMiddle.hasEmail, userMiddle.prepare, function (req, res) {
+
+		m_user.findOne({ email: req.body.email })
+			.then(result => {
+
+				if (!result) {
+					throw new Error('No account with that email found.')
+				}
+
+				if (result.email.toString() !== req.body.email.toString()) {
+					throw new Error('An error has occurred with that email.')
+				}
+
+				result.meta.link_verify = 'RESET PROCESS'
+				result.meta.link_recover = token.magic(result)
+
+				return result.save()
+			})
+			.then(result => {
+
+				app.emit('ACCOUNT_RESET', result)
+
+				return exit(res,
+					200,
+					'Success a reset email has been sent.')
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
+
+				return exit(res, 400, message, err)
+			})
+	})
+
+	/**
+	 * User reset password with the above token
+	 */
+	app.patch('/api/user/reset/:recover', userMiddle.recover, userMiddle.hasPassword, userMiddle.prepare, function (req, res) {
+
+		m_user.findOne({ 'meta.link_recover': req.params.recover })
+			.then(result => {
+
+				if (!result) {
+					throw new Error('No account with that link found.')
+				}
+
+				if (result.meta.link_recover.toString() !== req.params.recover.toString()) {
+					throw new Error('An error has occurred with that link.')
+				}
+
+				return m_user.createPassword(req.body.password, result)
+			})
+			.then(([hash, result]) => {
+
+				result.password = hash
+				result.meta.link_verify = ''
+				result.meta.link_recover = ''
+
+				return result.save()
+			})
+			.then(result => {
+
+				app.emit('ACCOUNT_VERIFIED', result) // todo
+
+				return exit(res,
+					200,
+					'Success a new password has been set.')
+			})
+			.catch(err => {
+				let message = err.message || err
+				logger.log(message)
+
+				return exit(res, 400, message, err)
+			})
+	})
+
+	return app
 }
 
 

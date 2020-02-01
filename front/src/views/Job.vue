@@ -1,10 +1,12 @@
 <template>
+
 	<card>
 		<job-render :attrs=attrs :job=job>
 			<div class="text-right">
-				<button-c ref="btn_update" v-on:click=OnUpdate> Update</button-c>
+				<button-c ref="btn_update" @click=OnUpdate> Update</button-c>
 				<div style="display:inline-block;width:1rem;"></div>
-				<button-c ref="btn_delete" v-on:click=OnDelete> Delete</button-c>
+				<button-c ref="btn_delete" @click=OnDelete> Delete</button-c>
+				<div style="display:inline-block;width:1rem;"></div>
 			</div>
 		</job-render>
 	</card>
@@ -13,15 +15,17 @@
 
 <script>
 
-	import ButtonC from '@/components/ButtonC.vue'
 	import Card from '@/components/Card.vue'
+	import ButtonC from '@/components/ButtonC.vue'
 	import JobRender from '@/components/Job.vue'
 	import JobService from '../helpers/JobService.js'
+	import sharedVars from '../constants/sharedVars.js'
 
 	export default {
 		name: 'Job',
 		data () {
 			return {
+				waiting: false,
 				/**
 				 * Used to make sure we dont send the same update twice
 				 */
@@ -55,8 +59,8 @@
 			}
 		},
 		components: {
-			ButtonC,
 			Card,
+			ButtonC,
 			JobRender,
 		},
 
@@ -76,7 +80,7 @@
 						this.checkSum = this.createCheckSum(this.job)
 					})
 					.catch(error => {
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
 					})
 			},
 			OnValidate: function () {
@@ -103,28 +107,42 @@
 					.then(response => {
 						this.$refs.btn_update.OnSuccess()
 						this.$root.$emit('message', response.data.message)
+						this.resetWaiting()
 						this.checkSum = this.createCheckSum(this.job)
 					})
 					.catch(error => {
 						this.$refs.btn_update.OnFail()
-						this.$root.$emit('message', error.response.data.message)
+						this.$root.$emit('message', error.response.data.message || error)
+						this.resetWaiting()
 					})
 			},
 			OnDelete: function () {
-				event.preventDefault()
+				if (this.waiting) {
+					return
+				}
+				this.waiting = true
 
-				JobService.remove({ job_id: this.$route.params.job_id }).then(response => {
-					this.$refs.btn_delete.OnSuccess()
-					this.$root.$emit('message', response.data.message)
-					let self = this
-					setTimeout(function () {
-						self.$router.push('/')
-					}, 3.5 * 1000)
-				}).catch(error => {
-					this.$refs.btn_delete.OnSuccess()
-					this.$root.$emit('message', error.response.data.message)
-				})
+				JobService.remove({ job_id: this.$route.params.job_id })
+					.then(response => {
+						this.$refs.btn_delete.OnSuccess()
+						this.$root.$emit('message', response.data.message)
+
+						setTimeout(() => {
+							this.$router.push({ name: 'home' })
+						}, sharedVars.page_push)
+
+					})
+					.catch(error => {
+						this.$refs.btn_delete.OnSuccess()
+						this.$root.$emit('message', error.response.data.message || error)
+						this.resetWaiting()
+					})
 			},
-		}
+			resetWaiting () {
+				setTimeout(() => {
+					this.waiting = false
+				}, sharedVars.wait_ms)
+			}
+		},
 	}
 </script>

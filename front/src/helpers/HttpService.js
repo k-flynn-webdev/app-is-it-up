@@ -31,7 +31,11 @@ function get_user () {
 }
 
 function get_user_payload () {
-  return  JSON.parse(localStorage.getItem(USER_PAYLOAD))
+  let local = localStorage.getItem(USER_PAYLOAD)
+  if (local === undefined || local === 'undefined' || local === null) {
+    return
+  }
+  return JSON.parse(localStorage.getItem(USER_PAYLOAD))
 }
 
 function set_user (response) {
@@ -39,9 +43,11 @@ function set_user (response) {
     localStorage.removeItem(USER_TOKEN)
     localStorage.removeItem(USER_PAYLOAD)
   } else {
-    let result = response.data.data
-    localStorage.setItem(USER_TOKEN, result.token)
-    localStorage.setItem(USER_PAYLOAD, JSON.stringify(result.account))
+    if (response.data && response.data.data && response.data.data.token && response.data.data.account) {
+      let result = response.data.data
+      localStorage.setItem(USER_TOKEN, result.token)
+      localStorage.setItem(USER_PAYLOAD, JSON.stringify(result.account))
+    }
   }
   get_user()
 }

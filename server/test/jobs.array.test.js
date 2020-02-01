@@ -1,6 +1,6 @@
 const array = require('../services/jobs/jobs.array.js');
 
-let temp_job = { url : 'https://www.google.com/', user : '5d8cc974f14001679cb90caf', active: true, ping : 300, job_id : 247259029 };
+let temp_job = { url : 'https://www.google.com/', user : { id: '5d8cc974f14001679cb90caf', name: 'sdfsdf' }, active: true, ping : 300, job_id : 247259029 };
 let tmp2 = Object.assign({},temp_job);
 let tmp3 = Object.assign({},temp_job);
 tmp2.job_id = 57823;
