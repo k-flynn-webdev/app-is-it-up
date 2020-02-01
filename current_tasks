@@ -8,7 +8,7 @@ Aims:
 	- CI/CD
 
 [BUGS]
-- able to update user while not verified
+✅ able to update user while not verified
 ✅ when logging out with expiredtoken DO NOT kick back an error or track it ... otherwise front end is trapped 
 ✅ login, password is verified before checking for user, dont 
 ✅ update a job is highlighted even with no changes.
@@ -46,6 +46,16 @@ Aims:
 
 
 [SERVER]
+- simplify jobs like user implementation with promises
+ * job creation
+ * job update
+ * job deletion
+ * job get
+- simplify job-execution like user implementation with promises
+ * execution creation
+ * execution update
+ * execution deletion
+ * execution get
 - back-end periods need max to be aware of how far through month has gone on first roll over?
 - create a public rendered svg badge for a job
 - custom name field for jobs
