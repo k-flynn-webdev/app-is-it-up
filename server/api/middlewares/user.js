@@ -56,6 +56,7 @@ function update (req, res, next) {
 	if (Object.keys(req.body).length < 1) {
 		return exit(res, 422, 'No properties recieved.')
 	}
+
 	next()
 }
 
@@ -78,22 +79,38 @@ function hasPassword (req, res, next) {
 exports.hasPassword = hasPassword
 
 function prepare (req, res, next) {
-	let tmpBody = Object.assign({}, req.body)
-	let tmpParams = Object.assign({}, req.params)
 
-	delete req.body
-	delete req.params
+	let tmpToken = null
+	let tmpParams = null
+	let tmpBody = null
 
-	Object.keys(tmpBody).map(item => {
-		tmpBody[item] = sanitizer(tmpBody[item])
-	})
+	if (req.body && req.body.token) {
+		tmpToken = Object.assign({}, req.body.token)
+		delete req.body.token
+	}
 
-	Object.keys(tmpParams).map(item => {
-		tmpParams[item] = sanitizer(tmpParams[item])
-	})
+	if (req.params) {
+		tmpParams = Object.assign({}, req.params)
+		Object.keys(tmpParams).map(item => {
+			tmpParams[item] = sanitizer(tmpParams[item])
+		})
+		delete req.params
+	}
+
+	if (req.body) {
+		tmpBody = Object.assign({}, req.body)
+		Object.keys(tmpBody).map(item => {
+			tmpBody[item] = sanitizer(tmpBody[item])
+		})
+		delete req.body
+	}
 
 	req.body = Object.assign({}, tmpBody)
 	req.params = Object.assign({}, tmpParams)
+
+	if (tmpToken) {
+		req.body.token = tmpToken
+	}
 
 	next()
 }

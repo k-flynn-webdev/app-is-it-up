@@ -15,7 +15,7 @@ const welcomeMsg = ((link) => {
 	return `Hello, you've signed up to isitup.kubedev.co.uk, to get started visit : \nhttp://127.0.0.1:8080/user/verify/${link}`
 })
 const verifyMsg = ((link) => {
-	return `Hello, you've recently changed your account email, to verify please visit : \nhttp://127.0.0.1:8080/user/verify/${link}`
+	return `Hello, you've recently changed your account email or password, to verify please visit : \nhttp://127.0.0.1:8080/user/verify/${link}`
 })
 const resetMsg = ((link) => {
 	return `Hello, you've recently requested a reset on your account password, to get started visit : \nhttp://127.0.0.1:8080/user/reset/${link}`
