@@ -132,6 +132,10 @@ module.exports = function (app) {
 					throw new Error('User does not exist, please contact support.')
 				}
 
+				if (userFound.meta.link_verify.length > 0) {
+					throw new Error('User is not yet verified.')
+				}
+
 				return req.body.password ?
 					m_user.createPassword(req.body.password, userFound) :
 					Promise.resolve([null, userFound])
