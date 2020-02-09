@@ -10,14 +10,14 @@ let app_temp = null;
 let has_init = false;
 
 
-function init(app){
-	if(!has_init){
-		app_temp = app;
-		app.on('jobs.exec', exec);
-		has_init = true;
-	}
-}
-exports.init = init;
+// function init(app){
+// 	if(!has_init){
+// 		app_temp = app;
+// 		app.on('jobs.exec', exec);
+// 		has_init = true;
+// 	}
+// }
+// exports.init = init;
 
 
 

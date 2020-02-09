@@ -11,17 +11,17 @@ let global_count = 0;
 let app_temp = null;
 
 
-function init(app){
-	app.on('jobs.start', start);
-	app.on('jobs.stop', stop);
-	app_temp = app;
-
-	setTimeout( function(){
-		start();
-	}, delay * 1000);
-
-}
-exports.init = init;
+// function init(app){
+// 	app.on('jobs.start', start);
+// 	app.on('jobs.stop', stop);
+// 	app_temp = app;
+//
+// 	setTimeout( function(){
+// 		start();
+// 	}, delay * 1000);
+//
+// }
+// exports.init = init;
 
 
 function get_mode(){

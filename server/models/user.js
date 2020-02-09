@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const has = require('../helpers/has.js')
 const config = require('../config/config.js')
 
-var user = mongoose.Schema({
+const user = mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, 'Name is required'],
@@ -130,7 +130,6 @@ function comparePassword(input) {
 /**
  * Export a user model with only the items needed.
  *
- *
  * @param 	{Boolean}	export including meta
  * @returns {model}		userModel minus items
  */
@@ -138,13 +137,13 @@ function safeExport (meta = false) {
 
   let freshUser = {}
 
-  if (has.Exists(this.name)) {
+  if (has.item(this.name)) {
 		freshUser.name = this.name
   }
-	if (has.Exists(this.email)) {
+	if (has.item(this.email)) {
 		freshUser.email = this.email
 	}
-	if (has.Exists(this.role)) {
+	if (has.item(this.role)) {
 		freshUser.role = this.role
 	}
 	if (meta) {
@@ -155,7 +154,7 @@ function safeExport (meta = false) {
 			verified: this.meta.link_verify.length < 1
 		}
 	}
-	if (has.Exists(this._id)) {
+	if (has.item(this._id)) {
 		freshUser.id = this._id
 	}
 
