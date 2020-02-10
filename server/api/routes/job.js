@@ -1,5 +1,5 @@
-const m_user = require('../../models/user.js')
 const m_job = require('../../models/job.js')
+const m_user = require('../../models/user.js')
 const exit = require('../../services/exit.js')
 const logger = require('../../helpers/logger.js')
 const job = require('../../services/job.js')
@@ -42,24 +42,28 @@ module.exports = function (app) {
 	// 		return exit(res, 200, 'Success jobs found.', { jobs: safe_jobs })
 	// 	})
 	// })
-	//
+
 	app.post('/api/job/create', token.passive, jobMiddle.create, function (req, res) {
 
 		let newJob = null
+
+		function updateUser (req) {
+			let userPromise = Promise.resolve()
+			if (req.body.token && req.body.token.id) {
+				userPromise = m_user.findOne({ _id: req.body.token.id })
+					.then(user => {
+						user.jobs.push(newJob.job_hash)
+						return user.save()
+					})
+			}
+			return userPromise
+		}
 
 		job.create({ job: req.body, auth: req.body.token })
 			.then(result => {
 				newJob = result
 
-				let userPromise = Promise.resolve()
-				if (req.body.token && req.body.token.id) {
-					userPromise = m_user.findOne({ _id: req.body.token.id })
-						.then(user => {
-							user.jobs.push(newJob.job_hash)
-							return user.save()
-						})
-				}
-				return userPromise
+				return updateUser(req)
 			})
 			.then(() => {
 				return exit(res, 201, 'Success new job created',

@@ -95,6 +95,8 @@ const job = mongoose.Schema({
     num: { type: Number, required: true, default: 0 },
     /** Maximum number of ticks at this ping count in the month */
     max: { type: Number, required: true, default: 0 },
+    /** Lifetime tick count */
+    total: { type: Number, required: true, default: 0 },
   },
   /** job hash id (Use the createJobHash to create) */
   job_hash: { type: String, required: true },
