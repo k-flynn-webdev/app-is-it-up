@@ -28,7 +28,11 @@ function create ({ job, auth }) {
 
 	let newJob = new m_job()
 
-	jobUpdate(newJob, job, auth)
+	try {
+		jobUpdate(newJob, job, auth)
+	} catch (e) {
+		return Promise.reject(e)
+	}
 
 	newJob.setJobHash()
 

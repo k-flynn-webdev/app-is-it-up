@@ -3,6 +3,7 @@ const m_user = require('../../models/user.js')
 const exit = require('../../services/exit.js')
 const logger = require('../../helpers/logger.js')
 const job = require('../../services/job.js')
+const jobStack = require('../../services/jobStack.js')
 const jobMiddle = require('../middlewares/job.js')
 const token = require('../../services/token.service.js')
 
@@ -29,23 +30,26 @@ const token = require('../../services/token.service.js')
 
 module.exports = function (app) {
 
-	// app.get('/api/job/all', token.passive, function (req, res) {
-	//
-	// 	api_job_stack.get_stack(req.body.token, function (error, jobs) {
-	//
-	// 		if (error) {
-	// 			return exit(res, 422, error.message, error)
-	// 		}
-	//
-	// 		let safe_jobs = jobs.map(item => api_job_shared.safe_export(item))
-	//
-	// 		return exit(res, 200, 'Success jobs found.', { jobs: safe_jobs })
-	// 	})
-	// })
+	app.get('/api/job/all', token.passive, function (req, res) {
+
+		jobStack.getStack(req.body.token)
+			.then(result => {
+
+				// todo , what happens when 0 jobs?
+
+				let safeJobs = result.map(item => item.safeExport())
+				return exit(res, 200, 'Success jobs found.', { jobs: safeJobs })
+			})
+			.catch(err => {
+				logger.log(err)
+				return exit(res, 422, err.message, err)
+			})
+	})
 
 	app.post('/api/job/create', token.passive, jobMiddle.create, function (req, res) {
 
 		let newJob = null
+		let newJobIndex = -1
 
 		function updateUser (req) {
 			let userPromise = Promise.resolve()
@@ -63,13 +67,19 @@ module.exports = function (app) {
 			.then(result => {
 				newJob = result
 
+				newJobIndex = jobStack.addStack(newJob)
+				if (newJobIndex === -1) {
+					throw Error('Job created was not added to the stack')
+				}
+
 				return updateUser(req)
 			})
 			.then(() => {
-				return exit(res, 201, 'Success new job created',
+				return exit(res, 201, `Success new job created (${newJobIndex}).`,
 				{ job : newJob.safeExport() })
 			})
 			.catch(err => {
+				logger.log(err)
 				return exit(res, 422, err.message || err, err)
 			})
 	})

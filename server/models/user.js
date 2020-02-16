@@ -36,7 +36,7 @@ const user = mongoose.Schema({
 		/** Link to recover account, if empty it's already recovered */
 		link_recover: { type: String, required: false, default: '' },
 	},
-	/** User roles: ['user', 'admin', 'dev'] */
+	/** User roles: ['user', 'admin', 'dev', 'guest'] */
 	role: { type: String, required: true, default: 'user', lowercase: true },
 	jobs: { type: Array, required: false },
 })

@@ -41,3 +41,16 @@ function item (input) {
 }
 
 exports.item = item
+
+/**
+ * Check if an item contains 'thing'
+ *
+ * @param 	{String} 	item			item to inspect
+ * @param 	{String} 	search		string to search for
+ * @returns {boolean}
+ */
+function contains (item, search) {
+	return (item.indexOf(search) >= 0)
+}
+
+exports.contains = contains

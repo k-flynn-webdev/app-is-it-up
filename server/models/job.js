@@ -162,7 +162,21 @@ function setUrl (input) {
   if (temp.indexOf('localhost') !== -1) {
 
   } else {
-    if (temp.indexOf('http') === -1) {
+
+    let hasDotCom = temp.split('.')
+    hasDotCom = hasDotCom.filter(item => item.length > 1)
+    let wwwIndex = temp.indexOf('www')
+    let httpIndex = temp.indexOf('http')
+
+    if (wwwIndex < 0 && hasDotCom.length < 2) {
+      throw Error('Invalid URL')
+    }
+
+    if (wwwIndex >= 0 && hasDotCom.length < 3) {
+      throw Error('Invalid URL')
+    }
+
+    if (httpIndex < 0) {
       temp = 'http://' + temp
     }
   }
