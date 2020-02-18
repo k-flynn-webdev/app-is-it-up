@@ -1,5 +1,6 @@
 const m_job = require('../../models/job.js')
 const m_user = require('../../models/user.js')
+const m_ping = require('../../models/ping.js')
 const has = require('../../helpers/has.js')
 const exit = require('../../services/exit.js')
 const logger = require('../../helpers/logger.js')
@@ -119,34 +120,45 @@ module.exports = function (app) {
 	//
 	// 	})
 	// })
-	//
-	// app.delete('/api/job/:job', token.passive, job.get, function (req, res) {
-	//
-	// 	api_job_remove.remove({ job: req.body.job, auth: req.body.token }, function (error, job) {
-	//
-	// 		if (error) {
-	// 			return exit(res, 422, error.message || error, error)
-	// 		}
-	//
-	// 		let safe_job = api_job_shared.safe_export(job)
-	//
-	//     // todo update job on user ..
-	//
-	//     pings.remove(job, function (error, pings_removed) {
-	//
-	// 			if (error) {
-	// 				return exit(res, 422, error.message || error, error)
-	// 			}
-	//
-	// 			return exit(res,
-	//         200,
-	//         'Success job removed.',
-	//         { job: safe_job, pings_removed: pings_removed },
-	// 				isVerifiedMsg(req.body.token)
-	//         )
-	// 		})
-	// 	})
-	// })
+
+
+	app.delete('/api/job/:job_hash', token.passive, jobMiddle.get, function (req, res) {
+
+		let jobResult = null
+		let jobDeleted = null
+		let pingsDeleted = null
+
+		m_job.findOne({ job_hash: req.params.job_hash })
+			.then(result => {
+
+				if (!result) {
+					throw Error('No jobs with that ID found.')
+				}
+
+				return job.permission(result, req.body.token)
+			})
+			.then(result => {
+				jobResult = result
+				return result.deleteOne()
+			})
+			.then(result => {
+				jobDeleted = result
+				return m_ping.deleteMany({ job_hash: jobResult.job_hash })
+			})
+			.then(result => {
+				pingsDeleted = result
+
+				return exit(res, 200, 'Success job found.',
+					{
+						job: jobResult.safeExport(),
+						deletion: { job: jobDeleted, pings: pingsDeleted }
+					})
+			})
+			.catch(err => {
+				logger.log(err)
+				return exit(res, 404, err.message || err, err)
+			})
+	})
 
 	return app
 }
