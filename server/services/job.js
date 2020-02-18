@@ -102,7 +102,7 @@ function permission (job, token) {
 		if (!tokenHasId) {
 			throw Error('Job belongs to user with a different ID')
 		}
-		if (req.body.token.id.toString() === result.user.id.toString()) {
+		if (token.id.toString() === job.user.id.toString()) {
 			return Promise.resolve(job)
 		} else {
 			throw Error('Job belongs to user with a different ID')

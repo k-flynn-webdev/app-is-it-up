@@ -94,50 +94,10 @@ module.exports = function (app) {
 				}
 
 				return job.permission(result, req.body.token)
-
-				// let resultHasUserId = false
-				// if (result.user && result.user.id) {
-				// 	resultHasUserId = true
-				// }
-				//
-				// let tokenIsAdmin = false
-				// if (req.body.token && req.body.token.role && req.body.token.role === 'admin') {
-				// 	tokenIsAdmin = true
-				// }
-				//
-				// let tokenHasId = false
-				// if (req.body.token && req.body.token.id) {
-				// 	tokenHasId = true
-				// }
-				//
-				// // public job
-				// if (!resultHasUserId) {
-				// 	return exit(res, 200, 'Success job found.',
-				// 		{ job: result.safeExport() })
-				// }
-				//
-				// // admin can view all
-				// if (tokenIsAdmin) {
-				// 	return exit(res, 200, 'Success job found.',
-				// 		{ job: result.safeExport() })
-				// }
-				//
-				// // user role find ..
-				// if (resultHasUserId){
-				// 	if (!tokenHasId) {
-				// 		throw Error('Job belongs to user with a different ID')
-				// 	}
-				// 	if(req.body.token.id.toString() === result.user.id.toString()) {
-				// 		return exit(res, 200, 'Success job found.',
-				// 			{ job: result.safeExport() })
-				// 	} else {
-				// 		throw Error('Job belongs to user with a different ID')
-				// 	}
-				// }
 			})
 			.then(result => {
-						return exit(res, 200, 'Success job found.',
-							{ job: result.safeExport() })
+				return exit(res, 200, 'Success job found.',
+					{ job: result.safeExport() })
 			})
 			.catch(err => {
 				logger.log(err)
