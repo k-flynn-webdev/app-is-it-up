@@ -64,10 +64,12 @@ function getStack (auth) {
 	} else {
 		if (has.contains(auth.role, 'user')) {
 			let authId = auth.id.toString()
-			resultVar = stackGlobal.filter(item => item.user.id && item.user.id.toString() === authId)
+			resultVar = stackGlobal.filter(item =>
+				item.user.id && item.user.id.toString() === authId)
 		}
 
-		if (has.contains(auth.role, 'admin') || has.contains(auth.role, 'dev')) {
+		if (has.contains(auth.role, 'admin') ||
+			has.contains(auth.role, 'dev')) {
 			resultVar = stackGlobal.filter(item => item)
 		}
 	}

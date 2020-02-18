@@ -16,7 +16,7 @@ function create (req, res, next) {
 exports.create = create
 
 function get (req, res, next) {
-  if (!has.item(req.body.job_hash)) return exit(res, 422, missing('job id'))
+  if (!has.item(req.params.job_hash)) return exit(res, 422, missing('job id'))
 
   next()
 }
@@ -61,8 +61,6 @@ function prepare (input) {
   if (tmpToken) {
     req.body.token = tmpToken
   }
-
-  next()
 }
 
 exports.prepare = prepare

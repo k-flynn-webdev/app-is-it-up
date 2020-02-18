@@ -68,12 +68,12 @@ export default {
       return newURL;
     },
     getPeriod(){
-      return (this.job.periods[ this.period ] * 100).toFixed(2);
+      return (this.job.uptime[ this.period ] * 100).toFixed(2);
     },
   },
   methods : {
     onClick(){
-      this.$router.push(`/job/${this.job.job_id}`);
+      this.$router.push(`/job/${this.job.job_hash}`);
     },
   },
 }

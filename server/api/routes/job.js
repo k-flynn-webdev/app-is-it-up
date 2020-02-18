@@ -1,5 +1,6 @@
 const m_job = require('../../models/job.js')
 const m_user = require('../../models/user.js')
+const has = require('../../helpers/has.js')
 const exit = require('../../services/exit.js')
 const logger = require('../../helpers/logger.js')
 const job = require('../../services/job.js')
@@ -17,7 +18,6 @@ const token = require('../../services/token.service.js')
 
 // const api_job_stack = require('../../services/jobs/jobs.array.js')
 // const exit = require('../middlewares/exit.js')
-
 
 // function isVerifiedMsg (auth) {
 // 	if (auth && auth.meta) {
@@ -46,7 +46,7 @@ module.exports = function (app) {
 			})
 	})
 
-	app.post('/api/job/create', token.passive, jobMiddle.create, function (req, res) {
+	app.post('/api/job/create', token.passive, jobMiddle.create, jobMiddle.prepare, function (req, res) {
 
 		let newJob = null
 		let newJobIndex = -1
@@ -76,7 +76,7 @@ module.exports = function (app) {
 			})
 			.then(() => {
 				return exit(res, 201, `Success new job created (${newJobIndex}).`,
-				{ job : newJob.safeExport() })
+					{ job: newJob.safeExport() })
 			})
 			.catch(err => {
 				logger.log(err)
@@ -84,25 +84,67 @@ module.exports = function (app) {
 			})
 	})
 
-	// app.get('/api/job/:job', token.passive, job.get, function (req, res) {
-	//
-	// 	api_job_get.get({ job: req.body.job, auth: req.body.token }, function (error, job) {
-	//
-	// 		if (error) {
-	// 			return exit(res, 422, error.message || error, error)
-	// 		}
-	//
-	// 		let safe_job = api_job_shared.safe_export(job)
-	//
-	// 		return exit(res,
-	// 			200,
-	// 			'Success job found.',
-	// 			{ job: safe_job },
-	// 			isVerifiedMsg(req.body.token)
-	// 		)
-	// 	})
-	// })
-	//
+	app.get('/api/job/:job_hash', token.passive, jobMiddle.get, function (req, res) {
+
+		m_job.findOne({ job_hash: req.params.job_hash })
+			.then(result => {
+
+				if (!result) {
+					throw Error('No jobs with that ID found.')
+				}
+
+				return job.permission(result, req.body.token)
+
+				// let resultHasUserId = false
+				// if (result.user && result.user.id) {
+				// 	resultHasUserId = true
+				// }
+				//
+				// let tokenIsAdmin = false
+				// if (req.body.token && req.body.token.role && req.body.token.role === 'admin') {
+				// 	tokenIsAdmin = true
+				// }
+				//
+				// let tokenHasId = false
+				// if (req.body.token && req.body.token.id) {
+				// 	tokenHasId = true
+				// }
+				//
+				// // public job
+				// if (!resultHasUserId) {
+				// 	return exit(res, 200, 'Success job found.',
+				// 		{ job: result.safeExport() })
+				// }
+				//
+				// // admin can view all
+				// if (tokenIsAdmin) {
+				// 	return exit(res, 200, 'Success job found.',
+				// 		{ job: result.safeExport() })
+				// }
+				//
+				// // user role find ..
+				// if (resultHasUserId){
+				// 	if (!tokenHasId) {
+				// 		throw Error('Job belongs to user with a different ID')
+				// 	}
+				// 	if(req.body.token.id.toString() === result.user.id.toString()) {
+				// 		return exit(res, 200, 'Success job found.',
+				// 			{ job: result.safeExport() })
+				// 	} else {
+				// 		throw Error('Job belongs to user with a different ID')
+				// 	}
+				// }
+			})
+			.then(result => {
+						return exit(res, 200, 'Success job found.',
+							{ job: result.safeExport() })
+			})
+			.catch(err => {
+				logger.log(err)
+				return exit(res, 404, err.message || err, err)
+			})
+	})
+
 	// app.patch('/api/job/:job', token.passive, job.update, function (req, res) {
 	//
 	// 	api_job_update.update({ job: req.body.job, auth: req.body.token }, function (error, job) {
@@ -128,20 +170,20 @@ module.exports = function (app) {
 	//
 	// 		let safe_job = api_job_shared.safe_export(job)
 	//
-  //     // todo update job on user ..
+	//     // todo update job on user ..
 	//
-  //     pings.remove(job, function (error, pings_removed) {
+	//     pings.remove(job, function (error, pings_removed) {
 	//
 	// 			if (error) {
 	// 				return exit(res, 422, error.message || error, error)
 	// 			}
 	//
 	// 			return exit(res,
-  //         200,
-  //         'Success job removed.',
-  //         { job: safe_job, pings_removed: pings_removed },
+	//         200,
+	//         'Success job removed.',
+	//         { job: safe_job, pings_removed: pings_removed },
 	// 				isVerifiedMsg(req.body.token)
-  //         )
+	//         )
 	// 		})
 	// 	})
 	// })
