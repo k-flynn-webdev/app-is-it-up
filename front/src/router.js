@@ -33,7 +33,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "reset" */ './views/Reset.vue')
     },
     {
-      path: '/job/:job_id',
+      path: '/job/:job_hash',
       name: Paths['JOB'],
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route

@@ -82,7 +82,7 @@ exports.getStack = getStack
 /**
  * Returns index of a job, -1 if not found
  *
- * @param job
+ * @param {Object} 		job
  * @returns {number}
  */
 function checkStack (job) {
@@ -98,7 +98,7 @@ function checkStack (job) {
  * Adds a job to the stack and returns it's index,
  * 	-1 if no action was taken
  *
- * @param job
+ * @param {Object} 		job
  * @returns {Number}
  */
 function addStack (job) {
@@ -115,7 +115,7 @@ exports.addStack = addStack
  * Removes a job from the stack and returns it's index,
  * 	-1 if no action was taken
  *
- * @param job
+ * @param {Object} 		job
  * @returns {Number}
  */
 function removeStack (job) {
@@ -134,7 +134,7 @@ exports.removeStack = removeStack
  * Updates a job on the stack with the new job, returns the index
  * 	-1 if no action was taken
  *
- * @param job
+ * @param {Object} 		job
  * @returns {Number}
  */
 function updateStack (job) {

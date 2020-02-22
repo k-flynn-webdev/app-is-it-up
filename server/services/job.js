@@ -22,6 +22,13 @@ function jobUpdate (job, update, auth) {
 	}
 }
 
+/**
+ * create a job
+ *
+ * @param {Object}	job		job to create
+ * @param {Object}	auth	token object
+ * @returns {Promise}
+ */
 function create ({ job, auth }) {
 
 	let newJob = new m_job()
@@ -49,6 +56,13 @@ function create ({ job, auth }) {
 
 exports.create = create
 
+/**
+ * Update a job
+ *
+ * @param {Object}	job		job model
+ * @param {Object}	auth	token object
+ * @returns {Promise}
+ */
 function update ({ job, auth }) {
 
 	return m_job.findOne({ job_hash: job.job_hash })

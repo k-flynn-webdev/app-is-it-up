@@ -13,11 +13,11 @@ function create (job) {
 }
 
 function update (job) {
-  return Http.patch(`/api/job/${job.job_id}`, job)
+  return Http.patch(`/api/job/${job.job_hash}`, job)
 }
 
 function remove (job) {
-  return Http.remove(`/api/job/${job.job_id}`)
+  return Http.remove(`/api/job/${job.job_hash}`)
 }
 
 function stack () {

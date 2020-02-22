@@ -15,6 +15,14 @@ function create (req, res, next) {
 
 exports.create = create
 
+function update (req, res, next) {
+  if (Object.keys(req.body).length < 1) return exit(res, 422, missing('paramaters to update'))
+
+  next()
+}
+
+exports.update = update
+
 function get (req, res, next) {
   if (!has.item(req.params.job_hash)) return exit(res, 422, missing('job id'))
 

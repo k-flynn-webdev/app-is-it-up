@@ -42,6 +42,7 @@ export default {
       period : Array,
       ping : Number,
       params : String,
+      job_hash : Number,
     },
     period : String,
   },  

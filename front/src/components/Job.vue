@@ -57,14 +57,14 @@
       <div class="flex-items wrap space-evenly">
 
         <div class="info">
-          <label for="status"> Status </label>
+          <label> Status </label>
           <Up v-if="getStatus === 1" />
           <Down v-if="getStatus === 2" />
           <Off v-if="getStatus === 3" />
         </div>
 
         <div class="info">
-          <label for="pings"> Pings </label>
+          <label> Pings </label>
           <p>{{ job.meta.num }}</p>
         </div>
 
@@ -78,12 +78,12 @@
         </div>
 
         <div class="option">
-          <label for="id"> ID </label>
-          <p>{{ job.job_id }}</p>
+          <label> ID </label>
+          <p>{{ job.job_hash }}</p>
         </div>
 
         <div class="option">
-          <label for="user"> User </label>
+          <label> User </label>
           <p>{{ job.user.name }}</p>
         </div> 
 

@@ -106,21 +106,28 @@ module.exports = function (app) {
 			})
 	})
 
-	// app.patch('/api/job/:job', token.passive, job.update, function (req, res) {
-	//
-	// 	api_job_update.update({ job: req.body.job, auth: req.body.token }, function (error, job) {
-	//
-	// 		if (error) {
-	// 			return exit(res, 422, error.message || error, error)
-	// 		}
-	//
-	// 		let safe_job = api_job_shared.safe_export(job)
-	//
-	// 		return exit(res, 201, 'Success job updated.', { job: safe_job })
-	//
-	// 	})
-	// })
+	app.patch('/api/job/:job', token.passive, jobMiddle.update, jobMiddle.prepare, function (req, res) {
 
+		let jobUpdated = null
+		let jobStackIndex = -1
+
+		job.update({ job: req.body, auth: req.body.token })
+			.then(result => {
+				jobUpdated = result
+
+				jobStackIndex = jobStack.updateStack(jobUpdated)
+				if (jobStackIndex === -1) {
+					throw Error('Job updated was not found on the stack')
+				}
+
+				return exit(res, 201, `Success job updated (${jobStackIndex}).`,
+					{ job: jobUpdated.safeExport() })
+			})
+			.catch(err => {
+				logger.log(err)
+				return exit(res, 422, err.message || err, err)
+			})
+	})
 
 	app.delete('/api/job/:job_hash', token.passive, jobMiddle.get, jobMiddle.prepare, function (req, res) {
 

@@ -107,6 +107,7 @@ const job = mongoose.Schema({
 })
 
 job.pre('save', function (next) {
+  this.meta.updated = Date.now()
   next()
 })
 

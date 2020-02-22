@@ -54,7 +54,7 @@
 						month: 0,
 					},
 					user: '',
-					job_id: '',
+					job_hash: '',
 				},
 			}
 		},
@@ -73,7 +73,7 @@
 				return (input.url + input.method + input.params + input.ping + input.user.id)
 			},
 			GetJob: function () {
-				JobService.get(this.$route.params.job_id)
+				JobService.get(this.$route.params.job_hash)
 					.then(response => {
 						this.job = response.data.data.job
 						this.job.full = true
@@ -122,7 +122,7 @@
 				}
 				this.waiting = true
 
-				JobService.remove({ job_id: this.$route.params.job_id })
+				JobService.remove({ job_hash: this.$route.params.job_hash })
 					.then(response => {
 						this.$refs.btn_delete.OnSuccess()
 						this.$root.$emit('message', response.data.message)
