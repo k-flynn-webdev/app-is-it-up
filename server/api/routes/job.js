@@ -9,24 +9,6 @@ const jobStack = require('../../services/jobStack.js')
 const jobMiddle = require('../middlewares/job.js')
 const token = require('../../services/token.service.js')
 
-// const token = require('../middlewares/token.service.js')
-// const api_job_get = require('../logic/job/api.job.get.js')
-// const api_job_create = require('../logic/job/api.job.create.js')
-// const api_job_update = require('../logic/job/api.job.update.js')
-// const api_job_remove = require('../logic/job/api.job.remove.js')
-// const api_job_shared = require('../logic/job/api.job.shared.js')
-// const pings = require('../../services/pings/pings.funcs.js')
-
-// const api_job_stack = require('../../services/jobs/jobs.array.js')
-// const exit = require('../middlewares/exit.js')
-
-// function isVerifiedMsg (auth) {
-// 	if (auth && auth.meta) {
-// 		return 'User email needs to be verified.'
-// 	}
-// 	return null
-// }
-
 // todo make sure owner is valid & exists ...
 
 module.exports = function (app) {

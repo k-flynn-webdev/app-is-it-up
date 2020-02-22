@@ -70,7 +70,7 @@
 
 		methods: {
 			createCheckSum (input) {
-				return (input.url + input.method + input.params + input.ping + input.user.id)
+				return (input.url + input.method + input.params + input.ping + input.user.toString() + input.active)
 			},
 			GetJob: function () {
 				JobService.get(this.$route.params.job_hash)

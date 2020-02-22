@@ -20,6 +20,14 @@ function jobUpdate (job, update, auth) {
 	if (has.item(update.ping)) {
 		job.setPing(update.ping)
 	}
+
+	if (has.item(update.params)) {
+		job.params = update.params
+	}
+	if (has.item(update.active)) {
+		job.active = update.active
+	}
+
 }
 
 /**

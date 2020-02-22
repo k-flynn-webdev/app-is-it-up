@@ -28,6 +28,7 @@ Aims:
 
 
 [FULL-STACK]
+- handle in-active jobs with a separate menu to view & edit those
 - badge creation / & public display for a job
 - deleting a job should cleanup all related pings 
 - deleting a user should cleanup all job + pings
