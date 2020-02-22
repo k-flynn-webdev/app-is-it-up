@@ -85,7 +85,7 @@ module.exports = function (app) {
 			})
 	})
 
-	app.get('/api/job/:job_hash', token.passive, jobMiddle.get, function (req, res) {
+	app.get('/api/job/:job_hash', token.passive, jobMiddle.get, jobMiddle.prepare, function (req, res) {
 
 		m_job.findOne({ job_hash: req.params.job_hash })
 			.then(result => {
@@ -122,11 +122,24 @@ module.exports = function (app) {
 	// })
 
 
-	app.delete('/api/job/:job_hash', token.passive, jobMiddle.get, function (req, res) {
+	app.delete('/api/job/:job_hash', token.passive, jobMiddle.get, jobMiddle.prepare, function (req, res) {
 
 		let jobResult = null
 		let jobDeleted = null
 		let pingsDeleted = null
+		let stackDeleted = null
+
+		function updateUser (req) {
+			let userPromise = Promise.resolve()
+			if (req.body.token && req.body.token.id) {
+				userPromise = m_user.findOne({ _id: req.body.token.id })
+					.then(user => {
+						user.jobs = user.jobs.filter(item => item.job_hash !== req.params.job_hash)
+						return user.save()
+					})
+			}
+			return userPromise
+		}
 
 		m_job.findOne({ job_hash: req.params.job_hash })
 			.then(result => {
@@ -143,15 +156,26 @@ module.exports = function (app) {
 			})
 			.then(result => {
 				jobDeleted = result
+				return updateUser(req)
+			})
+			.then(() => {
 				return m_ping.deleteMany({ job_hash: jobResult.job_hash })
 			})
 			.then(result => {
 				pingsDeleted = result
+				return jobStack.removeStack(jobDeleted)
+			})
+			.then(result => {
+				stackDeleted = result
 
-				return exit(res, 200, 'Success job found.',
+				return exit(res, 200, 'Success job removed.',
 					{
-						job: jobResult.safeExport(),
-						deletion: { job: jobDeleted, pings: pingsDeleted }
+						job: {},
+						deletion: {
+							job: jobDeleted.safeExport(),
+							pings: pingsDeleted,
+							stack: stackDeleted
+						}
 					})
 			})
 			.catch(err => {

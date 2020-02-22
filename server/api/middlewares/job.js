@@ -26,9 +26,9 @@ exports.get = get
 /**
  * Sanitizes all input and cleans up the raw data
  *
- * @param input
+ * @param req
  */
-function prepare (input) {
+function prepare (req, res, next) {
 
   let tmpToken = null
   let tmpParams = null
@@ -61,6 +61,8 @@ function prepare (input) {
   if (tmpToken) {
     req.body.token = tmpToken
   }
+
+  next()
 }
 
 exports.prepare = prepare
