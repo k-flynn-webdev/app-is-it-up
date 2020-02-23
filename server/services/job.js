@@ -1,5 +1,4 @@
 const m_job = require('../models/job.js')
-// const exit = require('../services/exit.js')
 const logger = require('../helpers/logger.js')
 const has = require('../helpers/has.js')
 

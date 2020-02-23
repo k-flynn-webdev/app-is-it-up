@@ -25,6 +25,7 @@ function delayStart () {
 	}, delay_load_jobs * 1000)
 }
 
+
 /**
  * Load all jobs into memory for ease of access ..
  */
@@ -48,6 +49,16 @@ function loadStack () {
 			loggger.log(err)
 		})
 }
+
+
+/**
+ * Returns the raw stack ..
+ */
+function stack () {
+	return stackGlobal.map(item => item)
+}
+
+exports.stack = stack
 
 /**
  * Returns current jobs in stack based on auth role
@@ -104,6 +115,7 @@ function checkStack (job) {
 function addStack (job) {
 	if (checkStack(job) < 0) {
 		stackGlobal.push(job)
+		logger.log(`Job added: ${job.job_hash}`)
 		return stackGlobal.length
 	}
 	return -1
@@ -122,6 +134,7 @@ function removeStack (job) {
 	let index = checkStack(job)
 	if (index !== -1) {
 		stackGlobal.splice(index, 1)
+		logger.log(`Job removed: ${job.job_hash}`)
 		return index
 	}
 	return -1
@@ -144,6 +157,7 @@ function updateStack (job) {
 	}
 
 	stackGlobal[index] = job
+	logger.log(`Job updated: ${job.job_hash}`)
 	return index
 }
 

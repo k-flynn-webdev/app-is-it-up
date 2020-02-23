@@ -10,7 +10,7 @@ var ping = mongoose.Schema({
 module.exports = mongoose.model('Ping', ping);
 
 
-function preSaveFunc(objec ){
+function preSaveFunc(object){
 	return object;
 }
 exports.preSaveFunc = preSaveFunc;

@@ -1,5 +1,5 @@
 const sanitizer = require('sanitizer').sanitize
-const exit = require('../middlewares/exit.js')
+const exit = require('../../services/exit.js')
 const has = require('../../helpers/has.js')
 
 

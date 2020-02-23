@@ -30,7 +30,7 @@ Aims:
 [FULL-STACK]
 - handle in-active jobs with a separate menu to view & edit those
 - badge creation / & public display for a job
-- deleting a job should cleanup all related pings 
+✅ deleting a job should cleanup all related pings 
 - deleting a user should cleanup all job + pings
 - create a full end to end set of test for user and job creation ..
 - add public/private to api for results
@@ -50,11 +50,11 @@ Aims:
 
 
 [SERVER]
-- simplify jobs like user implementation with promises
- * job creation
- * job update
- * job deletion
- * job get
+✅ simplify jobs like user implementation with promises
+ ✅ job creation
+ ✅ job update
+ ✅ job deletion
+ ✅ job get
 - simplify job-execution like user implementation with promises
  * execution creation
  * execution update
