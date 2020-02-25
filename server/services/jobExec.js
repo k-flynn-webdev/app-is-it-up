@@ -1,3 +1,4 @@
+const request = require('request');
 const m_job = require('../models/job.js')
 const m_ping = require('../models/ping.js')
 const logger = require('../helpers/logger.js')
@@ -21,6 +22,7 @@ let loop_count = 0
 let loop_current = 0
 let loop_mode = ''
 let loop_jobs = null
+let loop_timeNow = null
 
 
 function delayStart () {
@@ -53,17 +55,21 @@ function stopLoop () {
 }
 
 /**
- * Sets up the jobs to be executed locally
+ * Sets up the jobs to be executed locally each time
  */
 function setupLoop (rounds = 0) {
 	loop_rounds = rounds
 	loop_current = 0
 	loop_jobs = jobStack.stack()
+	loop_timeNow = Date.now()
 
 	executeLoop()
 
 	function executeLoop () {
-		execute(loop_jobs[loop_current])
+		let currentJob = loop_jobs[loop_current]
+		if (loop_timeNow >= new Date(currentJob.tick.next)) {
+			execute()
+		}
 
 		if (loop_current < loop_jobs.length && loop_mode === PLAY) {
 			loop_count +=1
@@ -91,16 +97,29 @@ function nextLoop () {
 }
 
 
+function nextTick (job) {
+	let future = 1000 * 60 * job.ping;
+	job.tick.num +=1
+	job.tick.total +=1
+	if(job.tick.num > job.tick.max){
+		job.tick.num = 0;
+	}
+
+	job.tick.next = Date.now() + future;
+}
+
 /**
  * Returns the result of a job execution
  * @param {Object} job
  */
 function execute (job) {
 	if (job && job.job_hash) {
-		console.log(`round: ${loop_rounds} index: ${loop_current} count: ${loop_count}`)
-		return true
+		// console.log(`round: ${loop_rounds} index: ${loop_current} count: ${loop_count}`)
+		// todo do request here
+
+		nextTick(job)
+		job.save()
 	}
-	return false
 }
 exports.execute = execute
 

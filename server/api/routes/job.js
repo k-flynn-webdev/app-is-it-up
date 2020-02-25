@@ -88,7 +88,7 @@ module.exports = function (app) {
 			})
 	})
 
-	app.patch('/api/job/:job', token.passive, jobMiddle.update, jobMiddle.prepare, function (req, res) {
+	app.patch('/api/job/:job_hash', token.passive, jobMiddle.update, jobMiddle.prepare, function (req, res) {
 
 		let jobUpdated = null
 		let jobStackIndex = -1
