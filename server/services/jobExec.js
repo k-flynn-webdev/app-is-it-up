@@ -2,6 +2,7 @@ const request = require('request')
 const m_job = require('../models/job.js')
 const m_ping = require('../models/ping.js')
 const logger = require('../helpers/logger.js')
+const config = require('../config/config.js')
 const has = require('../helpers/has.js')
 const jobStack = require('./jobStack.js')
 
@@ -9,7 +10,7 @@ const PLAY = 'play'
 const STOP = 'stop'
 
 let delay_load_jobs = 10
-let delay_job_rounds = 1000 * 15
+let delay_job_rounds = config.time_delay
 
 let loop_mode = ''
 let loop_init = null
@@ -84,7 +85,7 @@ function nextRound () {
 		loop_rounds += 1
 		loop_timeOut = setTimeout(() => {
 			setupRound(loop_rounds)
-		}, delay_job_rounds)
+		}, delay_job_rounds * 1000)
 	} else {
 		logger.log('closing loop')
 	}
@@ -108,7 +109,6 @@ function updateJobTick (job) {
 
 function updateJobError (job, error) {
 	logger.log(error)
-	// todo create fails and health update here etc
 	job.status = false
 
 	let newPing = new m_ping({

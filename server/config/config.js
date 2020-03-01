@@ -33,5 +33,6 @@ module.exports = {
 		api: envs.parsed.MAIL_API,
 		host: envs.parsed.MAIL_HOST,
 		domain: envs.parsed.MAIL_DOMAIN,
-	}
+	},
+	time_delay: envs.parsed.TIME_DELAY
 };
