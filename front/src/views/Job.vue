@@ -19,6 +19,7 @@
 	import ButtonC from '@/components/ButtonC.vue'
 	import JobRender from '@/components/Job.vue'
 	import JobService from '../helpers/JobService.js'
+	import jobVars from '../constants/job.js'
 	import sharedVars from '../constants/sharedVars.js'
 
 	export default {
@@ -32,7 +33,7 @@
 				checkSum: null,
 				attrs: {
 					active: [true, false],
-					pings: [1, 15, 30, 45, 60],
+					pings: jobVars.pings,
 					methods: ['GET', 'POST', 'PUT', 'DELETE'],
 				},
 				job: {
@@ -54,7 +55,7 @@
 						month: 0,
 					},
 					user: '',
-					job_id: '',
+					job_hash: '',
 				},
 			}
 		},
@@ -70,10 +71,10 @@
 
 		methods: {
 			createCheckSum (input) {
-				return (input.url + input.method + input.params + input.ping + input.user.id)
+				return (input.url + input.method + input.params + input.ping + input.user.toString() + input.active)
 			},
 			GetJob: function () {
-				JobService.get(this.$route.params.job_id)
+				JobService.get(this.$route.params.job_hash)
 					.then(response => {
 						this.job = response.data.data.job
 						this.job.full = true
@@ -122,7 +123,7 @@
 				}
 				this.waiting = true
 
-				JobService.remove({ job_id: this.$route.params.job_id })
+				JobService.remove({ job_hash: this.$route.params.job_hash })
 					.then(response => {
 						this.$refs.btn_delete.OnSuccess()
 						this.$root.$emit('message', response.data.message)

@@ -1,3 +1,9 @@
+/**
+ * Check if an item has a uppercase letter present
+ *
+ * @param 	{String}		input
+ * @returns {boolean}
+ */
 function Uppercase (input) {
 	let tmpNoNumber = input.replace(/[^A-Za-z]/g, '')
 	let upperTmp = tmpNoNumber.toLocaleUpperCase()
@@ -9,6 +15,12 @@ function Uppercase (input) {
 
 exports.Uppercase = Uppercase
 
+/**
+ * Returns all numeric from a string
+ *
+ * @param 	{String} 	input
+ * @returns {boolean}
+ */
 function Number (input) {
 	let strip = input.replace(/\D/g, '')
 	return (strip.length > 0)
@@ -16,9 +28,29 @@ function Number (input) {
 
 exports.Number = Number
 
-function Exists (input) {
+/**
+ * Check if an item exists
+ *
+ * @param 	{Property} 	input
+ * @returns {boolean}
+ */
+function item (input) {
 	if (input === null || input === undefined) return false
 	if (input.toString().length < 1) return false
 	return true
 }
-exports.Exists = Exists
+
+exports.item = item
+
+/**
+ * Check if an item contains 'thing'
+ *
+ * @param 	{String} 	item			item to inspect
+ * @param 	{String} 	search		string to search for
+ * @returns {boolean}
+ */
+function contains (item, search) {
+	return (item.indexOf(search) >= 0)
+}
+
+exports.contains = contains

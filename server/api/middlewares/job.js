@@ -1,92 +1,77 @@
 const sanitizer = require('sanitizer').sanitize
-const exit = require('../middlewares/exit.js')
+const exit = require('../../services/exit.js')
+const has = require('../../helpers/has.js')
 
-function exists (input) {
-  if (input === null || input === undefined) return false
-  if (input.toString().length < 1) return false
-  return true
+
+function missing (property) {
+  return `Missing ${property} field.`
 }
-
-exports.exists = exists
-
-
-function user (req, res, next) {
-  if (!exists(req.body.user)) return exit(res, 422, 'Missing user property.')
-
-  prepare(req)
-  next()
-}
-
-exports.user = user
-
-function get (req, res, next) {
-  if (!exists(req.params)) return exit(res, 422, 'Missing job id.')
-  if (!exists(req.params.job)) return exit(res, 422, 'Missing job id.')
-
-  prepare(req)
-  next()
-}
-
-exports.get = get
 
 function create (req, res, next) {
+  if (!has.item(req.body.url)) return exit(res, 422, missing('url'))
 
-  if (!exists(req.body.url)) return exit(res, 422, 'Missing url property.')
-  if (!exists(req.body.ping)) return exit(res, 422, 'Missing ping property.')
-
-  if (!exists(req.body.method)) req.body.method = 'GET'
-  if (!exists(req.body.params)) req.body.params = ''
-
-  prepare(req)
   next()
 }
 
 exports.create = create
 
-/**
- * Edits the request object with the result and moves onto next
- * @param req
- * @param res
- * @param next
- */
 function update (req, res, next) {
+  if (Object.keys(req.body).length < 1) return exit(res, 422, missing('paramaters to update'))
 
-  if (!exists(req.params)) return exit(res, 422, 'Missing job id.')
-  if (!exists(req.params.job)) return exit(res, 422, 'Missing job id.')
-
-  prepare(req)
   next()
 }
 
 exports.update = update
 
-function prepare (input) {
+function get (req, res, next) {
+  if (!has.item(req.params.job_hash)) return exit(res, 422, missing('job id'))
 
-  if (input.body.job === undefined || input.body.job === null) {
-    input.body.job = {}
-  }
-
-  if (exists(input.body.active)) {
-    input.body.job.active = sanitizer(input.body.active)
-  }
-  if (exists(input.body.url)) {
-    input.body.job.url = sanitizer(input.body.url.trim())
-  }
-  if (exists(input.body.method)) {
-    input.body.job.method = sanitizer(input.body.method.trim())
-  }
-  if (exists(input.body.params)) {
-    input.body.job.params = sanitizer(input.body.params.trim())
-  }
-  if (exists(input.body.ping)) {
-    input.body.job.ping = sanitizer(input.body.ping)
-  }
-  if (exists(input.params) && exists(input.params.job)) {
-    input.body.job.job_id = sanitizer(input.params.job)
-  }
-  // if (exists(input.body.user)) {
-  //   input.body.job.user = sanitizer(input.body.user)
-  // }
+  next()
 }
 
+exports.get = get
+
+/**
+ * Sanitizes all input and cleans up the raw data
+ *
+ * @param req
+ */
+function prepare (req, res, next) {
+
+  let tmpToken = null
+  let tmpParams = null
+  let tmpBody = null
+
+  if (req.body && req.body.token) {
+    tmpToken = Object.assign({}, req.body.token)
+    delete req.body.token
+  }
+
+  if (req.params) {
+    tmpParams = Object.assign({}, req.params)
+    Object.keys(tmpParams).map(item => {
+      tmpParams[item] = sanitizer(tmpParams[item])
+    })
+    delete req.params
+  }
+
+  if (req.body) {
+    tmpBody = Object.assign({}, req.body)
+    Object.keys(tmpBody).map(item => {
+      tmpBody[item] = sanitizer(tmpBody[item])
+    })
+    delete req.body
+  }
+
+  req.body = Object.assign({}, tmpBody)
+  req.params = Object.assign({}, tmpParams)
+
+  if (tmpToken) {
+    req.body.token = tmpToken
+  }
+
+  next()
+}
+
+exports.prepare = prepare
 

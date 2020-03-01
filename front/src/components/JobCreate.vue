@@ -22,6 +22,7 @@
 	import ButtonC from '@/components/ButtonC.vue'
 	import JobRender from '@/components/Job.vue'
 	import JobService from '../helpers/JobService.js'
+	import jobVars from '../constants/job.js'
 	import sharedVars from '../constants/sharedVars.js'
 
 	const defaultJob = {
@@ -40,7 +41,7 @@
 				waiting: false,
 				attrs: {
 					active: [true, false],
-					pings: [1, 15, 30, 45, 60],
+					pings: jobVars.pings,
 					methods: ['GET', 'POST', 'PUT', 'DELETE'],
 				},
 				job: {

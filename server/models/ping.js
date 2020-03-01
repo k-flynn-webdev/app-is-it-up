@@ -4,13 +4,13 @@ var ping = mongoose.Schema({
 	url : { type: String, required: true },
 	status : { type: Number, required: true, default: 0 },	
 	date : { type: Number, required: true, default : Date.now() },
-	job_id : { type: String, required: true },
+	job_hash : { type: String, required: true },
 	user : { type: mongoose.Schema.Types.ObjectId, required: false },
 })
 module.exports = mongoose.model('Ping', ping);
 
 
-function preSaveFunc(objec ){
+function preSaveFunc(object){
 	return object;
 }
 exports.preSaveFunc = preSaveFunc;
