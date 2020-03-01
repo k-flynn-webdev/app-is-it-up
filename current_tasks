@@ -32,7 +32,9 @@ Aims:
 - badge creation / & public display for a job
 ✅ deleting a job should cleanup all related pings 
 - deleting a user should cleanup all job + pings
-- create a full end to end set of test for user and job creation ..
+- create a full end to end set of test for users ..
+- create a full end to end set of test for job execution ..
+- create a full end to end set of test for job creation ..
 - add public/private to api for results
 ✅ cleanup navbar to include user acc details
 ✅ add user details page
@@ -56,10 +58,10 @@ Aims:
  ✅ job deletion
  ✅ job get
 - simplify job-execution like user implementation with promises
- * execution creation
- * execution update
- * execution deletion
- * execution get
+ ✅ execution creation
+ ✅ execution update
+ ✅ execution deletion
+ ✅ execution get
 - back-end periods need max to be aware of how far through month has gone on first roll over?
 - create a public rendered svg badge for a job
 - custom name field for jobs
