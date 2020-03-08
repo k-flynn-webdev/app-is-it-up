@@ -4,9 +4,9 @@ const config = require('../config/config.js')
 
 function defaultHealth () {
 	let tmp = []
-	// for (let i = 0; i < 30; i++) {
-	// 	tmp.push(1)
-	// }
+	for (let i = 0; i < 100; i++) {
+		tmp.push({ response: 0, time: null, status: 0 })
+	}
 	return tmp
 }
 

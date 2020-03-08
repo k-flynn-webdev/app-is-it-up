@@ -1,161 +1,255 @@
 <template>
-   
-  <div>
 
-    <div class="flex-items">
+	<div>
 
-      <div class="option block">
-        <label for="url"> URL </label>
-        <input id="url" name="url" placeholder="eg www.myhome.com" type="text" minLength="4" required v-model=job.url /> 
-      </div>
-      <div class="option">
-        <label for="active"> Active </label>
-        <select id="active" name="active" v-model=job.active>
-          <template v-for="item in attrs.active">
-            <option v-bind:key=item v-bind:value=item>
-              {{ item }}
-            </option>
-          </template>
-        </select>
-      </div>
+		<div class="flex-items">
 
-    </div> 
+			<div class="option block">
+				<label for="url"> URL </label>
+				<input id="url" name="url" placeholder="eg www.myhome.com" type="text" minLength="4"
+							 required v-model="job.url"/>
+			</div>
+			<div class="option">
+				<label for="active"> Active </label>
+				<select id="active" name="active" v-model="job.active">
+					<template v-for="item in attrs.active">
+						<option v-bind:key=item v-bind:value="item">
+							{{ item }}
+						</option>
+					</template>
+				</select>
+			</div>
 
-    <div class="flex-items">
+		</div>
 
-      <div class="option">
-        <label for="method"> Method </label>
-        <select id="method" name="method" v-model=job.method>
-          <template v-for="method in attrs.methods">
-            <option v-bind:key=method v-bind:value=method>
-              {{ method }}
-            </option>
-          </template>
-        </select>
-      </div>
+		<div class="flex-items">
 
-      <div class="option">
-        <label for="ping"> Ping </label>
-        <select id="ping" name="ping" v-model=job.ping>
-          <template v-for="ping in attrs.pings">
-            <option v-bind:key=ping v-bind:value=ping>
-              {{ ping }}m
-            </option>
-          </template>
-        </select>
-      </div>
+			<div class="option">
+				<label for="method"> Method </label>
+				<select id="method" name="method" v-model="job.method">
+					<template v-for="method in attrs.methods">
+						<option v-bind:key="method" v-bind:value="method">
+							{{ method }}
+						</option>
+					</template>
+				</select>
+			</div>
 
-      <div class="option block">
-        <label for="params"> Params </label>
-        <input id="params" name="params" placeholder="eg user123" type="text" maxLength="50" v-model=job.params />
-      </div>
+			<div class="option">
+				<label for="ping"> Ping </label>
+				<select id="ping" name="ping" v-model="job.ping">
+					<template v-for="ping in attrs.pings">
+						<option v-bind:key=ping v-bind:value="ping">
+							{{ ping }}m
+						</option>
+					</template>
+				</select>
+			</div>
 
-    </div> 
+			<div class="option block">
+				<label for="params"> Params </label>
+				<input id="params" name="params" placeholder="eg user123" type="text" maxLength="50"
+							 v-model="job.params"/>
+			</div>
 
-    <div v-if=renderFull style="margin-top:1rem;">
+		</div>
 
-      <div class="flex-items wrap space-evenly">
+		<div v-if=renderFull style="margin-top:1rem;">
 
-        <div class="info">
-          <label> Status </label>
-          <Up v-if="getStatus === 1" />
-          <Down v-if="getStatus === 2" />
-          <Off v-if="getStatus === 3" />
-        </div>
+			<div class="flex-items wrap space-evenly">
 
-        <div class="info">
-          <label> Pings </label>
-          <p>{{ job.meta.num }}</p>
-        </div>
+				<div class="info">
+					<label> Status </label>
+					<Up v-if="getStatus === 1"/>
+					<Down v-if="getStatus === 2"/>
+					<Off v-if="getStatus === 3"/>
+				</div>
 
-        <div class="info">
-          <template v-for="(period, name) in job.periods">
-            <div class="periods" :key=name>
-              <label> {{ name }} </label>
-              <p> {{ RenderPeriod(period) }} </p>
-            </div>
-          </template>
-        </div>
+				<div class="info">
+					<label> Pings </label>
+					<p>{{ job.meta.num }}</p>
+				</div>
 
-        <div class="option">
-          <label> ID </label>
-          <p>{{ job.job_hash }}</p>
-        </div>
+				<!--        <div class="info">-->
+				<!--          <template v-for="(period, name) in job.periods">-->
+				<!--            <div class="periods" :key=name>-->
+				<!--              <label> {{ name }} </label>-->
+				<!--              <p> {{ RenderPeriod(period) }} </p>-->
+				<!--            </div>-->
+				<!--          </template>-->
+				<!--        </div>-->
 
-        <div class="option">
-          <label> User </label>
-          <p>{{ job.user.name }}</p>
-        </div> 
+				<div class="option">
+					<label> ID </label>
+					<p>{{ job.job_hash }}</p>
+				</div>
 
-      </div>
+				<div class="option">
+					<label> User </label>
+					<p>{{ job.user.name }}</p>
+				</div>
 
-      <div style="margin: 1rem 0;">
+			</div>
 
-        <label style="text-align:center;margin-bottom:.5rem;">History</label>
+			<div style="margin: 1rem 0;">
 
-        <div v-if="job.fails.length > 0" class="flex-items wrap space-evenly">
+				<label style="text-align:center;margin-bottom:.5rem;">History</label>
 
-          <div class="item-fail" :key=job.id v-for="job in job.fails">
-            <p> {{ RenderDate(job.date) }} </p>
-          </div>
+				<div class="item-health" ref="canvasHolder">
 
-        </div>
+					<canvas ref="canvas" :width="width" :height="height"/>
 
-        <div v-else>
-            <p>No downtime.</p>
-        </div>
+				</div>
 
-      </div>
+			</div>
 
-    </div>
+		</div>
 
-    <slot></slot>
+		<slot></slot>
 
-  </div>
+	</div>
 
 </template>
 
 <script>
 
-import Up from '@/components/Ic_Up.vue'
-import Down from '@/components/Ic_Down.vue'
-import Off from '@/components/Ic_Off.vue'
+	import Up from '@/components/Ic_Up.vue'
+	import Down from '@/components/Ic_Down.vue'
+	import Off from '@/components/Ic_Off.vue'
 
-export default {
-  name: 'JobRender',
-  props : {
-    attrs : Object,
-    job : Object,
-  },
-  components: {
-    Up,
-    Down,
-    Off,
-  },
-  computed : {
-    renderFull : function(){
-      if(this.job.full) return true;
-      return false;
-    },
-    getStatus(){
-      if( !this.job.active ) return 3;
-      if( !this.job.status ) return 2;
-      return 1;
-    }, 
-  },
-  methods : {
-    RenderDate : function(input){
-      return new Date(input).toLocaleString();
-    },
-    RenderPeriod : function(input){
-      let temp = input.toString();
-      let index = temp.indexOf('.');
-      if(index === -1) return input;
-      let length = index + 3 < temp.length ? index + 3 : temp.length;
-      return temp.substring(0,length);
-    },
-  },
-}
+	const clamp = (a, min = 0, max = 1) => Math.min(max, Math.max(min, a))
+	const lerp = (x, y, a) => x * (1 - a) + y * a
+	const invlerp = (x, y, a) => clamp((a - x) / (y - x))
+
+	const defaultJob = () => {
+		return {
+			url: null,
+			method: null,
+			params: null,
+			ping: null,
+			active: null,
+			status: null,
+			fails: [],
+			health: [ { response: 0, time: null, status: 0 } ],
+			job_hash: null
+		}
+	}
+
+	export default {
+		name: 'JobRender',
+		props: {
+			attrs: Object,
+			job: {
+					type: Object,
+					default: defaultJob()
+				},
+		},
+
+		data () {
+			return {
+				width: null,
+				height: null
+			}
+		},
+
+		components: {
+			Up,
+			Down,
+			Off,
+		},
+
+		computed: {
+			renderFull: function () {
+				if (this.job.full) return true
+				return false
+			},
+			getStatus () {
+				if (!this.job.active) return 3
+				if (!this.job.status) return 2
+				return 1
+			}
+		},
+
+		// watch: {
+		// 	job (newVal) {
+		// 		if (!newVal) {
+		// 			return
+		// 		}
+		// 		if (newVal.health) {
+		// 			this.$nextTick(function () {
+		// 				this.renderHealth()
+		// 			})
+		// 		}
+		// 	}
+		// },
+
+		updated () {
+			if (!this.width) {
+				this.$nextTick(function () {
+					this.width = this.$refs.canvasHolder.clientWidth
+					this.height = this.$refs.canvasHolder.clientHeight
+				})
+			}
+		},
+
+		watch: {
+			'job.health' () {
+				if (!this.renderFull) {
+					return
+				}
+				setTimeout(() => {
+					this.renderHealth()
+				}, 66)
+			}
+		},
+
+		methods: {
+			RenderDate: function (input) {
+				return new Date(input).toLocaleString()
+			},
+			RenderPeriod: function (input) {
+				let temp = input.toString()
+				let index = temp.indexOf('.')
+				if (index === -1) return input
+				let length = index + 3 < temp.length ? index + 3 : temp.length
+				return temp.substring(0, length)
+			},
+			renderHealth () {
+				let ctx = this.$refs.canvas.getContext('2d')
+
+				let barWidth = this.width / this.job.health.length
+				let barMin = this.job.health.reduce((accum, current) => {
+					if (accum > current.response && current.response > 0) {
+						return current.response
+					}
+					return accum
+				}, 2000)
+				let barMax = this.job.health.reduce((accum, current) => {
+					if (accum < current.response) {
+						return current.response
+					}
+					return accum
+				}, 10)
+
+				ctx.lineWidth = barWidth
+
+				let colourMax = 172
+				let colourMin = 14
+
+				for (let i = 0, max = this.job.health.length; i < max; i++) {
+					let invLerpVal = invlerp(barMin, barMax, this.job.health[i].response)
+					let xCoord = (i * barWidth) + (barWidth * 0.5)
+					let yCoord = invLerpVal * this.height + 10
+					ctx.beginPath()
+					ctx.moveTo(xCoord, yCoord - 2)
+					ctx.lineTo(xCoord, yCoord + 2)
+					ctx.strokeStyle = 'hsl(' + lerp(colourMax, colourMin, invLerpVal) + ',50%,50%)'
+					ctx.stroke()
+				}
+
+			}
+		},
+	}
 </script>
 
 <style>
@@ -165,12 +259,19 @@ export default {
 <style scoped>
 
 .periods {
-  display: inline-block;
-  margin: 0 .5rem;
+	display: inline-block;
+	margin: 0 .5rem;
 }
 
 .item-fail {
-  margin: .3rem;
+	margin: .3rem;
+}
+
+.item-health {
+	/*width: 100%;*/
+	height: 4rem;
+	border: solid black 0.1rem;
+	/*background-color: yellow;*/
 }
 
 </style>

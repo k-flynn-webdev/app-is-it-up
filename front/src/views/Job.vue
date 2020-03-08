@@ -49,6 +49,7 @@
 						num: 0,
 						next: '',
 					},
+					health: [],
 					periods: {
 						day: 0,
 						week: 0,

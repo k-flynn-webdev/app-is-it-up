@@ -135,7 +135,7 @@ function updateJobHealth (job, start, end, status) {
 
 	// remove end
 	if (job.health.length > 99) {
-		job.health.splice(99, job.health.length - 100)
+		job.health.splice(100, job.health.length - 100)
 	}
 }
 
