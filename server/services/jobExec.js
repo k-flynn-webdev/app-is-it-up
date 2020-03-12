@@ -125,8 +125,13 @@ function updateJobError (job, error) {
 
 function updateJobSuccess (job, success) {
 	// todo update health, timings etc here
-
-	job.status = true
+	if (success.statusCode &&
+		success.statusCode > 100 &&
+		success.statusCode < 400) {
+		job.status = true
+		return
+	}
+	job.status = false
 }
 
 function updateJobHealth (job, start, end, status) {

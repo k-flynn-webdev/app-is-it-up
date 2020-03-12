@@ -218,32 +218,37 @@
 				let ctx = this.$refs.canvas.getContext('2d')
 
 				let barWidth = this.width / this.job.health.length
-				let barMin = this.job.health.reduce((accum, current) => {
-					if (accum > current.response && current.response > 0) {
-						return current.response
-					}
-					return accum
-				}, 2000)
-				let barMax = this.job.health.reduce((accum, current) => {
-					if (accum < current.response) {
-						return current.response
-					}
-					return accum
-				}, 10)
+				let barSlow = 1200
+				let barFast = 1
 
-				ctx.lineWidth = barWidth
+				ctx.lineWidth = barWidth * 0.9
 
 				let colourMax = 172
 				let colourMin = 14
 
 				for (let i = 0, max = this.job.health.length; i < max; i++) {
-					let invLerpVal = invlerp(barMin, barMax, this.job.health[i].response)
+					let hasTime = !!(this.job.health[i].time)
+					let invLerpVal = 1
+					let tmpColor = tmpColor = 'hsl(14,50%,50%)'
+
+					if (!hasTime) {
+						tmpColor = 'hsl(14,50%,90%)'
+					}
+
+					if (hasTime &&
+						this.job.health[i].status > 100 &&
+						this.job.health[i].status < 400) {
+						invLerpVal = 1 - invlerp(barSlow, barFast, this.job.health[i].response)
+						tmpColor =  'hsl(' + lerp(colourMax, colourMin, invLerpVal) + ',50%,50%)'
+					}
+
 					let xCoord = (i * barWidth) + (barWidth * 0.5)
-					let yCoord = invLerpVal * this.height + 10
+					let yCoord = invLerpVal * this.height
+
 					ctx.beginPath()
 					ctx.moveTo(xCoord, yCoord - 2)
 					ctx.lineTo(xCoord, yCoord + 2)
-					ctx.strokeStyle = 'hsl(' + lerp(colourMax, colourMin, invLerpVal) + ',50%,50%)'
+					ctx.strokeStyle = tmpColor
 					ctx.stroke()
 				}
 
@@ -268,10 +273,7 @@
 }
 
 .item-health {
-	/*width: 100%;*/
 	height: 4rem;
-	border: solid black 0.1rem;
-	/*background-color: yellow;*/
 }
 
 </style>
