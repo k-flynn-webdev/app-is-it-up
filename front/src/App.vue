@@ -113,7 +113,8 @@ label {
 	flex-wrap: wrap;
 }
 .flex-items .option {
-	margin: .2rem .2rem;
+	margin: .2rem;
+	margin-top: 0;
 }
 .flex-items .option.block {
 	flex-grow: 2;

@@ -56,7 +56,7 @@
 
 		<div v-if=renderFull style="margin-top:1rem;">
 
-			<div class="flex-items wrap space-evenly">
+			<div class="flex-items wrap space-evenly1">
 
 				<div class="info">
 					<label> Status </label>
@@ -66,18 +66,13 @@
 				</div>
 
 				<div class="info">
-					<label> Pings </label>
-					<p>{{ job.meta.num }}</p>
+					<template v-for="(period, name) in job.uptime">
+						<div class="periods" :key=name>
+							<label> {{ name }} </label>
+							<p> {{ period.toFixed(3) * 100 }}%</p>
+						</div>
+					</template>
 				</div>
-
-				<!--        <div class="info">-->
-				<!--          <template v-for="(period, name) in job.periods">-->
-				<!--            <div class="periods" :key=name>-->
-				<!--              <label> {{ name }} </label>-->
-				<!--              <p> {{ RenderPeriod(period) }} </p>-->
-				<!--            </div>-->
-				<!--          </template>-->
-				<!--        </div>-->
 
 				<div class="option">
 					<label> ID </label>
@@ -92,16 +87,18 @@
 			</div>
 
 			<div style="margin: 1rem 0;">
-
-				<label style="text-align:center;margin-bottom:.5rem;">History</label>
-
 				<div class="item-health" ref="canvasHolder">
-
 					<canvas ref="canvas" :width="width" :height="height"/>
-
 				</div>
-
 			</div>
+
+			<div class="flex-items wrap space-evenly1">
+				<div class="info">
+					<label>Ping #</label>
+					<p> {{ job.tick.num }} / {{ job.tick.max }}</p>
+				</div>
+			</div>
+
 
 		</div>
 
@@ -170,19 +167,6 @@
 			}
 		},
 
-		// watch: {
-		// 	job (newVal) {
-		// 		if (!newVal) {
-		// 			return
-		// 		}
-		// 		if (newVal.health) {
-		// 			this.$nextTick(function () {
-		// 				this.renderHealth()
-		// 			})
-		// 		}
-		// 	}
-		// },
-
 		updated () {
 			if (!this.width) {
 				this.$nextTick(function () {
@@ -207,19 +191,12 @@
 			RenderDate: function (input) {
 				return new Date(input).toLocaleString()
 			},
-			RenderPeriod: function (input) {
-				let temp = input.toString()
-				let index = temp.indexOf('.')
-				if (index === -1) return input
-				let length = index + 3 < temp.length ? index + 3 : temp.length
-				return temp.substring(0, length)
-			},
 			renderHealth () {
 				let ctx = this.$refs.canvas.getContext('2d')
 
 				let barWidth = this.width / this.job.health.length
-				let barSlow = 1200
-				let barFast = 1
+				let barSlow = 800
+				let barFast = 5
 
 				ctx.lineWidth = barWidth * 0.9
 

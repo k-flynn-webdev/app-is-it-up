@@ -6,7 +6,7 @@
 				<button-c ref="btn_update" @click=OnUpdate> Update</button-c>
 				<div style="display:inline-block;width:1rem;"></div>
 				<button-c ref="btn_delete" @click=OnDelete> Delete</button-c>
-				<div style="display:inline-block;width:1rem;"></div>
+				<div style="display:inline-block;width:.2rem;"></div>
 			</div>
 		</job-render>
 	</card>

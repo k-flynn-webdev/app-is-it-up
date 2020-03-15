@@ -108,6 +108,8 @@ const job = mongoose.Schema({
 
 job.pre('save', function (next) {
 	this.meta.updated = Date.now()
+	updateJobFails(this, next)
+
 	next()
 })
 
@@ -236,47 +238,54 @@ function setPing (input) {
 	this.tick.next = Date.now()
 }
 
-// todo this!
-// function UpdatePeriods (object) {
-//
-//   let dayInMs = 1000 * 60 * 60 * 24
-//   let dateNow = new Date().getTime()
-//
-//   let tmp_day_buckets = [0, 0, 0]
-//
-//   for (let i = 0; i < object.fails.length; i++) {
-//     let differenceTime = object.fails[i].date - dateNow
-//     let differenceDays = differenceTime / dayInMs
-//
-//     if (differenceDays <= 1) {
-//       tmp_day_buckets[0] += 1
-//     }
-//     if (differenceDays <= 7) {
-//       tmp_day_buckets[1] += 1
-//     }
-//     if (differenceDays <= 30) {
-//       tmp_day_buckets[2] += 1
-//     }
-//   }
-//
-//   object.periods.day = 1 - (tmp_day_buckets[0] / (object.meta.max / 30))
-//   object.periods.week = 1 - (tmp_day_buckets[1] / ((object.meta.max / 30) * 7))
-//   object.periods.month = 1 - (tmp_day_buckets[2] / object.meta.max)
-// }
-//
-// function preSaveFunc (object) {
-//   return object
-// }
+/**
+ * Update the job uptime
+ *
+ * @param {Object} job
+ * @param next
+ */
+function updateJobFails (job, next) {
+	// todo have a global cleanup of older fails ..
+	// todo remove/cleanup old pings of say 6 months? maybe do this as a cron job ..
 
-// todo remove/cleanup old pings of say 6 months? maybe do this as a cron job ..
+	const dayInSeconds = 8.64e7
+	let now = Date.now()
+	let daysSinceEpoch = Math.floor(now/dayInSeconds)
+
+	let day = 0
+	let week = 0
+	let month = 0
+
+	for (let i = 0, max = job.fails.length; i < max; i++) {
+		let dateInt = Math.floor(job.fails[i].date/dayInSeconds)
+		let dateIntDiff = daysSinceEpoch - dateInt
+
+		if (dateIntDiff <= 1) {
+			day+=1
+		}
+		if (dateIntDiff <= 7) {
+			week+=1
+		}
+		if (dateIntDiff <= 30) {
+			month+=1
+		}
+	}
+
+	let dayTickDivide = job.tick.max/30
+
+	job.uptime.day = 1 - (day/dayTickDivide)
+	job.uptime.week = 1 - (week/(dayTickDivide*7))
+	job.uptime.month = 1 - (month/job.tick.max)
+
+	return next()
+}
 
 /**
  * Export a job model with only the items needed.
  *
- * @param 	{Boolean}	export including meta
  * @returns {model}		jobModel minus items
  */
-function safeExport (meta = false) {
+function safeExport () {
 
 	let freshObj = {}
 
@@ -290,7 +299,7 @@ function safeExport (meta = false) {
 	freshObj.ping = this.ping
 	freshObj.active = this.active
 	freshObj.status = this.status
-	freshObj.fails = this.fails
+	freshObj.fails = this.fails.length
 	freshObj.health = this.health
 	freshObj.uptime = this.uptime
 	freshObj.meta = this.meta

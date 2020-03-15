@@ -119,7 +119,7 @@ function updateJobError (job, error) {
 		user: job.user && job.user.id ? job.user.id : null
 	})
 
-	job.fails.push(newPing._id)
+	job.fails.push({ id: newPing._id, date: loop_timeNow })
 	newPing.save()
 }
 
@@ -135,7 +135,7 @@ function updateJobSuccess (job, success) {
 }
 
 function updateJobHealth (job, start, end, status) {
-	let healthItem = { response: end - start, time: Date.now(), status: status }
+	let healthItem = { response: end - start, time: Date.now(), status }
 	job.health.unshift(healthItem) // add to start
 
 	// remove end
