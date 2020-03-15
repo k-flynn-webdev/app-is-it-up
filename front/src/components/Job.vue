@@ -69,7 +69,7 @@
 					<template v-for="(period, name) in job.uptime">
 						<div class="periods" :key=name>
 							<label> {{ name }} </label>
-							<p> {{ period.toFixed(3) * 100 }}%</p>
+							<p> {{ period.toFixed(2) }}%</p>
 						</div>
 					</template>
 				</div>

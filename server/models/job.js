@@ -78,11 +78,11 @@ const job = mongoose.Schema({
 	},
 	uptime: {
 		/** uptime for the last day */
-		day: { type: Number, required: false, default: 1 },
+		day: { type: Number, required: false, default: 100 },
 		/** uptime for the last week */
-		week: { type: Number, required: false, default: 1 },
+		week: { type: Number, required: false, default: 100 },
 		/** uptime for the last month */
-		month: { type: Number, required: false, default: 1 },
+		month: { type: Number, required: false, default: 100 },
 	},
 	meta: {
 		created: { type: Date, required: false, default: Date.now() },
@@ -273,9 +273,9 @@ function updateJobFails (job, next) {
 
 	let dayTickDivide = job.tick.max/30
 
-	job.uptime.day = 1 - (day/dayTickDivide)
-	job.uptime.week = 1 - (week/(dayTickDivide*7))
-	job.uptime.month = 1 - (month/job.tick.max)
+	job.uptime.day = ((1 - (day/dayTickDivide)) * 100)
+	job.uptime.week = ((1 - (week/(dayTickDivide*7))) * 100)
+	job.uptime.month = ((1 - (month/job.tick.max)) * 100)
 
 	return next()
 }

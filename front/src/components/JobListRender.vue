@@ -12,7 +12,7 @@
 
       <td class="widget-url"> {{ getURL }} </td>  
 
-      <td class="widget-period"> {{ getPeriod }}% </td>  
+      <td class="widget-period"> {{ getPeriod.toFixed(2) }}% </td>
 
       <td class="widget-ping"> {{ job.ping }}m </td>  
 
@@ -69,7 +69,7 @@ export default {
       return newURL;
     },
     getPeriod(){
-      return (this.job.uptime[ this.period ] * 100).toFixed(2);
+      return (this.job.uptime[ this.period ]);
     },
   },
   methods : {
