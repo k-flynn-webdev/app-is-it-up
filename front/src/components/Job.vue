@@ -65,9 +65,12 @@
 					<Off v-if="getStatus === 3"/>
 				</div>
 
-				<div class="info">
+				<div class="info" title="URL Uptime">
 					<template v-for="(period, name) in job.uptime">
-						<div class="periods" :key=name>
+						<div
+							class="periods"
+							:key=name
+							:title="`URL ${name} uptime`">
 							<label> {{ name }} </label>
 							<p> {{ period.toFixed(2) }}%</p>
 						</div>
@@ -127,7 +130,7 @@
 			active: null,
 			status: null,
 			fails: [],
-			health: [ { response: 0, time: null, status: 0 } ],
+			health: [{ response: 0, time: null, status: 0 }],
 			job_hash: null
 		}
 	}
@@ -137,9 +140,9 @@
 		props: {
 			attrs: Object,
 			job: {
-					type: Object,
-					default: defaultJob()
-				},
+				type: Object,
+				default: defaultJob()
+			},
 		},
 
 		data () {
@@ -165,6 +168,10 @@
 				if (!this.job.status) return 2
 				return 1
 			}
+		},
+
+		mounted () {
+			// set off animater
 		},
 
 		updated () {
@@ -216,7 +223,7 @@
 						this.job.health[i].status > 100 &&
 						this.job.health[i].status < 400) {
 						invLerpVal = 1 - invlerp(barSlow, barFast, this.job.health[i].response)
-						tmpColor =  'hsl(' + lerp(colourMax, colourMin, invLerpVal) + ',50%,50%)'
+						tmpColor = 'hsl(' + lerp(colourMax, colourMin, invLerpVal) + ',50%,50%)'
 					}
 
 					let xCoord = (i * barWidth) + (barWidth * 0.5)
