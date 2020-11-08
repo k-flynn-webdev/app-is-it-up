@@ -27,6 +27,16 @@ Aims:
 ✅ where possible use promises more!
 
 
+data layers
+database layer
+helper layer
+
+admin api:
+	for now fake user/admin
+	get all jobs present 
+	get all jobs global stack 
+	edit any job + global stack
+
 [FULL-STACK]
 - handle in-active jobs with a separate menu to view & edit those
 - badge creation / & public display for a job
@@ -113,10 +123,5 @@ Aims:
 ✅ create job comp to render based on page
 ✅ switch active dropdown to besides the url so params has more space 
 
-admin api:
-	for now fake user/admin
-	get all jobs present 
-	get all jobs global stack 
-	edit any job + global stack
 
 
